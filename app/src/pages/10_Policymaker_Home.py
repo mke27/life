@@ -17,11 +17,11 @@ st.write('### What would you like to do today?')
 if st.button('View Recent Policy Implementation', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/11_Prediction.py')
+  st.switch_page('pages/11_Policy_Implementation.py')
 
 if st.button('View Map of Similar Countries', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/12_API_Test.py')
+  st.switch_page('pages/12_Similar_Countries.py')
 
   
