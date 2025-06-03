@@ -11,14 +11,14 @@ st.write('### What would you like to do today?')
 if st.button('View Map of Expansion Recommendations', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/11_Prediction.py')
+  st.switch_page('pages/21_Expansion_Map.py')
 
 if st.button('View QoL Change Over Time', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/11_Prediction.py')
+  st.switch_page('pages/22_QoL_Change.py')
 
 if st.button('View Current Organizations', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/11_Prediction.py')
+  st.switch_page('pages/23_Current_Orgs.py')

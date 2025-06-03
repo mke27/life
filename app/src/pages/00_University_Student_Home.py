@@ -17,9 +17,9 @@ st.write('### What would you like to do today?')
 if st.button('View Gradient Map Country Recommendations', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/01_World_Bank_Viz.py')
+  st.switch_page('pages/01_Student_Map.py')
 
 if st.button('View QoL Comparison Chart', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/02_Map_Demo.py')
+  st.switch_page('pages/02_QoL_Chart.py')
