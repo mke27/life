@@ -1,14 +1,19 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from modules.nav import SideBarLinks
 
 df = pd.DataFrame()
 
-fig = px.choropleth(df, locations='iso_alpha', color='unemp',
-                           color_continuous_scale="Viridis",
-                           range_color=(0, 12),
-                           scope="usa",
-                           labels={'unemp':'unemployment rate'}
-                          )
+fig = px.choropleth(df, scope='europe')
 
-st.plotly_chart(fig, use_container_width=False, sharing="streamlit", theme="streamlit")
+SideBarLinks()
+
+st.set_page_config(layout = 'wide')
+
+st.title("Map Of Europe")
+
+st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
+
+st.radio("Feautures", options=['Health', 'Education', 'Environment', 'Safety', 'Transport'], 
+         index=0, horizontal=True, label_visibility="visible",)
