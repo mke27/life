@@ -3,7 +3,6 @@ logger = logging.getLogger(__name__)
 import pandas as pd
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
-import world_bank_data as wb
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
@@ -13,29 +12,55 @@ from modules.nav import SideBarLinks
 SideBarLinks()
 
 # set the header of the page
-st.header('World Bank Data')
+st.header('Country Recommendations Map')
 
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
+st.write("Set your preferences below to see the best country recommendations for you.")
 
-# get the countries from the world bank data
-with st.echo(code_location='above'):
-    countries:pd.DataFrame = wb.get_countries()
-   
-    st.dataframe(countries)
+education = st.slider(
+    label="Education",
+    min_value=0,
+    max_value=100,
+    value=50,
+    step=1
+    )
+health = st.slider(
+    label="Health",
+    min_value=0,
+    max_value=100,
+    value=50,
+    step=1
+    )
+safety = st.slider(
+    label="Safety",
+    min_value=0,
+    max_value=100,
+    value=50,
+    step=1
+    )
+transportation = st.slider(
+    label="Transportation",
+    min_value=0,
+    max_value=100,
+    value=50,
+    step=1
+    )
+environment = st.slider(
+    label="Environment",
+    min_value=0,
+    max_value=100,
+    value=50,
+    step=1
+    )
 
-# the with statment shows the code for this block above it 
-with st.echo(code_location='above'):
-    arr = np.random.normal(1, 1, size=100)
-    test_plot, ax = plt.subplots()
-    ax.hist(arr, bins=20)
+prefs = [education, health, safety, transportation, environment]
 
-    st.pyplot(test_plot)
+df = pd.DataFrame()
+fig = px.choropleth(df, scope='europe')
+st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
 
-
-with st.echo(code_location='above'):
-    slim_countries = countries[countries['incomeLevel'] != 'Aggregates']
-    data_crosstab = pd.crosstab(slim_countries['region'], 
-                                slim_countries['incomeLevel'],  
-                                margins = False) 
-    st.table(data_crosstab)
+#if st.button('Save Preferences', 
+             #type='primary',
+             #use_container_width=True):
+  # save prefs to database?
