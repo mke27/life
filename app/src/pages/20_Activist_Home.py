@@ -1,6 +1,3 @@
-import logging
-logger = logging.getLogger(__name__)
-
 import streamlit as st
 from modules.nav import SideBarLinks
 
@@ -17,7 +14,7 @@ st.write('### What would you like to do today?')
 if st.button('View Map of Expansion Recommendations', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/21_Expansion_Map.py')
+  st.switch_page('pages/21_Faye_map_for_concerns.py')
 
 if st.button('View QoL Change Over Time', 
              type='primary',
