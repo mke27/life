@@ -34,24 +34,31 @@ CREATE TABLE IF NOT EXISTS Rate
     FOREIGN KEY (country_ID) REFERENCES Country (country_ID)
 );
 
-CREATE TABLE IF NOT EXISTS Users
+CREATE TABLE IF NOT EXISTS User
 (
     user_ID    INT AUTO_INCREMENT PRIMARY KEY,
     persona_ID INT UNSIGNED NOT NULL,
     user_name  VARCHAR(30)  NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Post
+CREATE TABLE IF NOT EXISTS User_Role
 (
-    post_ID    INT AUTO_INCREMENT PRIMARY KEY,
-    user_ID    INT NOT NULL,
-    text_input TEXT,
-    img        BLOB,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_ID) REFERENCES Users (user_ID)
+    user_role INT AUTO_INCREMENT PRIMARY KEY,
+    user_ID   INT UNSIGNED NOT NULL,
+    FOREIGN KEY (user_ID) REFERENCES User (user_ID) 
 );
 
-CREATE TABLE IF NOT EXISTS Preferences
+CREATE TABLE IF NOT EXISTS Organization
+(
+    org_ID      INT AUTO_INCREMENT PRIMARY KEY,
+    org_name    VARCHAR(30) NOT NULL,
+    org_country INT UNSIGNED NOT NULL,
+    org_factor  INT UNSIGNED NOT NULL,
+    FOREIGN KEY (org_country) REFERENCES Country (country_ID),
+    FOREIGN KEY (org_factor) REFERENCES Factor (factor_ID)
+);
+
+CREATE TABLE IF NOT EXISTS Preference
 (
     pref_ID     INT AUTO_INCREMENT PRIMARY KEY,
     user_ID     INT          NOT NULL,
@@ -67,19 +74,10 @@ CREATE TABLE IF NOT EXISTS Preferences
     weight4     FLOAT,
     factorID_5  INT UNSIGNED NOT NULL,
     weight5     FLOAT,
-    FOREIGN KEY (user_ID) REFERENCES Users (user_ID)
+    FOREIGN KEY (user_ID) REFERENCES User (user_ID)
 );
 
-CREATE TABLE IF NOT EXISTS Pref_Factor
-(
-    pref_ID   INT AUTO_INCREMENT,
-    factor_ID INT UNSIGNED,
-    PRIMARY KEY (pref_ID, factor_ID),
-    FOREIGN KEY (pref_ID) REFERENCES Preferences (pref_ID),
-    FOREIGN KEY (factor_ID) REFERENCES Factor (factor_ID)
-);
-
-CREATE TABLE IF NOT EXISTS `Predicted Scores`
+CREATE TABLE IF NOT EXISTS Predicted_Score
 (
     pred_ID    INT AUTO_INCREMENT PRIMARY KEY,
     factor_ID  INT UNSIGNED NOT NULL,
@@ -89,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `Predicted Scores`
     FOREIGN KEY (country_ID) REFERENCES Country (country_ID)
 );
 
-CREATE TABLE IF NOT EXISTS Recommendations
+CREATE TABLE IF NOT EXISTS Recommendation
 (
     rec_ID       INT AUTO_INCREMENT PRIMARY KEY,
     country_ID   INT UNSIGNED NOT NULL,
@@ -97,17 +95,17 @@ CREATE TABLE IF NOT EXISTS Recommendations
     universities VARCHAR(500),
     urls         VARCHAR(500),
     email        VARCHAR(30),
-    FOREIGN KEY (user_ID) REFERENCES Users (user_ID)
+    FOREIGN KEY (user_ID) REFERENCES User (user_ID)
 );
 
-CREATE TABLE IF NOT EXISTS Policy
+CREATE TABLE IF NOT EXISTS Policy_News
 (
     policy_ID  INT AUTO_INCREMENT PRIMARY KEY,
     factor_ID  INT UNSIGNED NOT NULL,
     country_ID INT UNSIGNED NOT NULL,
-    url        VARCHAR(500),
+    urls        VARCHAR(500),
     title      VARCHAR(500),
-    date       DATE,
+    date_created       DATE,
     FOREIGN KEY (factor_ID) REFERENCES Factor (factor_ID),
     FOREIGN KEY (country_ID) REFERENCES Country (country_ID)
 );
@@ -124,7 +122,7 @@ CREATE TABLE IF NOT EXISTS ML_Factor
     factor_name VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS ML_Scores
+CREATE TABLE IF NOT EXISTS ML_Score
 (
     country_ID INT UNSIGNED,
     factor_ID  INT UNSIGNED,
@@ -150,32 +148,24 @@ INSERT INTO Rate (factor_ID, country_ID, rate_of_change)
 VALUES (1, 13, 1.159),
        (1, 15, 1.0789);
 
-INSERT INTO Users (persona_ID, user_name)
+INSERT INTO User (persona_ID, user_name)
 VALUES (372, 'mfontenot'),
        (254, 'egerber');
 
-INSERT INTO Post (user_ID, text_input)
-VALUES (1, 'Protect the environment! Be more mindful of your carbon footprint.'),
-       (2, 'We need better education in France!');
-
-INSERT INTO Preferences (user_ID, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
+INSERT INTO Preference (user_ID, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
                          factorID_4, weight4, factorID_5, weight5)
 VALUES (1, 13, 1, 0.234, 2, 0.3333, 3, 0.78, 4, 0.99, 5, 0.324),
        (2, 14, 2, 0.34, 1, 0.67, 3, 0.98, 4, 0.9, 5, 0.34);
 
-INSERT INTO Pref_Factor (factor_ID)
-VALUES (1),
-       (2);
-
-INSERT INTO `Predicted Scores`(factor_ID, country_ID, pred_score)
+INSERT INTO Predicted_Score (factor_ID, country_ID, pred_score)
 VALUES (1, 13, 1.455),
        (2, 15, 0.978);
 
-INSERT INTO Recommendations (country_ID, user_ID, universities, urls, email)
+INSERT INTO Recommendation (country_ID, user_ID, universities, urls, email)
 VALUES (13, 1, 'KU Leuven, Ghent, Antwerp', 'https://www.kuleuven.be/kuleuven', 'kuleuven@edu.com'),
        (15, 2, 'Patras, Thessaly, Athens', 'https://www.upatras.gr/en/', 'patras@edu.com');
 
-INSERT INTO Policy (factor_ID, country_ID, url, title, date)
+INSERT INTO Policy_News (factor_ID, country_ID, url, title, date)
 VALUES (1, 13, 'euupdate/parliament.com', 'Changes in EU Parliament', '2025-05-23'),
        (2, 15, 'greecegov/education.com', 'Changes in Greece Education', '2025-05-26');
 
@@ -187,6 +177,6 @@ INSERT INTO ML_Factor (factor_ID, factor_name)
 VALUES (1, 'Safety'),
        (2, 'Education');
 
-INSERT INTO ML_Scores (country_ID, factor_ID, score)
+INSERT INTO ML_Score (country_ID, factor_ID, score)
 VALUES (13, 1, 78),
        (15, 2, 65);
