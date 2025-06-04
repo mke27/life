@@ -168,16 +168,16 @@ def get_cosine_similarity(education, health, safety, environment):
     try:
         current_app.logger.info("GET /cosine_similarity handler")
         
-        similarity = model01.predict(education, health, safety, environment)
+        similarity = model01.predict(health, education, safety, environment)
         current_app.logger.info(f"Cosine similarity value returned is {similarity}")
         
         response_data = {
             "cosine_similarity": similarity,
             "input_variables": {
-                "var01": education,
-                "var02": health,
-                "var03": safety,
-                "var04": environment
+                "education": education,
+                "health": health,
+                "safety": safety,
+                "environment": environment
             }
         }
 
