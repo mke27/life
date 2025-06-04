@@ -66,7 +66,7 @@ logger.info(f"safety = {safety}")
 logger.info(f"environment = {environment}")
 
 if st.button("Save Preferences", type="primary", use_container_width=True):
-    results = requests.get(f"http://web-api:4000/predict/{education}/{health}/{safety}/{environment}")
+    results = requests.get(f"http://localhost:4000/predict/{education}/{health}/{safety}/{environment}")
     top_country = results[0]
     json_results = results.json()
     logger.info(f"Top country based on preferences: {top_country}")
