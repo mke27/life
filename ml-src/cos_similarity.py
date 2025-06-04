@@ -12,10 +12,11 @@ df_all_years = pd.read_csv('datasets/preprocessed-datasets/all_data.csv')
 
 # filters all data points that don't include a year of 2022
 recent = (df_all_years.year == 2022)
-df = df_all_years[recent]
+df_recent = df_all_years[recent]
+df = df_recent.drop('infrastructure')
 
 # healthcare, education, safety, environment, infrastructure -> mock input
-input = np.array([0, 0, 0, 0, 0])
+input = np.array([0, 0, 0, 0])
 
 def inv_sigmoid(value):
     """ returns the inverse sigmoid of the input. If the input is 0 or 1, rebounds the sigmoid to -3 or 3
@@ -49,8 +50,7 @@ def cosine_similarity(df, input_vector):
         temp_vector = np.array([df.iloc[country, 2], 
                             df.iloc[country, 3], 
                             df.iloc[country, 4], 
-                            df.iloc[country, 5],
-                            df.iloc[country, 6]])
+                            df.iloc[country, 5],])
         
         cos_similarity = np.dot(inv_sig_input, temp_vector) / (np.linalg.norm(inv_sig_input) * np.linalg.norm(temp_vector))
 
