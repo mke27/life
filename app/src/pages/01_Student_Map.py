@@ -25,7 +25,7 @@ df = pd.DataFrame()
 fig = px.choropleth(df, scope='europe')
 st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
 
-col1, col2, col3, col4, col5 = st.columns(5)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     education = st.slider(
@@ -52,14 +52,6 @@ with col3:
         step=1
         )
 with col4:
-    transportation = st.slider(
-        label="Transportation",
-        min_value=0,
-        max_value=100,
-        value=50,
-        step=1
-        )
-with col5:
     environment = st.slider(
         label="Environment",
         min_value=0,
@@ -71,11 +63,10 @@ with col5:
 logger.info(f"var_01 = {education}")
 logger.info(f"var_02 = {health}")
 logger.info(f"var_03 = {safety}")
-logger.info(f"var_04 = {transportation}")
-logger.info(f"var_05 = {environment}")
+logger.info(f"var_04 = {environment}")
 
 if st.button("Save Preferences", type="primary", use_container_width=True):
-    results = requests.get(f"http://web-api:4000/cosine_similarity/{education}/{health}{safety}/{transportation}{environment}")
+    results = requests.get(f"http://web-api:4000/cosine_similarity/{education}/{health}/{safety}/{environment}")
     top_country = results[0]
     json_results = results.json()
     logger.info(f"Top country based on preferences: {top_country}")
@@ -91,8 +82,6 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         "factorID_3": 3,
         "weight3": safety,
         "factorID_4": 4,
-        "weight4": transportation,
-        "factorID_5": 5,
         "weight5": environment
         }
 

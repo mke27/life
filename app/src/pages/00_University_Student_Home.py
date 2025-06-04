@@ -19,11 +19,6 @@ if st.button('View Country Recommendations',
              use_container_width=True):
   st.switch_page('pages/01_Student_Map.py')
 
-if st.button('View QoL Comparison Chart', 
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/02_QoL_Chart.py')
-
 if st.button('View University Recommendations', 
              type='primary',
              use_container_width=True):
