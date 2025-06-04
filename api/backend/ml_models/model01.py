@@ -38,8 +38,7 @@ def cosine_similarity(df, input_vector):
         temp_vector = np.array([df.iloc[country, 2], 
                             df.iloc[country, 3], 
                             df.iloc[country, 4], 
-                            df.iloc[country, 5],
-                            df.iloc[country, 6]])
+                            df.iloc[country, 5]])
         
         cos_similarity = np.dot(inv_sig_input, temp_vector) / (np.linalg.norm(inv_sig_input) * np.linalg.norm(temp_vector))
 
@@ -66,7 +65,7 @@ def train():
 def test():
   return 'Testing the model'
 
-def predict(var01, var02):
+def predict(health_score, education_score, safety_score, environment_score):
   """
   Retreives model parameters from the database and uses them for real-time prediction
   """
@@ -76,21 +75,27 @@ def predict(var01, var02):
   query = 'SELECT * FROM ML_Score'
   cursor.execute(query)
   return_val = cursor.fetchall()
-  params = return_val['beta_vals']
 
-  cosine_similarity()
+  df = pd.DataFrame(return_val)
+
+  vector = np.array(health_score, education_score, safety_score, environment_score)
+
+  vector/np.sum(vector)
+     
+
+  similarity_table = cosine_similarity(df, vector)
   
   # turn the values from the database into a numpy array
-  params_array = np.array(list(map(float, params[1:-1].split(','))))
-  current_app.logger.info(f'params array = {params_array}')
+  # params_array = np.array(list(map(float, params[1:-1].split(','))))
+  # current_app.logger.info(f'params array = {params_array}')
 
   # turn the variables sent from the UI into a numpy array
-  input_array = np.array([1.0, float(var01), float(var02)])
+  #input_array = np.array([1.0, float(var01), float(var02)])
   
   # calculate the dot product (since this is a fake regression)
-  prediction = np.dot(params_array, input_array)
+  # prediction = np.dot(params_array, input_array)
 
-  return prediction
+  return similarity_table
 
 # just remove infrastructure
 # 10 years, no 2013.
