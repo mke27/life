@@ -34,18 +34,21 @@ CREATE TABLE IF NOT EXISTS Rate
     FOREIGN KEY (country_ID) REFERENCES Country (country_ID)
 );
 
+CREATE TABLE IF NOT EXISTS User_Role
+(
+    role_ID INT AUTO_INCREMENT PRIMARY KEY,
+    role_name   VARCHAR(30) NOT NULL, 
+);
+
 CREATE TABLE IF NOT EXISTS User
 (
     user_ID    INT AUTO_INCREMENT PRIMARY KEY,
-    persona_ID INT UNSIGNED NOT NULL,
+    user_country INT UNSIGNED NOT NULL,
+    user_age   INT UNSIGNED NOT NULL,
     user_name  VARCHAR(30)  NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS User_Role
-(
-    user_role INT AUTO_INCREMENT PRIMARY KEY,
-    user_ID   INT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_ID) REFERENCES User (user_ID) 
+    role_ID  INT UNSIGNED NOT NULL,
+    FOREIGN KEY (role_ID) REFERENCES User_Role (role_ID)
+    FOREIGN KEY (user_country) REFERENCES Country (country_ID)
 );
 
 CREATE TABLE IF NOT EXISTS Organization
@@ -54,6 +57,7 @@ CREATE TABLE IF NOT EXISTS Organization
     org_name    VARCHAR(30) NOT NULL,
     org_country INT UNSIGNED NOT NULL,
     org_factor  INT UNSIGNED NOT NULL,
+    org_url     VARCHAR(100),
     FOREIGN KEY (org_country) REFERENCES Country (country_ID),
     FOREIGN KEY (org_factor) REFERENCES Factor (factor_ID)
 );
