@@ -14,7 +14,7 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
-if st.button('View Gradient Map Country Recommendations', 
+if st.button('View Country Recommendations', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/01_Student_Map.py')
@@ -23,3 +23,8 @@ if st.button('View QoL Comparison Chart',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/02_QoL_Chart.py')
+
+if st.button('View University Recommendations', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/04_University_Recs.py')
