@@ -9,7 +9,8 @@ from flask import (
 )
 from backend.db_connection import db 
 from mysql.connector import Error
-from backend.ml_models import model02
+from backend.ml_models import model02, model03
+
 
 users = Blueprint("users", __name__)
 @users.route("/users/<int:user_id>", methods=["GET"])
@@ -80,6 +81,39 @@ def get_all_pred_scores():
     
 @grace.route("/pred_scores/<int:country_id>", methods=["GET"])
 def get_pred_scores_by_country(country_id):
+    try:
+        data = request.get_json()
+
+        cursor = db.get_db().cursor()
+        cursor.execute("SELECT * FROM WorldNGOs WHERE NGO_ID = %s", (ngo_id,))
+        if not cursor.fetchone():
+            return jsonify({"error": "NGO not found"}), 404
+
+        # Build update query dynamically based on provided fields
+        update_fields = []
+        params = []
+        allowed_fields = ["Name", "Country", "Founding_Year", "Focus_Area", "Website"]
+
+        for field in allowed_fields:
+            if field in data:
+                update_fields.append(f"{field} = %s")
+                params.append(data[field])
+
+        if not update_fields:
+            return jsonify({"error": "No valid fields to update"}), 400
+
+        params.append(ngo_id)
+        query = f"UPDATE WorldNGOs SET {', '.join(update_fields)} WHERE NGO_ID = %s"
+
+        cursor.execute(query, params)
+        db.get_db().commit()
+        cursor.close()
+
+        return jsonify({"message": "NGO updated successfully"}), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 
 @grace.route("/preferences", methods=["POST"])
@@ -138,6 +172,30 @@ def get_cosine_similarity():
                 "var04": var_04,
                 "var05": var_05
             }
+        }
+
+        response = make_response(jsonify(response_data))
+        response.status_code = 200
+        return response
+
+    except Exception as e:
+        response = make_response(
+            jsonify({"error": "Error processing prediction request"})
+        )
+        response.status_code = 500
+        return response
+
+@model.route("/pred_scores/<var_01>/<var_02>", methods=["GET"])
+def get_pred_scores(var_01, var_02):
+    current_app.logger.info("GET /prediction handler")
+
+    try:
+        prediction = model03.predict(var_01, var_02)
+        current_app.logger.info(f"prediction value returned is {prediction}")
+        
+        response_data = {
+            "prediction": prediction,
+            "input_variables": {"var01": var_01, "var02": var_02},
         }
 
         response = make_response(jsonify(response_data))
