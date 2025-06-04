@@ -7,9 +7,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
 from modules.nav import SideBarLinks
+import requests
 
 # Call the SideBarLinks from the nav module in the modules directory
 SideBarLinks()
+
+API_URL = "http://web-api:4000/grace/preferences"
 
 # set the header of the page
 st.header('Country Recommendations Map')
@@ -65,17 +68,49 @@ with col5:
         step=1
         )
 
-prefs = [education, health, safety, transportation, environment]
+logger.info(f"var_01 = {education}")
+logger.info(f"var_02 = {health}")
+logger.info(f"var_03 = {safety}")
+logger.info(f"var_04 = {transportation}")
+logger.info(f"var_05 = {environment}")
+
+if st.button("Save Preferences", type="primary", use_container_width=True):
+    results = requests.get(f"http://web-api:4000/cosine_similarity/{education}/{health}{safety}/{transportation}{environment}")
+    top_country = results[0]
+    json_results = results.json()
+    logger.info(f"Top country based on preferences: {top_country}")
 
 
-if st.button('Save Preferences', type='primary', use_container_width=True):
-    preferences = {
-        "Education": education,
-        "Health": health,
-        "Safety": safety,
-        "Transportation": transportation,
-        "Environment": environment
-    }
+    pref_data = {
+        "user_ID": st.session_state['user_id'],
+        "top_country": top_country,
+        "factorID_1": 1,
+        "weight1": education,
+        "factorID_2": 2,
+        "weight2": health,
+        "factorID_3": 3,
+        "weight3": safety,
+        "factorID_4": 4,
+        "weight4": transportation,
+        "factorID_5": 5,
+        "weight5": environment
+        }
+
+    try:
+        # Send POST request to API
+        response = requests.post(API_URL, json=pref_data)
+
+        if response.status_code == 201:
+            st.success("Preferences saved successfully!")
+        else:
+            st.error(
+                f"Failed to save preferences: {response.json().get('error', 'Unknown error')}"
+            )
+
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error connecting to the API: {str(e)}")
+        st.info("Please ensure the API server is running")
+
 
 if st.button('Compare Preference History', type='primary', use_container_width=True):
     st.switch_page('pages/03_Past_Prefs.py')
