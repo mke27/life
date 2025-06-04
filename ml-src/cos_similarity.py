@@ -15,7 +15,7 @@ recent = (df_all_years.year == 2022)
 df = df_all_years[recent]
 
 # healthcare, education, safety, environment, infrastructure -> mock input
-input = np.array([0, 0, 0, 0, 0]) # NOTE!!! REVERSE SIGMOID THE INPUTS FOR REAL INPUTS
+input = np.array([0, 0, 0, 0, 0])
 
 def inv_sigmoid(value):
     """ returns the inverse sigmoid of the input. If the input is 0 or 1, rebounds the sigmoid to -3 or 3
@@ -31,33 +31,37 @@ def inv_sigmoid(value):
 
     return np.log(value) - np.log(1-value)
 
-inv_sig_input = np.array(list(map(inv_sigmoid, input)))
-
-# makes a list of each country with that countries vector inside
-# country_vector = [np.array(df.iloc[row, 0], 
-#                            df.iloc[row, 1], 
-#                            df.iloc[row, 2], 
-#                            df.iloc[row, 3]) for row in range(len(df))]
 
 
-cos_scores = []
+def cosine_similarity(df, input_vector):
+    """ returns a sorted dataframe of countries and their cosine similarity scores compared to the input vector.
+        Args:
+            df (pandas DataFrame): dataframe of all country's most recent data for all five features.
+            input_vector (numpy.array): array of the input of the sliders in the order healthcare, education, safety, environment, infrastructure.
+        Returns:
+            sorted_df_scores (pandas DataFrame): a sorted dataframe of countries and their cosine similarity scores compared to the input vector.
+    """
+    cos_scores = []
 
-for country in range(len(df)):
-    temp_vector = np.array([df.iloc[country, 2], 
-                           df.iloc[country, 3], 
-                           df.iloc[country, 4], 
-                           df.iloc[country, 5],
-                           df.iloc[country, 6]])
-    
-    cos_similarity = np.dot(inv_sig_input, temp_vector) / (np.linalg.norm(inv_sig_input) * np.linalg.norm(temp_vector))
+    inv_sig_input = np.array(list(map(inv_sigmoid, input_vector)))
 
-    cos_scores.append(cos_similarity)
+    for country in range(len(df)):
+        temp_vector = np.array([df.iloc[country, 2], 
+                            df.iloc[country, 3], 
+                            df.iloc[country, 4], 
+                            df.iloc[country, 5],
+                            df.iloc[country, 6]])
+        
+        cos_similarity = np.dot(inv_sig_input, temp_vector) / (np.linalg.norm(inv_sig_input) * np.linalg.norm(temp_vector))
 
-dict_scores = {'Country_input': df.country,
-            'similarity': cos_scores}
+        cos_scores.append(cos_similarity)
 
-df_scores = pd.DataFrame(dict_scores)
+    dict_scores = {'Country_input': df.country,
+                'similarity': cos_scores}
 
-sorted_df_scores = df_scores.sort_values('similarity', ascending = False)
+    df_scores = pd.DataFrame(dict_scores)
 
-print(sorted_df_scores)
+    sorted_df_scores = df_scores.sort_values('similarity', ascending = False)
+    return sorted_df_scores
+
+print(cosine_similarity(df, input))
