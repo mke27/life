@@ -9,6 +9,7 @@ from flask import (
 )
 from backend.db_connection import db 
 from mysql.connector import Error
+
 from backend.ml_models import model01
 
 
@@ -85,7 +86,7 @@ def get_pred_scores_by_country(country_id):
         data = request.get_json()
 
         cursor = db.get_db().cursor()
-        cursor.execute("SELECT * FROM WorldNGOs WHERE NGO_ID = %s", (ngo_id,))
+        cursor.execute("SELECT * FROM WorldNGOs WHERE NGO_ID = %s", (country_id,))
         if not cursor.fetchone():
             return jsonify({"error": "NGO not found"}), 404
 
@@ -113,7 +114,17 @@ def get_pred_scores_by_country(country_id):
     except Error as e:
         return jsonify({"error": str(e)}), 500
 
+@grace.route("/universities/<int:country_id>", methods=["GET"])
+def get_unis_by_country(country_id):
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("SELECT * FROM Universities WHERE Country_ID = %s", (country_id,))
+        universities = cursor.fetchall()
+        cursor.close()
 
+        return jsonify(universities), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @grace.route("/preferences", methods=["POST"])
@@ -127,8 +138,8 @@ def create_preference():
         cursor = db.get_db().cursor()
         query = """
             INSERT INTO Preferences (user_ID, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
-            factorID_4, weight4, factorID_5, weight5)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            factorID_4, weight4)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(query, (
             data.get('user_ID'),
@@ -140,9 +151,7 @@ def create_preference():
             data.get('factorID_3'),
             data.get('weight3'),
             data.get('factorID_4'),
-            data.get('weight4'),
-            data.get('factorID_5'),
-            data.get('weight5')
+            data.get('weight4')
         ))
         db.get_db().commit()
         cursor.close()
@@ -155,22 +164,21 @@ def create_preference():
 
 
 model = Blueprint("model", __name__)
-@model.route("/cosine_similarity/<var_01>/<var_02>/<var_03>/<var_04>/<var_05>", methods=["GET"])
-def get_cosine_similarity():
+@model.route("/predict/<education>/<health>/<safety>/<environment>", methods=["GET"])
+def get_predict(education, health, safety, environment):
     try:
-        current_app.logger.info("GET /cosine_similarity handler")
+        current_app.logger.info("GET /predict handler")
         
-        similarity = model02.cosine_similarity(var_01, var_02, var_03, var_04, var_05)
+        similarity = model01.predict(health, education, safety, environment)
         current_app.logger.info(f"Cosine similarity value returned is {similarity}")
         
         response_data = {
-            "cosine_similarity": similarity,
+            "predict": similarity,
             "input_variables": {
-                "var01": var_01,
-                "var02": var_02,
-                "var03": var_03,
-                "var04": var_04,
-                "var05": var_05
+                "education": education,
+                "health": health,
+                "safety": safety,
+                "environment": environment
             }
         }
 
