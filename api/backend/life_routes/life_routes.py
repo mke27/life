@@ -85,7 +85,7 @@ def get_pred_scores_by_country(country_id):
         data = request.get_json()
 
         cursor = db.get_db().cursor()
-        cursor.execute("SELECT * FROM WorldNGOs WHERE NGO_ID = %s", (ngo_id,))
+        cursor.execute("SELECT * FROM WorldNGOs WHERE NGO_ID = %s", (country_id,))
         if not cursor.fetchone():
             return jsonify({"error": "NGO not found"}), 404
 
@@ -113,7 +113,17 @@ def get_pred_scores_by_country(country_id):
     except Error as e:
         return jsonify({"error": str(e)}), 500
 
+@grace.route("/universities/<int:country_id>", methods=["GET"])
+def get_unis_by_country(country_id):
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("SELECT * FROM Universities WHERE Country_ID = %s", (country_id,))
+        universities = cursor.fetchall()
+        cursor.close()
 
+        return jsonify(universities), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @grace.route("/preferences", methods=["POST"])
@@ -155,12 +165,12 @@ def create_preference():
 
 
 model = Blueprint("model", __name__)
-@model.route("/cosine_similarity/<var_01>/<var_02>/<var_03>/<var_04>/<var_05>", methods=["GET"])
+@model.route("/cosine_similarity/<var_01>/<var_02>/<var_03>/<var_04>", methods=["GET"])
 def get_cosine_similarity():
     try:
         current_app.logger.info("GET /cosine_similarity handler")
         
-        similarity = model02.cosine_similarity(var_01, var_02, var_03, var_04, var_05)
+        similarity = model02.cosine_similarity(var_01, var_02, var_03, var_04)
         current_app.logger.info(f"Cosine similarity value returned is {similarity}")
         
         response_data = {
@@ -170,7 +180,6 @@ def get_cosine_similarity():
                 "var02": var_02,
                 "var03": var_03,
                 "var04": var_04,
-                "var05": var_05
             }
         }
 
