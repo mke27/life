@@ -9,7 +9,7 @@ from flask import (
 )
 from backend.db_connection import db 
 from mysql.connector import Error
-from backend.ml_models import model02, model03
+from backend.ml_models import model01, model02, model03
 
 
 users = Blueprint("users", __name__)
@@ -137,8 +137,8 @@ def create_preference():
         cursor = db.get_db().cursor()
         query = """
             INSERT INTO Preferences (user_ID, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
-            factorID_4, weight4, factorID_5, weight5)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            factorID_4, weight4)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(query, (
             data.get('user_ID'),
@@ -150,9 +150,7 @@ def create_preference():
             data.get('factorID_3'),
             data.get('weight3'),
             data.get('factorID_4'),
-            data.get('weight4'),
-            data.get('factorID_5'),
-            data.get('weight5')
+            data.get('weight4')
         ))
         db.get_db().commit()
         cursor.close()
@@ -170,16 +168,16 @@ def get_cosine_similarity():
     try:
         current_app.logger.info("GET /cosine_similarity handler")
         
-        similarity = model02.cosine_similarity(var_01, var_02, var_03, var_04)
+        similarity = model01.cosine_similarity(education, health, safety, environment)
         current_app.logger.info(f"Cosine similarity value returned is {similarity}")
         
         response_data = {
             "cosine_similarity": similarity,
             "input_variables": {
-                "var01": var_01,
-                "var02": var_02,
-                "var03": var_03,
-                "var04": var_04,
+                "var01": education,
+                "var02": health,
+                "var03": safety,
+                "var04": environment
             }
         }
 
