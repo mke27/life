@@ -17,48 +17,48 @@ def AboutPageNav():
 #### ------------------------ Examples for Role of student ------------------------
 def StudentHomeNav():
     st.sidebar.page_link(
-        "pages/00_University_Student_Home.py", label="University Student Home", icon="👤"
+        "pages/00_University_Student_Home.py", label="University Student Home", icon="👩‍🎓"
     )
 
 
 def StudentMapNav():
     st.sidebar.page_link(
-        "pages/01_Student_Map.py", label="Country Recommendation Map", icon="🏦"
+        "pages/01_Student_Map.py", label="Country Recommendation Map", icon="🗺️"
     )
 
 
 def QoLChartNav():
-    st.sidebar.page_link("pages/02_QoL_Chart.py", label="QoL Chart", icon="🗺️")
+    st.sidebar.page_link("pages/02_QoL_Chart.py", label="QoL Chart", icon="📈")
 
 
 ## ------------------------ Examples for Role of policymaker ------------------------
 def PolicymakerNav():
-    st.sidebar.page_link("pages/10_Policymaker_Home.py", label="Policymaker Home", icon="🛜")
+    st.sidebar.page_link("pages/10_Policymaker_Home.py", label="Policymaker Home", icon="👨‍💼")
 
 
 def PolicyNav():
     st.sidebar.page_link(
-        "pages/11_Policy_Implementation.py", label="Policy Implementation", icon="📈"
+        "pages/11_Policy_Implementation.py", label="Policy Implementation", icon="📰"
     )
 
 
 def SimilarityNav():
     st.sidebar.page_link(
-        "pages/12_Similar_Countries.py", label="Similar Countries", icon="🌺"
+        "pages/12_Similar_Countries.py", label="Similar Countries", icon="🗺️"
     )
 
 #### ------------------------ Activist Role ------------------------
 def ActivistHomeNav():
-    st.sidebar.page_link("pages/20_Activist_Home.py", label="Activist Home", icon="🖥️")
+    st.sidebar.page_link("pages/20_Activist_Home.py", label="Activist Home", icon="👩‍💼")
 
 def ExpansionNav():
-    st.sidebar.page_link("pages/21_Expansion_Map.py", label="Expansion Map", icon="🖥️")
+    st.sidebar.page_link("pages/21_Expansion_Map.py", label="Expansion Map", icon="🗺️")
 
 def QoLChangeNav():
-    st.sidebar.page_link("pages/22_QoL_Change.py", label="QoL Change", icon="🖥️")
+    st.sidebar.page_link("pages/22_QoL_Change.py", label="QoL Change", icon="📈")
 
 def CurrentOrgsNav():
-    st.sidebar.page_link("pages/23_Current_Orgs.py", label="Current Organizations", icon="🖥️")
+    st.sidebar.page_link("pages/23_Current_Orgs.py", label="Current Organizations", icon="🏢")
 
 # --------------------------------Links Function -----------------------------------------------
 def SideBarLinks(show_home=False):

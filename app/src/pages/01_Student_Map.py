@@ -18,49 +18,64 @@ st.header('Country Recommendations Map')
 st.write(f"### Hi, {st.session_state['first_name']}.")
 st.write("Set your preferences below to see the best country recommendations for you.")
 
-education = st.slider(
-    label="Education",
-    min_value=0,
-    max_value=100,
-    value=50,
-    step=1
-    )
-health = st.slider(
-    label="Health",
-    min_value=0,
-    max_value=100,
-    value=50,
-    step=1
-    )
-safety = st.slider(
-    label="Safety",
-    min_value=0,
-    max_value=100,
-    value=50,
-    step=1
-    )
-transportation = st.slider(
-    label="Transportation",
-    min_value=0,
-    max_value=100,
-    value=50,
-    step=1
-    )
-environment = st.slider(
-    label="Environment",
-    min_value=0,
-    max_value=100,
-    value=50,
-    step=1
-    )
-
-prefs = [education, health, safety, transportation, environment]
-
 df = pd.DataFrame()
 fig = px.choropleth(df, scope='europe')
 st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
 
-#if st.button('Save Preferences', 
-             #type='primary',
-             #use_container_width=True):
-  # save prefs to database?
+col1, col2, col3, col4, col5 = st.columns(5)
+
+with col1:
+    education = st.slider(
+        label="Education",
+        min_value=0,
+        max_value=100,
+        value=50,
+        step=1
+        )
+with col2:
+    health = st.slider(
+        label="Health",
+        min_value=0,
+        max_value=100,
+        value=50,
+        step=1
+        )
+with col3:
+    safety = st.slider(
+        label="Safety",
+        min_value=0,
+        max_value=100,
+        value=50,
+        step=1
+        )
+with col4:
+    transportation = st.slider(
+        label="Transportation",
+        min_value=0,
+        max_value=100,
+        value=50,
+        step=1
+        )
+with col5:
+    environment = st.slider(
+        label="Environment",
+        min_value=0,
+        max_value=100,
+        value=50,
+        step=1
+        )
+
+prefs = [education, health, safety, transportation, environment]
+
+
+if st.button('Save Preferences', type='primary', use_container_width=True):
+    preferences = {
+        "Education": education,
+        "Health": health,
+        "Safety": safety,
+        "Transportation": transportation,
+        "Environment": environment
+    }
+
+if st.button('Compare Preference History', type='primary', use_container_width=True):
+    st.switch_page('pages/03_Past_Prefs.py')
