@@ -163,12 +163,12 @@ def create_preference():
 
 
 model = Blueprint("model", __name__)
-@model.route("/cosine_similarity/<var_01>/<var_02>/<var_03>/<var_04>", methods=["GET"])
-def get_cosine_similarity():
+@model.route("/predict/<education>/<health>/<safety>/<environment>", methods=["GET"])
+def get_cosine_similarity(education, health, safety, environment):
     try:
         current_app.logger.info("GET /cosine_similarity handler")
         
-        similarity = model01.cosine_similarity(education, health, safety, environment)
+        similarity = model01.predict(education, health, safety, environment)
         current_app.logger.info(f"Cosine similarity value returned is {similarity}")
         
         response_data = {

@@ -60,13 +60,13 @@ with col4:
         step=1
         )
 
-logger.info(f"var_01 = {education}")
-logger.info(f"var_02 = {health}")
-logger.info(f"var_03 = {safety}")
-logger.info(f"var_04 = {environment}")
+logger.info(f"education = {education}")
+logger.info(f"health = {health}")
+logger.info(f"safety = {safety}")
+logger.info(f"environment = {environment}")
 
 if st.button("Save Preferences", type="primary", use_container_width=True):
-    results = requests.get(f"http://web-api:4000/cosine_similarity/{education}/{health}/{safety}/{environment}")
+    results = requests.get(f"http://web-api:4000/predict/{education}/{health}/{safety}/{environment}")
     top_country = results[0]
     json_results = results.json()
     logger.info(f"Top country based on preferences: {top_country}")
