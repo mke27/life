@@ -81,21 +81,7 @@ def predict(health_score, education_score, safety_score, environment_score):
   vector = np.array(health_score, education_score, safety_score, environment_score)
 
   vector/np.sum(vector)
-     
 
   similarity_table = cosine_similarity(df, vector)
-  
-  # turn the values from the database into a numpy array
-  # params_array = np.array(list(map(float, params[1:-1].split(','))))
-  # current_app.logger.info(f'params array = {params_array}')
-
-  # turn the variables sent from the UI into a numpy array
-  #input_array = np.array([1.0, float(var01), float(var02)])
-  
-  # calculate the dot product (since this is a fake regression)
-  # prediction = np.dot(params_array, input_array)
 
   return similarity_table
-
-# just remove infrastructure
-# 10 years, no 2013.
