@@ -70,30 +70,30 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
     st.write("Status code:", results.status_code)
     st.write("Response text:", results.text)
 
-    try:
-        #JSONifying twice?
-        json_results = results.json()  # This should be a list of dicts
-    except ValueError:
-        st.error("Could not parse JSON from response.")
-        st.stop()
+    # try:
+    #     #JSONifying twice?
+    #     json_results = results.json()  # This should be a list of dicts
+    # except ValueError:
+    #     st.error("Could not parse JSON from response.")
+    #     st.stop()
 
     if results.status_code != 200:
-        st.error(f"API returned error: {json_results.get('error', 'Unknown error')}")
+        st.error(f"API returned error: {results.get('error', 'Unknown error')}")
         st.stop()
 
-    if not isinstance(json_results, list) or len(json_results) == 0:
+    if not isinstance(results, dict):
         st.error("Unexpected response format or empty result list.")
         st.stop()
 
     try:
-        first_result = json_results[0]  # first dict in the list
+        first_result = results[0]  # first dict in the list
         top_country = first_result.get('Country_input', 'Unknown')
         similarity = first_result.get('similarity', None)
         st.write(f"Top country based on preferences: {top_country}")
         st.write(f"Similarity score: {similarity}")
     except Exception as e:
         st.error(f"Error reading prediction results: {str(e)}")
-        st.write("Raw JSON:", json_results)
+        st.write("Raw JSON:", results)
         st.stop()
 
     pref_data = {

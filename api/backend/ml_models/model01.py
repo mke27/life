@@ -32,19 +32,24 @@ def cosine_similarity(df, input_vector):
     """
     cos_scores = []
 
+    for factor in range(len(input_vector)):
+       input_vector[factor] = input_vector[factor]/np.sum(input_vector)
+
     inv_sig_input = np.array(list(map(inv_sigmoid, input_vector)))
+
+    current_app.logger.info(f"sigmoided vector = {inv_sig_input}, the type is {type(df)}")
 
     for country in range(len(df)):
         temp_vector = np.array([df.iloc[country, 1],
                             df.iloc[country, 2],
                             df.iloc[country, 3],
                             df.iloc[country, 4]])
-        temp_vector = temp_vector/np.sum(temp_vector)
+        #temp_vector = temp_vector/np.sum(temp_vector)
         cos_similarity = np.dot(inv_sig_input, temp_vector) / (np.linalg.norm(inv_sig_input) * np.linalg.norm(temp_vector))
 
         cos_scores.append(cos_similarity)
 
-    dict_scores = {'Country_input': df.country,
+    dict_scores = {'Country_input': df['country_name'],
                 'similarity': cos_scores}
 
     df_scores = pd.DataFrame(dict_scores)
@@ -72,16 +77,19 @@ def predict(health_score, education_score, safety_score, environment_score):
   # get a database cursor 
   cursor = db.get_db().cursor()
   # get the model params from the database
-  query = 'SELECT country_name, health_score, education_score, safety_score, environment_score FROM ML_Score ' \
-  'WHERE score_year = 2022'
+  query = 'SELECT country_name, health_score, education_score, safety_score, environment_score FROM ML_Score WHERE score_year = 2022'
   cursor.execute(query)
   return_val = cursor.fetchall()
 
-  current_app.logger.info(f"Tfetch = {return_val}, the type is {type(return_val)}")
 
-  df = pd.DataFrame(return_val)
 
-  vector = np.array([health_score, education_score, safety_score, environment_score])
+  df = pd.DataFrame.from_dict(return_val)
+
+  current_app.logger.info(f"Tfetch = {df}, the type is {type(df)}")
+  #put the score between 0 and 1
+  vector = np.array([health_score, education_score, safety_score, environment_score])/100
+
+  current_app.logger.info(f"input vector = {vector}, the type is {type(vector)}")
 
   similarity_table = cosine_similarity(df, vector)
 
