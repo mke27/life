@@ -8,6 +8,8 @@ import requests
 
 st.set_page_config(layout = 'wide')
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 st.title('Similar Country and Policy Implementation')
 col1, col2 = st.columns(2)

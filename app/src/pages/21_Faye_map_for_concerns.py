@@ -8,6 +8,8 @@ df = pd.DataFrame()
 fig = px.choropleth(df, scope='europe')
 
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 st.title("Map Of Europe")
 

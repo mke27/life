@@ -8,6 +8,8 @@ from urllib.error import URLError
 from modules.nav import SideBarLinks
 
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 # set up the page
 st.markdown("# Mapping Demo")

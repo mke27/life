@@ -9,6 +9,8 @@ from modules.nav import SideBarLinks
 import requests
 
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 # add the logo
 add_logo("assets/logo.png", height=400)

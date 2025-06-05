@@ -27,6 +27,8 @@ st.session_state['authenticated'] = False
 # IMPORTANT: ensure src/.streamlit/config.toml sets
 # showSidebarNavigation = false in the [client] section
 SideBarLinks(show_home=True)
+from modules.style import style_sidebar
+style_sidebar()
 
 # ***************************************************
 #    The major content of this page
