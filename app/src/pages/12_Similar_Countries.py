@@ -7,4 +7,29 @@ from modules.nav import SideBarLinks
 
 SideBarLinks()
 
-st.header('Update Later')
+st.header('Similar Countries')
+API_URL = "http://web-api:4000/country/countries"
+response = requests.get(API_URL)
+if(response.status_code == 200):
+    countries = response.json()
+
+st.subheader("Choose Country")
+
+option = st.selectbox(
+    label = "",
+    options=countries
+)
+
+if "show_sim_country" not in st.session_state:
+    st.session_state.show_sim_country = False
+
+if "prev_country" not in st.session_state or st.session_state.prev_country != option:
+    st.session_state.show_sim_country = False
+    st.session_state.prev_country = option
+
+if st.button(f"Country most similar to {option}:"):
+    st.session_state.show_sim_country = True
+    
+if st.session_state.show_sim_country:
+    #get the most similar country based on country --- route
+    st.write('Belgium')

@@ -19,7 +19,7 @@ if st.button('View Recent Policy Implementation',
              use_container_width=True):
   st.switch_page('pages/11_Policy_Implementation.py')
 
-if st.button('Quality of Life Score Rankings', 
+if st.button('Similar Countries', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/12_Similar_Countries.py')
