@@ -54,10 +54,10 @@ CREATE TABLE IF NOT EXISTS User
 CREATE TABLE IF NOT EXISTS Organization
 (
     org_ID      INT AUTO_INCREMENT PRIMARY KEY,
-    org_name    VARCHAR(30) NOT NULL,
+    org_name    VARCHAR(40) NOT NULL,
     org_country INT UNSIGNED NOT NULL,
     org_factor  INT UNSIGNED NOT NULL,
-    org_url     VARCHAR(100),
+    org_url     VARCHAR(1500),
     FOREIGN KEY (org_country) REFERENCES Country (country_ID),
     FOREIGN KEY (org_factor) REFERENCES Factor (factor_ID)
 );
@@ -161,6 +161,35 @@ CREATE TABLE IF NOT EXISTS ML_Score
         
 
 INSERT INTO ML_Country 
+    VALUES(1,"Austria"),
+          (2,"Belgium"), 
+          (3,"Bulgaria"), 
+          (4,"Croatia"), 
+          (5,"Cyprus"),
+          (6,"Czechia"), 
+          (7,"Denmark"), 
+          (8,"Estonia"), 
+          (9,"Finland"), 
+          (10,"France"), 
+          (11,"Germany"), 
+          (12,"Greece"),
+          (13,"Hungary"), 
+          (14,"Ireland"), 
+          (15,"Italy"), 
+          (16,"Latvia"), 
+          (17,"Lithuania"), 
+          (18,"Luxembourg"), 
+          (19,"Malta"),
+          (20,"Netherlands"),
+          (21,"Poland"), 
+          (22,"Portugal"),
+          (23,"Romania"), 
+          (24,"Slovakia"), 
+          (25,"Slovenia"), 
+          (26,"Spain"), 
+          (27,"Sweden");
+
+INSERT INTO Country 
     VALUES(1,"Austria"),
           (2,"Belgium"), 
           (3,"Bulgaria"), 
