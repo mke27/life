@@ -9,7 +9,6 @@ from flask import (
 )
 from backend.db_connection import db 
 from mysql.connector import Error
-
 from backend.ml_models import model01
 
 
@@ -79,46 +78,48 @@ def get_all_pred_scores():
     except Error as e:
         current_app.logger.error(f'Database error in get_all_pred_scores: {str(e)}')
         return jsonify({"error": str(e)}), 500
+
+@grace.route("/preferences/by_user/<int:user_id>", methods=["GET"])
+def get_preferences_by_user(user_id):
+    try:
+        cursor = db.get_db().cursor(dictionary=True)
+        cursor.execute("""
+            SELECT pref_ID, pref_date, top_country 
+            FROM Preference 
+            WHERE user_ID = %s
+            ORDER BY pref_date DESC
+        """, (user_id,))
+        preferences = cursor.fetchall()
+        cursor.close()
+
+        return jsonify(preferences), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
     
 @grace.route("/pred_scores/<int:country_id>", methods=["GET"])
 def get_pred_scores_by_country(country_id):
     try:
-        data = request.get_json()
-
-        cursor = db.get_db().cursor()
-        cursor.execute("SELECT * FROM WorldNGOs WHERE NGO_ID = %s", (country_id,))
-        if not cursor.fetchone():
-            return jsonify({"error": "NGO not found"}), 404
-
-        # Build update query dynamically based on provided fields
-        update_fields = []
-        params = []
-        allowed_fields = ["Name", "Country", "Founding_Year", "Focus_Area", "Website"]
-
-        for field in allowed_fields:
-            if field in data:
-                update_fields.append(f"{field} = %s")
-                params.append(data[field])
-
-        if not update_fields:
-            return jsonify({"error": "No valid fields to update"}), 400
-
-        params.append(ngo_id)
-        query = f"UPDATE WorldNGOs SET {', '.join(update_fields)} WHERE NGO_ID = %s"
-
-        cursor.execute(query, params)
-        db.get_db().commit()
+        cursor = db.get_db().cursor(dictionary=True)
+        cursor.execute("""
+            SELECT factor_ID, pred_score 
+            FROM Predicted_Score 
+            WHERE country_ID = %s
+        """, (country_id,))
+        scores = cursor.fetchall()
         cursor.close()
 
-        return jsonify({"message": "NGO updated successfully"}), 200
+        if scores:
+            return jsonify(scores), 200
+        else:
+            return jsonify({"error": "No scores found for country"}), 404
     except Error as e:
         return jsonify({"error": str(e)}), 500
 
-@grace.route("/universities/<int:country_id>", methods=["GET"])
+@grace.route("/university/<int:country_id>", methods=["GET"])
 def get_unis_by_country(country_id):
     try:
         cursor = db.get_db().cursor()
-        cursor.execute("SELECT * FROM Universities WHERE Country_ID = %s", (country_id,))
+        cursor.execute("SELECT * FROM University WHERE Country_ID = %s", (country_id,))
         universities = cursor.fetchall()
         cursor.close()
 
@@ -127,7 +128,7 @@ def get_unis_by_country(country_id):
         return jsonify({"error": str(e)}), 500
 
 
-@grace.route("/preferences", methods=["POST"])
+@grace.route("/preference", methods=["POST"])
 def create_preference():
     try:
         current_app.logger.info('Starting create_preference request')
@@ -137,7 +138,7 @@ def create_preference():
 
         cursor = db.get_db().cursor()
         query = """
-            INSERT INTO Preferences (user_ID, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
+            INSERT INTO Preference (user_ID, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
             factorID_4, weight4)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
@@ -161,6 +162,27 @@ def create_preference():
     except Error as e:
         current_app.logger.error(f'Database error in create_preference: {str(e)}')
         return jsonify({"error": str(e)}), 500
+    
+@grace.route("/preference/<int:pref_id>/top_country", methods=["GET"])
+def get_pref_topcountry(pref_id):
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("""
+            SELECT C.country_name 
+            FROM Preference P
+            JOIN Country C ON P.top_country = C.country_ID
+            WHERE P.pref_ID = %s
+        """, (pref_id,))
+        result = cursor.fetchone()
+        cursor.close()
+
+        if result:
+            return jsonify({"top_country": result[0]}), 200
+        else:
+            return jsonify({"error": "Preference not found"}), 404
+
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
 
 
 model = Blueprint("model", __name__)
@@ -169,22 +191,17 @@ def get_predict(education, health, safety, environment):
     try:
         current_app.logger.info("GET /predict handler")
         
+        education = float(education)
+        health = float(health)
+        safety = float(safety)
+        environment = float(environment)
+
         similarity = model01.predict(health, education, safety, environment)
         current_app.logger.info(f"Cosine similarity value returned is {similarity}")
-        
-        response_data = {
-            "predict": similarity,
-            "input_variables": {
-                "education": education,
-                "health": health,
-                "safety": safety,
-                "environment": environment
-            }
-        }
 
-        response = make_response(jsonify(response_data))
-        response.status_code = 200
-        return response
+        response_data = similarity.to_dict(orient='records')
+
+        return jsonify(response_data), 200
 
     except Exception as e:
         response = make_response(
@@ -192,6 +209,7 @@ def get_predict(education, health, safety, environment):
         )
         response.status_code = 500
         return response
+
 
 @model.route("/pred_scores/<var_01>/<var_02>", methods=["GET"])
 def get_pred_scores(var_01, var_02):

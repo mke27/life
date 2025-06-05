@@ -66,11 +66,34 @@ logger.info(f"safety = {safety}")
 logger.info(f"environment = {environment}")
 
 if st.button("Save Preferences", type="primary", use_container_width=True):
-    results = requests.get(f"http://localhost:4000/predict/{education}/{health}/{safety}/{environment}")
-    top_country = results[0]
-    json_results = results.json()
-    logger.info(f"Top country based on preferences: {top_country}")
+    results = requests.get(f"http://web-api:4000/model/predict/{education}/{health}/{safety}/{environment}")
+    st.write("Status code:", results.status_code)
+    st.write("Response text:", results.text)
 
+    try:
+        json_results = results.json()  # This should be a list of dicts
+    except ValueError:
+        st.error("Could not parse JSON from response.")
+        st.stop()
+
+    if results.status_code != 200:
+        st.error(f"API returned error: {json_results.get('error', 'Unknown error')}")
+        st.stop()
+
+    if not isinstance(json_results, list) or len(json_results) == 0:
+        st.error("Unexpected response format or empty result list.")
+        st.stop()
+
+    try:
+        first_result = json_results[0]  # first dict in the list
+        top_country = first_result.get('Country_input', 'Unknown')
+        similarity = first_result.get('similarity', None)
+        st.write(f"Top country based on preferences: {top_country}")
+        st.write(f"Similarity score: {similarity}")
+    except Exception as e:
+        st.error(f"Error reading prediction results: {str(e)}")
+        st.write("Raw JSON:", json_results)
+        st.stop()
 
     pref_data = {
         "user_ID": st.session_state['user_id'],
@@ -82,24 +105,22 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         "factorID_3": 3,
         "weight3": safety,
         "factorID_4": 4,
-        "weight5": environment
-        }
+        "weight4": environment
+    }
 
     try:
-        # Send POST request to API
+        # Send POST request to API to save preferences
         response = requests.post(API_URL, json=pref_data)
 
         if response.status_code == 201:
             st.success("Preferences saved successfully!")
         else:
-            st.error(
-                f"Failed to save preferences: {response.json().get('error', 'Unknown error')}"
-            )
+            err_msg = response.json().get('error', 'Unknown error')
+            st.error(f"Failed to save preferences: {err_msg}")
 
     except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to the API: {str(e)}")
         st.info("Please ensure the API server is running")
-
 
 if st.button('Compare Preference History', type='primary', use_container_width=True):
     st.switch_page('pages/03_Past_Prefs.py')

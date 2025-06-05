@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS ML_Score
 (
     score_ID  INT AUTO_INCREMENT PRIMARY KEY,
     country_ID INT UNSIGNED NOT NULL,
-    country_name INT UNSIGNED,
+    country_name VARCHAR(100) NOT NULL,
     score_year       INT NOT NULL,
     health_score      FLOAT NOT NULL,
     education_score   FLOAT NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS ML_Score
 
         
 
-INSERT INTO Country 
+INSERT INTO ML_Country 
     VALUES(1,"Austria"),
           (2,"Belgium"), 
           (3,"Bulgaria"), 
@@ -187,6 +187,17 @@ INSERT INTO Country
           (22,"Slovenia"), 
           (23,"Spain"), 
           (24,"Sweden");
+
+INSERT INTO ML_Score (
+    country_ID, country_name, score_year, 
+    health_score, education_score, safety_score, 
+    environment_score, qol_score
+)
+VALUES (
+    1, "Austria", 2024,
+    0.8, 0.7, 0.9,
+    0.75, 0.8
+);
 
 -- INSERT INTO ML_Score VALUES(1,"Austria",2011,-0.411756524102414,-1.3915916393856,-0.441433246820812,0.103147960744607,-0.0847513689634486,1.07512469036187);
 -- INSERT INTO ML_Score VALUES(1,"Austria",2012,-0.0726371764091414,-1.3042268315115,-0.446470898289643,0.07707122909569,-0.0506601362368999,1.26165608092089);
