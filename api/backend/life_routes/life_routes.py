@@ -16,28 +16,61 @@ users = Blueprint("users", __name__)
 @users.route("/users/<int:user_id>", methods=["GET"])
 def get_user_by_id(user_id):
     try:
-        current_app.logger.info(f'Starting get_user_by_id request for user_id={user_id}')
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
 
         query = """
-            SELECT u.user_ID, u.user_name, u.country_ID, r.role_name
+            SELECT u.user_ID, u.user_name, u.user_country, r.role_name
             FROM User u
             JOIN User_Role r ON u.role_ID = r.role_ID
             WHERE u.user_ID = %s
         """
         cursor.execute(query, (user_id,))
         user = cursor.fetchone()
-        cursor.close()
 
-        if user:
-            return jsonify(user), 200
-        else:
+        if not user:
+            cursor.close()
             return jsonify({"error": "User not found"}), 404
+        cursor.close()
+        return jsonify(user), 200
 
     except Error as e:
         current_app.logger.error(f'Database error in get_user_by_id: {str(e)}')
         return jsonify({"error": str(e)}), 500
     
+@users.route('/users/remove/<int:user_id>', methods=["DELETE"])
+def remove_user(user_id):
+    try:
+        cursor = db.get_db().cursor()
+        query = 'DELETE FROM User WHERE user_ID = %s'
+        cursor.execute(query, (user_id,))
+        
+        if cursor.rowcount == 0:
+            cursor.close()
+            return jsonify({'error': 'User not found'}), 404
+
+        db.get_db().commit()
+        cursor.close()
+        return jsonify({'message': f'User {user_id} deleted successfully'}), 200
+
+    except Error as e:
+        return jsonify({'error': str(e)}), 500
+
+  
+@users.route('/users/name', methods=['PUT'])
+def update_name():
+    current_app.logger.info('PUT /users/name route')
+    user_info = request.json
+    user_id = user_info['user_id']
+    user_name = user_info['user_name']
+
+    query = 'UPDATE User SET user_name = %s WHERE user_id = %s'
+    data = (user_name, user_id)
+    cursor = db.get_db().cursor()
+    cursor.execute(query, data)
+    db.get_db().commit()
+    cursor.close()
+
+    return jsonify({'message': 'User name updated successfully'}), 200
 
 grace = Blueprint("grace", __name__)
 @grace.route("/pred_scores", methods=["GET"])
@@ -138,12 +171,13 @@ def create_preference():
 
         cursor = db.get_db().cursor()
         query = """
-            INSERT INTO Preference (user_ID, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
+            INSERT INTO Preference (user_ID, pref_date, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
             factorID_4, weight4)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(query, (
             data.get('user_ID'),
+            data.get('pref_date'),
             data.get('top_country'),
             data.get('factorID_1'),
             data.get('weight1'),
@@ -199,13 +233,13 @@ def get_predict(education, health, safety, environment):
         similarity = model01.predict(health, education, safety, environment)
         current_app.logger.info(f"Cosine similarity value returned is {similarity}")
 
-        response_data = similarity.to_dict(orient='records')
+        response_data = similarity.to_dict()
 
         return jsonify(response_data), 200
 
     except Exception as e:
         response = make_response(
-            jsonify({"error": "Error processing prediction request"})
+            jsonify({"error": "Error processing prediction request"}, {'e':e})
         )
         response.status_code = 500
         return response
@@ -239,14 +273,66 @@ country = Blueprint("country", __name__)
 @country.route("/countries", methods=["GET"])
 def get_countries():
     try:
-        cursor = db.get_db().cursor()  # no dictionary=True because your connector doesn't support it
+        cursor = db.get_db().cursor()
         cursor.execute('SELECT country_name FROM Country')
         rows = cursor.fetchall()
         cursor.close()
 
-        # since rows is a list of dicts, access by key
         countries = [row["country_name"] for row in rows]
 
         return jsonify(countries)
     except Error as e:
         return jsonify({"error": str(e)}), 500    
+    
+@country.route("/country", methods=["GET"])
+def get_country_ID():
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute('SELECT country_ID, country_name FROM Country')
+        rows = cursor.fetchall()
+        cursor.close()
+
+        countries = [{"country_name": row["country_name"], "country_ID": row["country_ID"]} for row in rows]
+
+        return jsonify(countries), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@country.route("/factor", methods=["GET"])
+def get_factor_ID():
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute('SELECT factor_ID, factor_name FROM Factor')
+        rows = cursor.fetchall()
+        cursor.close()
+
+        factors = [{"factor_name": row["factor_name"], "factor_ID": row["factor_ID"]} for row in rows]
+
+        return jsonify(factors), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    
+
+faye = Blueprint("faye", __name__)
+@faye.route("/orgs/<int:country_ID>/<int:factor_ID>", methods=["GET"])
+def get_orgs_by_country_and_factor(country_ID, factor_ID):
+    try:   
+        cursor = db.get_db().cursor()
+        query = """
+            SELECT * FROM Organization
+            WHERE org_country = %s AND org_factor = %s
+        """
+        cursor.execute(query, (country_ID, factor_ID))
+        orgs = cursor.fetchall() 
+        cursor.close()
+    
+        if not orgs:
+            return jsonify({"error": "No organizations found for that factor and country"}), 404
+
+        return jsonify(orgs), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+
+

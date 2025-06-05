@@ -8,6 +8,8 @@ st.set_page_config(layout = 'wide')
 
 # Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 st.title(f"Welcome Policymaker, {st.session_state['first_name']}.")
 st.write('')
@@ -19,7 +21,7 @@ if st.button('View Recent Policy Implementation',
              use_container_width=True):
   st.switch_page('pages/11_Policy_Implementation.py')
 
-if st.button('Quality of Life Score Rankings', 
+if st.button('Similar Countries', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/12_Similar_Countries.py')

@@ -6,13 +6,19 @@ from streamlit_extras.app_logo import add_logo
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
+import json
+from datetime import datetime
 from modules.nav import SideBarLinks
 import requests
 
 # Call the SideBarLinks from the nav module in the modules directory
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 API_URL = "http://web-api:4000/grace/preferences"
+df = pd.DataFrame()
+
 
 # set the header of the page
 st.header('Country Recommendations Map')
@@ -20,10 +26,6 @@ st.header('Country Recommendations Map')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 st.write("Set your preferences below to see the best country recommendations for you.")
-
-df = pd.DataFrame()
-fig = px.choropleth(df, scope='europe')
-st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -67,37 +69,31 @@ logger.info(f"environment = {environment}")
 
 if st.button("Save Preferences", type="primary", use_container_width=True):
     results = requests.get(f"http://web-api:4000/model/predict/{education}/{health}/{safety}/{environment}")
-    st.write("Status code:", results.status_code)
-    st.write("Response text:", results.text)
+    results_json = json.loads(results.text)
+    df = pd.DataFrame.from_dict(results_json)
+    #logger.info(f"{type(results)}")
+    # st.write("Status code:", results.status_code)
+    # st.write(f"Response text: {results.text}, Response text type: {type(results.text)}")
+    # st.write(f"Response text: {df}")
 
-    try:
-        json_results = results.json()  # This should be a list of dicts
-    except ValueError:
-        st.error("Could not parse JSON from response.")
-        st.stop()
+    sorted_df = df.sort_values('similarity')
+
+
+    # try:
+    #     #JSONifying twice?
+    #     json_results = results.json()  # This should be a list of dicts
+    # except ValueError:
+    #     st.error("Could not parse JSON from response.")
+    #     st.stop()
 
     if results.status_code != 200:
-        st.error(f"API returned error: {json_results.get('error', 'Unknown error')}")
-        st.stop()
-
-    if not isinstance(json_results, list) or len(json_results) == 0:
-        st.error("Unexpected response format or empty result list.")
-        st.stop()
-
-    try:
-        first_result = json_results[0]  # first dict in the list
-        top_country = first_result.get('Country_input', 'Unknown')
-        similarity = first_result.get('similarity', None)
-        st.write(f"Top country based on preferences: {top_country}")
-        st.write(f"Similarity score: {similarity}")
-    except Exception as e:
-        st.error(f"Error reading prediction results: {str(e)}")
-        st.write("Raw JSON:", json_results)
+        st.error(f"API returned error: {results.get('error', 'Unknown error')}")
         st.stop()
 
     pref_data = {
-        "user_ID": st.session_state['user_id'],
-        "top_country": top_country,
+        "user_ID": st.session_state["user_id"],
+        "pref_date": datetime.now(), 
+        "top_country": sorted_df.iloc[0, 0],
         "factorID_1": 1,
         "weight1": education,
         "factorID_2": 2,
@@ -106,11 +102,16 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         "weight3": safety,
         "factorID_4": 4,
         "weight4": environment
-    }
+        }
+        
+    #pref_dict = pd.Series.to_dict(pref_data)
+
+    #str_data = json.dumps(pref_data)
+    #json_data = json.loads(str_data)
 
     try:
         # Send POST request to API to save preferences
-        response = requests.post(API_URL, json=pref_data)
+        response = requests.post(API_URL, data=pref_data)
 
         if response.status_code == 201:
             st.success("Preferences saved successfully!")
@@ -124,3 +125,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
 
 if st.button('Compare Preference History', type='primary', use_container_width=True):
     st.switch_page('pages/03_Past_Prefs.py')
+
+if len(df) > 1:
+    fig = px.choropleth(df, scope='europe', locations='Country_input', locationmode='country names', color='similarity')
+    st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")

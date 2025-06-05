@@ -8,7 +8,7 @@ import pandas as pd
 
 
 # reads in the CSV as df
-df_all_years = pd.read_csv('datasets/preprocessed-datasets/alldata_noinf.csv')
+df_all_years = pd.read_csv('datasets/preprocessed-datasets/all_data.csv')
 
 # filters all data points that don't include a year of 2022
 recent = (df_all_years.year == 2022)
@@ -50,7 +50,7 @@ def cosine_similarity(df, input_vector):
                             df.iloc[country, 3], 
                             df.iloc[country, 4], 
                             df.iloc[country, 5],])
-        
+        temp_vector = temp_vector/np.sum(temp_vector)
         cos_similarity = np.dot(inv_sig_input, temp_vector) / (np.linalg.norm(inv_sig_input) * np.linalg.norm(temp_vector))
 
         cos_scores.append(cos_similarity)

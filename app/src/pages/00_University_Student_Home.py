@@ -8,6 +8,8 @@ st.set_page_config(layout = 'wide')
 
 # Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 st.title(f"Welcome Univerity Student, {st.session_state['first_name']}.")
 st.write('')

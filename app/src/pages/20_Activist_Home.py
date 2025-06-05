@@ -5,8 +5,10 @@ st.set_page_config(layout = 'wide')
 
 # Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
-st.title(f"Welcome Activst, {st.session_state['first_name']}.")
+st.title(f"Welcome Activist, {st.session_state['first_name']}.")
 st.write('')
 st.write('')
 st.write('### What would you like to do today?')
