@@ -69,8 +69,9 @@ logger.info(f"environment = {environment}")
 
 if st.button("Save Preferences", type="primary", use_container_width=True):
     results = requests.get(f"http://web-api:4000/model/predict/{education}/{health}/{safety}/{environment}")
+    df = pd.read_json(results)
     st.write("Status code:", results.status_code)
-    st.write("Response text:", results.text)
+    st.write("Response text:", df)
 
     # try:
     #     #JSONifying twice?
