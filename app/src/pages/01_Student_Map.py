@@ -109,7 +109,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
 
     try:
         # Send POST request to API to save preferences
-        response = requests.post(API_URL, json=json_data)
+        response = requests.post(API_URL, data=pref_data)
 
         if response.status_code == 201:
             st.success("Preferences saved successfully!")
