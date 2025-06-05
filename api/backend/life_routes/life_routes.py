@@ -55,6 +55,23 @@ def remove_user(user_id):
     except Error as e:
         return jsonify({'error': str(e)}), 500
 
+  
+@users.route('/users/name', methods=['PUT'])
+def update_name():
+    current_app.logger.info('PUT /users/name route')
+    user_info = request.json
+    user_id = user_info['user_id']
+    user_name = user_info['user_name']
+
+    query = 'UPDATE User SET user_name = %s WHERE user_id = %s'
+    data = (user_name, user_id)
+    cursor = db.get_db().cursor()
+    cursor.execute(query, data)
+    db.get_db().commit()
+    cursor.close()
+
+    return jsonify({'message': 'User name updated successfully'}), 200
+
 grace = Blueprint("grace", __name__)
 @grace.route("/pred_scores", methods=["GET"])
 def get_all_pred_scores():
