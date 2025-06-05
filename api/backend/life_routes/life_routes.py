@@ -234,3 +234,19 @@ def get_pred_scores(var_01, var_02):
         )
         response.status_code = 500
         return response
+    
+country = Blueprint("country", __name__)
+@country.route("/countries", methods=["GET"])
+def get_countries():
+    try:
+        cursor = db.get_db().cursor()  # no dictionary=True because your connector doesn't support it
+        cursor.execute('SELECT country_name FROM Country')
+        rows = cursor.fetchall()
+        cursor.close()
+
+        # since rows is a list of dicts, access by key
+        countries = [row["country_name"] for row in rows]
+
+        return jsonify(countries)
+    except Error as e:
+        return jsonify({"error": str(e)}), 500    
