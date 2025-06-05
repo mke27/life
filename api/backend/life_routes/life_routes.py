@@ -250,3 +250,56 @@ def get_countries():
         return jsonify(countries)
     except Error as e:
         return jsonify({"error": str(e)}), 500    
+    
+@country.route("/country", methods=["GET"])
+def get_country_ID():
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute('SELECT country_ID, country_name FROM Country')
+        rows = cursor.fetchall()
+        cursor.close()
+
+        countries = [{"country_name": row["country_name"], "country_ID": row["country_ID"]} for row in rows]
+
+        return jsonify(countries), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@country.route("/factor", methods=["GET"])
+def get_factor_ID():
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute('SELECT factor_ID, factor_name FROM Factor')
+        rows = cursor.fetchall()
+        cursor.close()
+
+        factors = [{"factor_name": row["factor_name"], "factor_ID": row["factor_ID"]} for row in rows]
+
+        return jsonify(factors), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    
+
+faye = Blueprint("faye", __name__)
+@faye.route("/orgs/<int:country_ID>/<int:factor_ID>", methods=["GET"])
+def get_orgs_by_country_and_factor(country_ID, factor_ID):
+    try:   
+        cursor = db.get_db().cursor()
+        query = """
+            SELECT * FROM Organization
+            WHERE org_country = %s AND org_factor = %s
+        """
+        cursor.execute(query, (country_ID, factor_ID))
+        orgs = cursor.fetchall() 
+        cursor.close()
+    
+        if not orgs:
+            return jsonify({"error": "No organizations found for that factor and country"}), 404
+
+        return jsonify(orgs), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+
+
