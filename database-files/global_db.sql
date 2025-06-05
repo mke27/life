@@ -95,8 +95,6 @@ CREATE TABLE IF NOT EXISTS University
     country_ID   INT UNSIGNED NOT NULL,
     university_name VARCHAR(500),
     uni_url         VARCHAR(500),
-    user_ID INT NOT NULL,
-    FOREIGN KEY (user_ID) REFERENCES User (user_ID),
     FOREIGN KEY (country_ID) REFERENCES Country (country_ID)
 );
 
@@ -131,33 +129,6 @@ CREATE TABLE IF NOT EXISTS ML_Score
     qol_score FLOAT NOT NULL,
     FOREIGN KEY (country_ID) REFERENCES ML_Country (country_ID)
 );
-
--- INSERT INTO University
---     VALUES(1, "University of Vienna", "url"), (1, "Vienna University of Technology", "url"), (1, "University of Innsbruck", "url"),
---           (2, "KU Leuven", "url"), (2, "University of Antwerp", "url"), (2, "Ghent University", "url"),
---           (3, "Sofia University", "url"), (3, "International School of Culinary Arts and Crafts ‘Sharena Fabrika’", "url"), (3, "University of Ruse", "url"),
---           (4, "University of Zagreb", "url"), (4, "University of Split", "url"), (4, "Josip Juraj Strossmayer University of Osijek", "url"),
---           (5, "Charles University", "url"), (5, "Czech Technical University in Prague", "url"), (5, "Masaryk University", "url"),
---           (6, "University of Copenhagen", "url"), (6, "Technical University of Denmark", "url"), (6, "Aarhus University", "url"),
---           (7, "University of Tartu", "url"), (7, "Tallinn University of Technology", "url"), (7, "Tallinn University", "url"),
---           (8, "University of Helsinki", "url"), (8, "Aalto University", "url"), (8, "University of Oulu", "url"),
---           (9, "Sorbonne University", "url"), (9, "University of Paris-Saclay", "url"), (9, "Université PSL", "url"),
---           (10, "Ludwig Maximilian University of Munich", "url"), (10, "Technical University of Munich", "url"), (10, "Heidelberg University", "url"),
---           (11, "National and Kapodistrian University of Athens", "url"), (11, "Aristotle University of Thessaloniki", "url"), (11, "Aristotle University of Thessaloniki", "url"),
---           (12, "Eötvös Loránd University", "url"), (12, "Budapest University of Technology and Economics", "url"), (12, "Budapest University of Technology and Economics", "url"),
---           (13, "Trinity College Dublin", "url"), (13, "University College Dublin", "url"), (13, "University College Dublin", "url"),
---           (14, "University of Bologna", "url"), (14, "Sapienza University of Rome", "url"), (14, "Sapienza University of Rome", "url"),
---           (15, "University of Latvia", "url"), (15, "Riga Technical University", "url"), (15, "Riga Technical University", "url"),
---           (16, "Vilnius University", "url"), (16, "Vilnius Gediminas Technical University", 'https://www.vgtu.lt/'), (16, "Vilnius Gediminas Technical University", 'https://www.vgtu.lt/'),
---           (17, 'University of Luxembourg', 'https://wwwen.uni.lu/'), (17, 'University of Luxembourg', 'https://wwwen.uni.lu/'), (17, 'University of Luxembourg', 'https://wwwen.uni.lu/'),
---           (18, 'University of Warsaw', 'https://www.uw.edu.pl/en/'), (18, 'University of Warsaw', 'https://www.uw.edu.pl/en/'), (18, 'University of Warsaw', 'https://www.uw.edu.pl/en/'),
---           (19,'University of Porto', 'https://sigarra.up.pt/up/en/web_page.inicial'),  (19,'University of Porto', 'https://sigarra.up.pt/up/en/web_page.inicial'),  (19,'University of Porto', 'https://sigarra.up.pt/up/en/web_page.inicial'),
---           (20,'Bucharest University', 'https://unibuc.ro/en/'), (20,'Bucharest University', 'https://unibuc.ro/en/'), (20,'Bucharest University', 'https://unibuc.ro/en/'),
---           (21,'Comenius University', 'https'), (21,'Comenius University', 'https'), (21,'Comenius University', 'https'),
---           (22,'Comenius University', 'https'), (22,'Comenius University', 'https'), (22,'Comenius University', 'https'),
---           (23,'Comenius University', 'https'), (23,'Comenius University', 'https'), (23,'Comenius University', 'https'),
---           (24,'Comenius University', 'https'), (24,'Comenius University', 'https'), (24,'Comenius University', 'https');
-
         
 
 INSERT INTO ML_Country 
@@ -217,6 +188,35 @@ INSERT INTO Country
           (25,"Slovenia"), 
           (26,"Spain"), 
           (27,"Sweden");
+
+INSERT INTO University(country_ID, university_name, uni_url)
+    VALUES(1, "University of Vienna", "https://www.univie.ac.at/en/"), (1, "Vienna University of Technology", "https://www.univie.ac.at/en/"), (1, "University of Innsbruck", "https://www.univie.ac.at/en/"),
+          (2, "KU Leuven", "url"), (2, "University of Antwerp", "url"), (2, "Ghent University", "url"),
+          (3, "Sofia University", "url"), (3, "International School of Culinary Arts and Crafts 'Sharena Fabrika'", "url"), (3, "University of Ruse", "url"),
+          (4, "University of Zagreb", "url"), (4, "University of Split", "url"), (4, "Josip Juraj Strossmayer University of Osijek", "url"),
+          (5, "University of Cyprus", "https://www.cyi.ac.cy/"), (5, "University of Nicosia", "https://www.unic.ac.cy/"), (5, "Cyprus University of Technology", "https://www.cut.ac.cy/"),
+          (6, "Charles University", "url"), (6, "Czech Technical University in Prague", "url"), (6, "Masaryk University", "url"),
+          (7, "University of Copenhagen", "url"), (7, "Technical University of Denmark", "url"), (7, "Aarhus University", "url"),
+          (8, "University of Tartu", "url"), (8, "Tallinn University of Technology", "url"), (8, "Tallinn University", "url"),
+          (9, "University of Helsinki", "url"), (9, "Aalto University", "url"), (9, "University of Oulu", "url"),
+          (10, "Sorbonne University", "url"), (10, "University of Paris-Saclay", "url"), (10, "Université PSL", "url"),
+          (11, "Ludwig Maximilian University of Munich", "url"), (11, "Technical University of Munich", "url"), (11, "Heidelberg University", "url"),
+          (12, "National and Kapodistrian University of Athens", "url"), (12, "Aristotle University of Thessaloniki", "url"), (12, "National Technical University of Athens", "url"),
+          (13, "Eötvös Loránd University", "url"), (13, "Budapest University of Technology and Economics", "url"), (13, "University of Szeged", "url"),
+          (14, "Trinity College Dublin", "url"), (14, "University College Dublin", "url"), (14, "University of Cork", "url"),
+          (15, "University of Bologna", "https://www.unibo.it/en"), (15, "Sapienza University of Rome", "https://www.uniroma1.it/en"), (15, "University of Padua", "https://www.unipd.it/en"),
+          (16, "University of Latvia", "https"), (16, "Riga Technical University", "url"), (16, "Riga Stradins University", "url"),
+          (17, "Vytautas Magnus University", "url"), (17, "Vilnius Gediminas Technical University", 'https://www.vgtu.lt/'), (17, "Kaunas University of Technology", 'https://www.vgtu.lt/'),
+          (18, "University of Luxembourg", "https://wwwen.uni.lu/"), (18, "Luxembourg University of Science and Technology", "https://wwwen.uni.lu/"), (18, "Sacred Heart University Luxembourg", "https://wwwen.uni.lu/"),
+          (19, 'University of Malta', 'https://www.um.edu.mt/'), (19, 'University of Malta', 'https://www.um.edu.mt/'), (19, 'University of Malta', 'https://www.um.edu.mt/'),
+          (20, 'Delft University of Technology', 'https://www.tudelft.nl/en/'), (20, 'Eindhoven University of Technology', 'https://www.tue.nl/en/'), (20, 'Utrecht University', 'https://www.uu.nl/en'),
+          (21, 'University of Warsaw', 'https://www.uw.edu.pl/en/'),  (21, 'Jagiellonian University', 'https://www.uw.edu.pl/en/'),  (21, 'Warsaw University of Technology', 'https://www.uw.edu.pl/en/'),
+          (22,'University of Porto', 'https://sigarra.up.pt/up/en/web_page.inicial'),  (22,'University of Lisbon', 'https://sigarra.up.pt/up/en/web_page.inicial'),  (22,'ISEG - Lisbon School of Economics and Management', 'https://sigarra.up.pt/up/en/web_page.inicial'),
+          (23,'Bucharest University', 'https://unibuc.ro/en/'), (23,'Babes-Bolyai University', 'https://unibuc.ro/en/'), (23,'Bucharest University of Economic Studies', 'https://unibuc.ro/en/'),
+          (24,'Comenius University', 'https'), (24,'Pavol Jozef Safárik University', 'https'), (24,'The Technical University of Kosice', 'https'),
+          (25,'University of Ljubljana', 'https'), (25,'University of Maribor', 'https'), (25,'University of Nova Gorica', 'https'),
+          (26,'University of Barcelona', 'https'), (26,'Universitat Autònoma de Barcelona', 'https'), (26,'Pompeu Fabra University', 'https'),
+          (27,'Lund University', 'https'), (27,'Uppsala University', 'https'), (27,'KTH Royal Institute of Technology', 'https');
 
 INSERT INTO ML_Score(country_ID,country_name,score_year,health_score,education_score,safety_score,environment_score,qol_score) VALUES (1,'Austria',2012,-0.0726371764091414,-1.3042268315115002,-0.44647089828964365,0.07707122909569004,1.261656080920897);
 INSERT INTO ML_Score(country_ID,country_name,score_year,health_score,education_score,safety_score,environment_score,qol_score) VALUES (1,'Austria',2013,-0.37893852271274214,-1.2045571211199142,-0.06115162336611681,0.18137815569136087,1.1506567675248562);
