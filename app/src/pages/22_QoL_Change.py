@@ -7,6 +7,8 @@ import requests
 st.set_page_config(layout = 'wide')
 
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 st.title('App Administration Page')
 

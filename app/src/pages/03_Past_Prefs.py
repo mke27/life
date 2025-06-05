@@ -8,6 +8,8 @@ import requests
 from modules.nav import SideBarLinks
 
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 add_logo("assets/logo.png", height=400)
 st.header("Preference History")
 st.write("Select 2 preference sets below to compare your recommended countries.")

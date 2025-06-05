@@ -11,6 +11,8 @@ import requests
 
 # Call the SideBarLinks from the nav module in the modules directory
 SideBarLinks()
+from modules.style import style_sidebar
+style_sidebar()
 
 API_URL = "http://web-api:4000/grace/preferences"
 
