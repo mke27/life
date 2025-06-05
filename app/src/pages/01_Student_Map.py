@@ -71,6 +71,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
     st.write("Response text:", results.text)
 
     try:
+        #JSONifying twice?
         json_results = results.json()  # This should be a list of dicts
     except ValueError:
         st.error("Could not parse JSON from response.")
