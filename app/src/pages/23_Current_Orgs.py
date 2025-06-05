@@ -8,21 +8,43 @@ st.set_page_config(layout = 'wide')
 
 SideBarLinks()
 
-st.title('App Administration Page')
+st.title('View Existing Organizations')
 
-st.write('\n\n')
-st.write('## Model 1 Maintenance')
+st.write(
+    """Select a country."""
+)
+country = st.selectbox("Country",
+    ["Select a country", "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France",
+    "Germany", "Greece", "Hungary", "Ireland", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
+    "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"])
 
-st.button("Train Model 01", 
-            type = 'primary', 
-            use_container_width=True)
+st.write(
+    """Select a factor."""
+)
+factor = st.selectbox("Factors",
+    ["Select a factor", "healthcare", "education", "environment", "safety"])
 
-st.button('Test Model 01', 
-            type = 'primary', 
-            use_container_width=True)
+current_orgs = [
+            {"name": "Organization A", "link": "URL X"},
+            {"name": "Organization B", "link": "URL Y"},
+            {"name": "Organization C", "link": "URL Z"}
+        ]
 
-if st.button('Model 1 - get predicted value for 10, 25', 
-             type = 'primary',
-             use_container_width=True):
-  results = requests.get('http://web-api:4000/prediction/10/25').json()
-  st.dataframe(results)
+if st.button('Submit', type='primary', use_container_width=True):
+    if country == "Select a country":
+        st.warning("Please select a valid country.")
+    if country == "Select a factor":
+        st.warning("Please select a valid factor.")
+    else:
+        st.subheader(f"Existing organizations focused on {factor} in {country}")
+        cols = st.columns(3)
+
+        for col, uni in zip(cols, current_orgs):
+            with col:
+                st.markdown(f"### {uni['name']}")
+                st.write(f"**Link:** {uni['link']}")
+
+
+
+
+
