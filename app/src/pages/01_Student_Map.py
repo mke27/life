@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
 import json
+from datetime import datetime
 from modules.nav import SideBarLinks
 import requests
 
@@ -16,6 +17,8 @@ from modules.style import style_sidebar
 style_sidebar()
 
 API_URL = "http://web-api:4000/grace/preferences"
+df = pd.DataFrame()
+
 
 # set the header of the page
 st.header('Country Recommendations Map')
@@ -23,10 +26,6 @@ st.header('Country Recommendations Map')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 st.write("Set your preferences below to see the best country recommendations for you.")
-
-df = pd.DataFrame()
-fig = px.choropleth(df, scope='europe')
-st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -72,10 +71,10 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
     results = requests.get(f"http://web-api:4000/model/predict/{education}/{health}/{safety}/{environment}")
     results_json = json.loads(results.text)
     df = pd.DataFrame.from_dict(results_json)
-    logger.info(f"{type(results)}")
-    st.write("Status code:", results.status_code)
-    st.write(f"Response text: {results.text}, Response text type: {type(results.text)}")
-    st.write(f"Response text: {df}")
+    #logger.info(f"{type(results)}")
+    # st.write("Status code:", results.status_code)
+    # st.write(f"Response text: {results.text}, Response text type: {type(results.text)}")
+    # st.write(f"Response text: {df}")
 
     sorted_df = df.sort_values('similarity')
 
@@ -91,7 +90,9 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         st.error(f"API returned error: {results.get('error', 'Unknown error')}")
         st.stop()
 
-    pref_data = {"user_ID": st.session_state["user_id"],
+    pref_data = {
+        "user_ID": st.session_state["user_id"],
+        "pref_date": datetime.now(), 
         "top_country": sorted_df.iloc[0, 0],
         "factorID_1": 1,
         "weight1": education,
@@ -100,12 +101,13 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         "factorID_3": 3,
         "weight3": safety,
         "factorID_4": 4,
-        "weight4": environment}
-    
+        "weight4": environment
+        }
+        
     #pref_dict = pd.Series.to_dict(pref_data)
 
-    str_data = json.dumps(pref_data)
-    json_data = json.loads(str_data)
+    #str_data = json.dumps(pref_data)
+    #json_data = json.loads(str_data)
 
     try:
         # Send POST request to API to save preferences
@@ -123,3 +125,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
 
 if st.button('Compare Preference History', type='primary', use_container_width=True):
     st.switch_page('pages/03_Past_Prefs.py')
+
+if len(df) > 1:
+    fig = px.choropleth(df, scope='europe', locations='Country_input', locationmode='country names', color='similarity')
+    st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")

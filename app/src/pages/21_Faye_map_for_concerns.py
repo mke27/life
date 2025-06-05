@@ -4,6 +4,7 @@ import plotly.express as px
 import numpy as np
 import requests
 import logging
+import json
 logger = logging.getLogger(__name__)
 from modules.nav import SideBarLinks
 
@@ -33,10 +34,12 @@ match struggle:
 
 results = requests.get(
             f"http://web-api:4000/model/predict/{input_issue[0]}/{input_issue[1]}/{input_issue[2]}/{input_issue[3]}")
-#logger.info(f"result: {results}")
-st.write(results.text)
-#logger.info(df)
 
-fig = px.choropleth(results, scope='europe')
+results_json = json.loads(results.text)
+df = pd.DataFrame.from_dict(results_json)
+df_sorted = df.sort_values('similarity', ascending=False)
+st.table(df_sorted.iloc[[0]])
+
+fig = px.choropleth(df, scope='europe', color='similarity', locations = 'Country_input', locationmode='country names')
 
 st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
