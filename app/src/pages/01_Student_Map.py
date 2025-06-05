@@ -6,6 +6,7 @@ from streamlit_extras.app_logo import add_logo
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
+import json
 from modules.nav import SideBarLinks
 import requests
 
@@ -69,7 +70,8 @@ logger.info(f"environment = {environment}")
 
 if st.button("Save Preferences", type="primary", use_container_width=True):
     results = requests.get(f"http://web-api:4000/model/predict/{education}/{health}/{safety}/{environment}")
-    #df = pd.read_json(results.text)
+    results_json = json.loads(results.text)
+    df = pd.read_json(results_json)
     logger.info(f"{type(results)}")
     st.write("Status code:", results.status_code)
     st.write(f"Response text: {results.text}, Response text type: {type(results.text)}")
