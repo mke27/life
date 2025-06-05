@@ -199,13 +199,13 @@ def get_predict(education, health, safety, environment):
         similarity = model01.predict(health, education, safety, environment)
         current_app.logger.info(f"Cosine similarity value returned is {similarity}")
 
-        response_data = similarity.to_dict(orient='records')
+        response_data = similarity.to_dict()
 
         return jsonify(response_data), 200
 
     except Exception as e:
         response = make_response(
-            jsonify({"error": "Error processing prediction request"})
+            jsonify({"error": "Error processing prediction request"}, {'e':e})
         )
         response.status_code = 500
         return response

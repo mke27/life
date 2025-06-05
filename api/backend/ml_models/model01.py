@@ -6,7 +6,7 @@ accessed.
 from backend.db_connection import db
 import numpy as np
 import pandas as pd
-# import logging
+import logging
 
 def inv_sigmoid(value):
     """ returns the inverse sigmoid of the input. If the input is 0 or 1, rebounds the sigmoid to -3 or 3
@@ -35,11 +35,11 @@ def cosine_similarity(df, input_vector):
     inv_sig_input = np.array(list(map(inv_sigmoid, input_vector)))
 
     for country in range(len(df)):
-        temp_vector = np.array([df.iloc[country, 2],
+        temp_vector = np.array([df.iloc[country, 1],
+                            df.iloc[country, 2],
                             df.iloc[country, 3],
-                            df.iloc[country, 4],
-                            df.iloc[country, 5]])
-        
+                            df.iloc[country, 4]])
+        temp_vector = temp_vector/np.sum(temp_vector)
         cos_similarity = np.dot(inv_sig_input, temp_vector) / (np.linalg.norm(inv_sig_input) * np.linalg.norm(temp_vector))
 
         cos_scores.append(cos_similarity)
@@ -77,11 +77,11 @@ def predict(health_score, education_score, safety_score, environment_score):
   cursor.execute(query)
   return_val = cursor.fetchall()
 
+  current_app.logger.info(f"Tfetch = {return_val}, the type is {type(return_val)}")
+
   df = pd.DataFrame(return_val)
 
-  vector = np.array(health_score, education_score, safety_score, environment_score)
-
-  vector/np.sum(vector)
+  vector = np.array([health_score, education_score, safety_score, environment_score])
 
   similarity_table = cosine_similarity(df, vector)
 
