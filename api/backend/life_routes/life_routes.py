@@ -171,12 +171,13 @@ def create_preference():
 
         cursor = db.get_db().cursor()
         query = """
-            INSERT INTO Preference (user_ID, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
+            INSERT INTO Preference (user_ID, pref_date, top_country, factorID_1, weight1, factorID_2, weight2, factorID_3, weight3,
             factorID_4, weight4)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(query, (
             data.get('user_ID'),
+            data.get('pref_date'),
             data.get('top_country'),
             data.get('factorID_1'),
             data.get('weight1'),
