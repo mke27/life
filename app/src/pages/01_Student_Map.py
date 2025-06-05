@@ -71,10 +71,14 @@ logger.info(f"environment = {environment}")
 if st.button("Save Preferences", type="primary", use_container_width=True):
     results = requests.get(f"http://web-api:4000/model/predict/{education}/{health}/{safety}/{environment}")
     results_json = json.loads(results.text)
-    df = pd.read_json(results_json)
+    df = pd.DataFrame.from_dict(results_json)
     logger.info(f"{type(results)}")
     st.write("Status code:", results.status_code)
     st.write(f"Response text: {results.text}, Response text type: {type(results.text)}")
+    st.write(f"Response text: {df}")
+
+    sorted_df = df.sort_values('similarity')
+
 
     # try:
     #     #JSONifying twice?
@@ -87,24 +91,8 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         st.error(f"API returned error: {results.get('error', 'Unknown error')}")
         st.stop()
 
-    if not isinstance(results, dict):
-        st.error("Unexpected response format or empty result list.")
-        st.stop()
-
-    try:
-        first_result = results[0]  # first dict in the list
-        top_country = first_result.get('Country_input', 'Unknown')
-        similarity = first_result.get('similarity', None)
-        st.write(f"Top country based on preferences: {top_country}")
-        st.write(f"Similarity score: {similarity}")
-    except Exception as e:
-        st.error(f"Error reading prediction results: {str(e)}")
-        st.write("Raw JSON:", results)
-        st.stop()
-
-    pref_data = {
-        "user_ID": st.session_state['user_id'],
-        "top_country": top_country,
+    pref_data = {"user_ID": st.session_state["user_id"],
+        "top_country": sorted_df.iloc[0, 0],
         "factorID_1": 1,
         "weight1": education,
         "factorID_2": 2,
@@ -112,12 +100,16 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         "factorID_3": 3,
         "weight3": safety,
         "factorID_4": 4,
-        "weight4": environment
-    }
+        "weight4": environment}
+    
+    #pref_dict = pd.Series.to_dict(pref_data)
+
+    str_data = json.dumps(pref_data)
+    json_data = json.loads(str_data)
 
     try:
         # Send POST request to API to save preferences
-        response = requests.post(API_URL, json=pref_data)
+        response = requests.post(API_URL, json=json_data)
 
         if response.status_code == 201:
             st.success("Preferences saved successfully!")
