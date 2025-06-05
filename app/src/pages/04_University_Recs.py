@@ -15,43 +15,49 @@ add_logo("assets/logo.png", height=400)
 
 # set up the page
 st.header("University Recommendations")
-st.write(
-    """Select a country."""
-)
+st.write("""Select a country.""")
 
-API_URL = "http://web-api:4000/country/countries"
-response = requests.get(API_URL)
-if(response.status_code == 200):
-    countries = response.json()
+# Fetch list of countries
+response = requests.get("http://web-api:4000/country/country")
+data = response.json()
+country_name_to_id = {item["country_name"]: item["country_ID"] for item in data}
+country_names = list(country_name_to_id.keys())
 
-country = st.selectbox("Country", options=countries)
+# Country dropdown
+country = st.selectbox("Country", options=["Select a country"] + country_names)
 
-top_universities = [
-            {"name": "University A", "rank": 1, "city": "City X"},
-            {"name": "University B", "rank": 2, "city": "City Y"},
-            {"name": "University C", "rank": 3, "city": "City Z"}
-        ]
-
-for uni in top_universities:
-    key = f"show_form_{uni['name']}"
-    if key not in st.session_state:
-        st.session_state[key] = False
-
+# Handle button click to view universities
 if st.button('View top universities', type='primary', use_container_width=True):
     if country == "Select a country":
         st.warning("Please select a valid country.")
     else:
-        st.subheader(f"Top Universities in {country}")
-        cols = st.columns(3)
+        country_id = country_name_to_id[country]
 
-        for col, uni in zip(cols, top_universities):
-            with col:
-                st.markdown(f"### {uni['name']}")
-                st.write(f"**Rank:** {uni['rank']}")
-                st.write(f"**City:** {uni['city']}")
+        # Fetch universities from API
+        try:
+            uni_response = requests.get(f"http://web-api:4000/grace/university/{country_id}")
+            universities = uni_response.json()
 
-                with st.popover("Join mailing list"):
-                    st.markdown(f"Join {uni['name']}'s mailing list for more information.")
-                    email = st.text_input(f"Enter your email.", key=f"email_{uni['name']}")
+            if "error" in universities:
+                st.warning(universities["error"])
+            elif not universities:
+                st.info(f"No universities found in {country}.")
+            else:
+                st.subheader(f"Top Universities in {country}")
+                cols = st.columns(3)
+
+                for i, uni in enumerate(universities):
+                    col = cols[i % 3]
+                    with col:
+                        st.markdown(f"### {uni['university_name']}")
+                        st.write(f"**Website:** [{uni['uni_url']}]({uni['uni_url']})")
+
+                        with st.popover("Join mailing list"):
+                            st.markdown(f"Join {uni['university_name']}'s mailing list for more information.")
+                            email = st.text_input("Enter your email.", key=f"email_{uni['university_ID']}")
+
+        except Exception as e:
+            st.error(f"Failed to fetch universities: {e}")
+
 
 
