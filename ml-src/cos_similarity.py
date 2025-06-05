@@ -8,7 +8,7 @@ import pandas as pd
 
 
 # reads in the CSV as df
-df_all_years = pd.read_csv('datasets/preprocessed-datasets/alldata_noinf.csv')
+df_all_years = pd.read_csv('datasets/preprocessed-datasets/all_data.csv')
 
 # filters all data points that don't include a year of 2022
 recent = (df_all_years.year == 2022)
