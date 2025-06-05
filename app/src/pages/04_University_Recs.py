@@ -18,7 +18,7 @@ st.write(
     """Select a country."""
 )
 country = st.selectbox("Country",
-    ["Select a country", "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France,"
+    ["Select a country", "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France",
     "Germany", "Greece", "Hungary", "Ireland", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
     "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"])
 
@@ -46,4 +46,8 @@ if st.button('View top universities', type='primary', use_container_width=True):
                 st.write(f"**Rank:** {uni['rank']}")
                 st.write(f"**City:** {uni['city']}")
 
-                ## create popup?
+                with st.popover("Join mailing list"):
+                    st.markdown(f"Join {uni['name']}'s mailing list for more information.")
+                    email = st.text_input(f"Enter your email.", key=f"email_{uni['name']}")
+
+

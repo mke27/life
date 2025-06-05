@@ -27,8 +27,8 @@ def StudentMapNav():
     )
 
 
-def QoLChartNav():
-    st.sidebar.page_link("pages/02_QoL_Chart.py", label="QoL Chart", icon="📈")
+def UniversityNav():
+    st.sidebar.page_link("pages/04_University_Recs.py", label="University Recommendations", icon="🏫")
 
 
 ## ------------------------ Examples for Role of policymaker ------------------------
@@ -85,7 +85,7 @@ def SideBarLinks(show_home=False):
         if st.session_state["role"] == "student":
             StudentHomeNav()
             StudentMapNav()
-            QoLChartNav()
+            UniversityNav()
 
         # If the user role is usaid worker, show the Api Testing page
         if st.session_state["role"] == "policymaker":
