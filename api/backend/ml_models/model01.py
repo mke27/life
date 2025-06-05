@@ -1,12 +1,9 @@
-"""
-model01.py is an example of how to access model parameter values that you are storing
-in the database and use them to make a prediction when a route associated with prediction is
-accessed. 
-"""
 from backend.db_connection import db
 import numpy as np
 import pandas as pd
 import logging
+
+from flask import current_app
 
 def inv_sigmoid(value):
     """ returns the inverse sigmoid of the input. If the input is 0 or 1, rebounds the sigmoid to -3 or 3
@@ -37,7 +34,7 @@ def cosine_similarity(df, input_vector):
 
     inv_sig_input = np.array(list(map(inv_sigmoid, input_vector)))
 
-    current_app.logger.info(f"sigmoided vector = {inv_sig_input}, the type is {type(df)}")
+    #current_app.logger.info(f"sigmoided vector = {inv_sig_input}, the type is {type(df)}")
 
     for country in range(len(df)):
         temp_vector = np.array([df.iloc[country, 1],
@@ -58,7 +55,7 @@ def cosine_similarity(df, input_vector):
     return sorted_df_scores
 
 
-from flask import current_app
+
 
 def train():
   """
@@ -85,11 +82,11 @@ def predict(health_score, education_score, safety_score, environment_score):
 
   df = pd.DataFrame.from_dict(return_val)
 
-  current_app.logger.info(f"Tfetch = {df}, the type is {type(df)}")
+  #current_app.logger.info(f"Tfetch = {df}, the type is {type(df)}")
   #put the score between 0 and 1
   vector = np.array([health_score, education_score, safety_score, environment_score])/100
 
-  current_app.logger.info(f"input vector = {vector}, the type is {type(vector)}")
+  #current_app.logger.info(f"input vector = {vector}, the type is {type(vector)}")
 
   similarity_table = cosine_similarity(df, vector)
 
