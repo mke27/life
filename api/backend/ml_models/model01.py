@@ -35,9 +35,9 @@ def cosine_similarity(df, input_vector):
     inv_sig_input = np.array(list(map(inv_sigmoid, input_vector)))
 
     for country in range(len(df)):
-        temp_vector = np.array([df.iloc[country, 2], 
-                            df.iloc[country, 3], 
-                            df.iloc[country, 4], 
+        temp_vector = np.array([df.iloc[country, 2],
+                            df.iloc[country, 3],
+                            df.iloc[country, 4],
                             df.iloc[country, 5]])
         
         cos_similarity = np.dot(inv_sig_input, temp_vector) / (np.linalg.norm(inv_sig_input) * np.linalg.norm(temp_vector))
@@ -72,7 +72,8 @@ def predict(health_score, education_score, safety_score, environment_score):
   # get a database cursor 
   cursor = db.get_db().cursor()
   # get the model params from the database
-  query = 'SELECT * FROM ML_Score'
+  query = 'SELECT country_name, health_score, education_score, safety_score, environment_score FROM ML_Score ' \
+  'WHERE score_year = 2022'
   cursor.execute(query)
   return_val = cursor.fetchall()
 
