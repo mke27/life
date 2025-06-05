@@ -72,7 +72,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
     #df = pd.read_json(results.text)
     logger.info(f"{type(results)}")
     st.write("Status code:", results.status_code)
-    st.write("Response text:", results.text)
+    st.write(f"Response text: {results.text}, Response text type: {type(results.text)}")
 
     # try:
     #     #JSONifying twice?
