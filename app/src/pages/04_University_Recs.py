@@ -6,6 +6,7 @@ import pandas as pd
 import pydeck as pdk
 from urllib.error import URLError
 from modules.nav import SideBarLinks
+import requests
 
 SideBarLinks()
 
@@ -17,10 +18,13 @@ st.header("University Recommendations")
 st.write(
     """Select a country."""
 )
-country = st.selectbox("Country",
-    ["Select a country", "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France",
-    "Germany", "Greece", "Hungary", "Ireland", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
-    "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"])
+
+API_URL = "http://web-api:4000/country/countries"
+response = requests.get(API_URL)
+if(response.status_code == 200):
+    countries = response.json()
+
+country = st.selectbox("Country", options=countries)
 
 top_universities = [
             {"name": "University A", "rank": 1, "city": "City X"},

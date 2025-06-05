@@ -12,7 +12,7 @@ SideBarLinks()
 st.title('Similar Country and Policy Implementation')
 col1, col2 = st.columns(2)
 
-API_URL = "http://web-api:4000/life/countries"
+API_URL = "http://web-api:4000/country/countries"
 response = requests.get(API_URL)
 if(response.status_code == 200):
     countries = response.json()
