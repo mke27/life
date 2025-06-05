@@ -44,7 +44,7 @@ def PolicyNav():
 
 def SimilarityNav():
     st.sidebar.page_link(
-        "pages/12_Similar_Countries.py", label="Similar Countries", icon="🗺️"
+        "pages/12_Similar_Countries", label="Similar Countries", icon="🗺️"
     )
 
 #### ------------------------ Activist Role ------------------------

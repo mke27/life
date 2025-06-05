@@ -14,14 +14,14 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
+if st.button('Similar Country Comparison', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/11_Similar_Country.py')
+
 if st.button('View Recent Policy Implementation', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/11_Policy_Implementation.py')
-
-if st.button('Quality of Life Score Rankings', 
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/12_Similar_Countries.py')
+  st.switch_page('pages/12_Policy_Implementation.py')
 
   
