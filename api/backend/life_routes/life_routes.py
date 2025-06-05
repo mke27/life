@@ -16,28 +16,44 @@ users = Blueprint("users", __name__)
 @users.route("/users/<int:user_id>", methods=["GET"])
 def get_user_by_id(user_id):
     try:
-        current_app.logger.info(f'Starting get_user_by_id request for user_id={user_id}')
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
 
         query = """
-            SELECT u.user_ID, u.user_name, u.country_ID, r.role_name
+            SELECT u.user_ID, u.user_name, u.user_country, r.role_name
             FROM User u
             JOIN User_Role r ON u.role_ID = r.role_ID
             WHERE u.user_ID = %s
         """
         cursor.execute(query, (user_id,))
         user = cursor.fetchone()
-        cursor.close()
 
-        if user:
-            return jsonify(user), 200
-        else:
+        if not user:
+            cursor.close()
             return jsonify({"error": "User not found"}), 404
+        cursor.close()
+        return jsonify(user), 200
 
     except Error as e:
         current_app.logger.error(f'Database error in get_user_by_id: {str(e)}')
         return jsonify({"error": str(e)}), 500
     
+@users.route('/users/remove/<int:user_id>', methods=["DELETE"])
+def remove_user(user_id):
+    try:
+        cursor = db.get_db().cursor()
+        query = 'DELETE FROM User WHERE user_ID = %s'
+        cursor.execute(query, (user_id,))
+        
+        if cursor.rowcount == 0:
+            cursor.close()
+            return jsonify({'error': 'User not found'}), 404
+
+        db.get_db().commit()
+        cursor.close()
+        return jsonify({'message': f'User {user_id} deleted successfully'}), 200
+
+    except Error as e:
+        return jsonify({'error': str(e)}), 500
 
 grace = Blueprint("grace", __name__)
 @grace.route("/pred_scores", methods=["GET"])
