@@ -40,7 +40,7 @@ with col1:
         if st.button('Belgium', 
              type='primary',
              use_container_width=True):
-            st.switch_page('pages/22_Sim_Country_Graph.py')
+            st.switch_page('pages/17_Sim_Country_Graph.py')
 
 
     st.subheader("View recent EU policy related to: ")
