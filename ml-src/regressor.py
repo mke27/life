@@ -1,3 +1,5 @@
+# time series auto regression model
+
 import pandas as pd
 import numpy as np
 
@@ -13,23 +15,25 @@ eu_countries = [
 
 df_encoded = pd.get_dummies(df, columns=['country'], dtype = 'int')
 
-qol = df['qol'].to_numpy()
-feature_data = df[features].to_numpy()
-dummy_cols = df_encoded[eu_countries].to_numpy()
-
 X = []
 y = []
 
 for country in df['country'].unique(): 
 
-    for t in range(p, len(qol)):
-        lags = qol[t - p:t][::-1] 
-        current_feats = feature_data[t]
-        current_country = dummy_cols[t]
+    mask = df['country'] == country
+    df_country = df_encoded[mask].sort_values('year')
+
+    qol_country = df_country['qol'].to_numpy()
+    feature_data_country = df_country[features].to_numpy()
+    dummy_country = df_country[eu_countries].to_numpy()[0]
+
+    for t in range(p, len(qol_country)):
+        lags = qol_country[t - p:t][::-1] 
+        current_feats = feature_data_country[t]
         
-        row = np.concatenate([lags, current_feats, current_country])
+        row = np.concatenate([lags, current_feats, dummy_country])
         X.append(row)
-        y.append(qol[t])
+        y.append(qol_country[t])
 
 
 X = np.array(X)
