@@ -16,7 +16,7 @@ SideBarLinks()
 from modules.style import style_sidebar
 style_sidebar()
 
-API_URL = "http://web-api:4000/grace/preferences"
+API_URL = "http://web-api:4000/grace/preference"
 df = pd.DataFrame()
 
 
@@ -90,10 +90,28 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         st.error(f"API returned error: {results.get('error', 'Unknown error')}")
         st.stop()
 
+    try:
+        country_response = requests.get("http://web-api:4000/country/country")
+        country_data = country_response.json()
+
+        country_name_to_id = {c["country_name"]: c["country_ID"] for c in country_data}
+
+        top_country_name = sorted_df.iloc[0]["Country_input"]
+
+        top_country_id = country_name_to_id.get(top_country_name)
+
+        if not top_country_id:
+            st.error(f"Could not find country ID for '{top_country_name}'")
+            st.stop()
+
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error getting country list: {str(e)}")
+        st.stop()   
+
     pref_data = {
         "user_ID": st.session_state["user_id"],
-        "pref_date": datetime.now(), 
-        "top_country": sorted_df.iloc[0, 0],
+        "pref_date": datetime.now().isoformat(), 
+        "top_country": top_country_id,
         "factorID_1": 1,
         "weight1": education,
         "factorID_2": 2,
@@ -111,7 +129,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
 
     try:
         # Send POST request to API to save preferences
-        response = requests.post(API_URL, data=pref_data)
+        response = requests.post(API_URL, json=pref_data)
 
         if response.status_code == 201:
             st.success("Preferences saved successfully!")
