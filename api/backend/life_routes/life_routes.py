@@ -37,6 +37,48 @@ def get_user_by_id(user_id):
         current_app.logger.error(f'Database error in get_user_by_id: {str(e)}')
         return jsonify({"error": str(e)}), 500
     
+@users.route("/users/role/<role_name>", methods=["GET"])
+def get_role_id_by_name(role_name):
+    try:
+        cursor = db.get_db().cursor()
+
+        query = """
+            SELECT role_ID
+            FROM User_Role
+            WHERE role_name = %s
+        """
+        cursor.execute(query, role_name)
+        role = cursor.fetchone()
+        cursor.close()
+        if role:
+            return jsonify(role["role_ID"]), 200
+        else:
+            return jsonify({"error": "Role not found"}), 404
+    except Error as e:
+        current_app.logger.error(f'Database error in get_role_id_by_name: {str(e)}')
+        return jsonify({"error": str(e)}), 500
+
+@users.route("/users/role/<int:role_id>", methods=["GET"])
+def get_usernames_by_role_id(role_id):
+    try:
+        cursor = db.get_db().cursor()
+
+        query = """
+            SELECT user_name
+            FROM User
+            WHERE role_ID = %s
+        """
+        cursor.execute(query, (role_id))
+        users = cursor.fetchall()
+        cursor.close()
+    
+        usernames = [user["user_name"] for user in users]
+        return jsonify(usernames), 200
+
+    except Error as e:
+        current_app.logger.error(f'Database error in get_user_by_role_id: {str(e)}')
+        return jsonify({"error": str(e)}), 500
+    
 @users.route('/users/remove/<int:user_id>', methods=["DELETE"])
 def remove_user(user_id):
     try:
