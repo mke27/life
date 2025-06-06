@@ -62,6 +62,21 @@ def get_usernames(role_name):
      
      return users_res.json()
 
+def get_userID(user_name):
+    user_id_res = requests.get(f"http://web-api:4000/users/users/getID/{user_name}")
+    if user_id_res.status_code != 200:
+        logger.error(f"Failed to get user_id for {user_name}")
+        return None
+     
+    user_id = user_id_res.json()
+    
+    if "user_id" not in user_id:
+        logger.error(f"No user_id found for {user_name}")
+        return None
+    
+    return user_id["user_id"]
+    
+
 student_users = get_usernames("student")
 policymaker_users = get_usernames("policymaker")
 activist_users = get_usernames("activist")
@@ -85,6 +100,7 @@ with row1_col2:
             st.session_state['role'] = 'student'
             st.session_state['first_name'] = 'Grace'
             st.session_state['username'] = grace_user
+            st.session_state['user_id'] = get_userID(grace_user)
             logger.info("Logging in as University Student Persona")
             st.switch_page('pages/00_University_Student_Home.py')
     warning_grace = st.empty()
@@ -115,6 +131,7 @@ with row2_col2:
             st.session_state['role'] = 'policymaker'
             st.session_state['first_name'] = 'James'
             st.session_state['username'] = james_user
+            st.session_state['user_id'] = get_userID(james_user)
             logger.info("Logging in as Policymaker Persona")
             st.switch_page('pages/10_Policymaker_Home.py')
     warning_james = st.empty()
@@ -145,6 +162,7 @@ with row3_col2:
             st.session_state['role'] = 'activist'
             st.session_state['first_name'] = 'Faye'
             st.session_state['username'] = faye_user
+            st.session_state['user_id'] = get_userID(faye_user)
             logger.info("Logging in as Activist Persona")
             st.switch_page('pages/20_Activist_Home.py')
     warning_faye = st.empty()

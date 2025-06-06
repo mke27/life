@@ -13,6 +13,10 @@ def HomeNav():
 def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
+def UserSettingsNav():
+    st.sidebar.page_link("pages/31_User_Settings.py", label="User Settings", icon="⚙️")
+
+
 
 #### ------------------------ Examples for Role of student ------------------------
 def StudentHomeNav():
@@ -52,7 +56,7 @@ def ActivistHomeNav():
     st.sidebar.page_link("pages/20_Activist_Home.py", label="Activist Home", icon="👩‍💼")
 
 def ExpansionNav():
-    st.sidebar.page_link("pages/21_Expansion_Map.py", label="Expansion Map", icon="🗺️")
+    st.sidebar.page_link("pages/21_Faye_map_for_concerns.py", label="Expansion Map", icon="🗺️")
 
 def QoLChangeNav():
     st.sidebar.page_link("pages/22_QoL_Change.py", label="QoL Change", icon="📈")
@@ -86,12 +90,14 @@ def SideBarLinks(show_home=False):
             StudentHomeNav()
             StudentMapNav()
             UniversityNav()
+            UserSettingsNav()
 
         # If the user role is usaid worker, show the Api Testing page
         if st.session_state["role"] == "policymaker":
             PolicymakerNav()
             PolicyNav()
             SimilarityNav()
+            UserSettingsNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "activist":
@@ -99,6 +105,7 @@ def SideBarLinks(show_home=False):
             ExpansionNav()
             QoLChangeNav()
             CurrentOrgsNav()
+            UserSettingsNav()
 
 
     # Always show the About page at the bottom of the list of links
