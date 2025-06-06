@@ -27,7 +27,8 @@ update_username = st.text_input(
 if update_username:
     try:
         response = requests.put(UPDATE_USERNAME, json={
-             "user_name":update_username})
+             "user_name":update_username,
+             "user_id": user_id})
         if response.status_code == 200:
             st.success(f"Updated username to: {update_username}")
             st.rerun()
