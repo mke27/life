@@ -334,5 +334,23 @@ def get_orgs_by_country_and_factor(country_ID, factor_ID):
         return jsonify(orgs), 200
     except Error as e:
         return jsonify({"error": str(e)}), 500
+    
+@faye.route("/scores", methods=["GET"])
+def get_scores():
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("""
+            SELECT C.country_name, S.health_score, S.education_score, S.safety_score, S.environment_score
+            FROM ML_Score S
+            JOIN Country C ON S.country_ID = C.country_ID
+            WHERE S.score_year = 2022
+        """)
+        scores = cursor.fetchall()
+        cursor.close()
+
+        return jsonify(scores)
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
