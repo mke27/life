@@ -177,22 +177,22 @@ def get_all_pred_scores():
         current_app.logger.error(f'Database error in get_all_pred_scores: {str(e)}')
         return jsonify({"error": str(e)}), 500
 
-@grace.route("/preferences/by_user/<int:user_id>", methods=["GET"])
-def get_preferences_by_user(user_id):
-    try:
-        cursor = db.get_db().cursor(dictionary=True)
-        cursor.execute("""
-            SELECT pref_ID, pref_date, top_country 
-            FROM Preference 
-            WHERE user_ID = %s
-            ORDER BY pref_date DESC
-        """, (user_id,))
-        preferences = cursor.fetchall()
-        cursor.close()
+# @grace.route("/preferences/by_user/<int:user_id>", methods=["GET"])
+# def get_preferences_by_user(user_id):
+#     try:
+#         cursor = db.get_db().cursor(dictionary=True)
+#         cursor.execute("""
+#             SELECT pref_ID, pref_date, top_country 
+#             FROM Preference 
+#             WHERE user_ID = %s
+#             ORDER BY pref_date DESC
+#         """, (user_id,))
+#         preferences = cursor.fetchall()
+#         cursor.close()
 
-        return jsonify(preferences), 200
-    except Error as e:
-        return jsonify({"error": str(e)}), 500
+#         return jsonify(preferences), 200
+#     except Error as e:
+#         return jsonify({"error": str(e)}), 500
     
 @grace.route("/pred_scores/<int:country_id>", methods=["GET"])
 def get_pred_scores_by_country(country_id):
@@ -262,23 +262,26 @@ def create_preference():
         current_app.logger.error(f'Database error in create_preference: {str(e)}')
         return jsonify({"error": str(e)}), 500
     
-@grace.route("/preference/<int:pref_id>/top_country", methods=["GET"])
-def get_pref_topcountry(pref_id):
+@grace.route("/preference/<int:user_ID>", methods=["GET"])
+def get_pref_topcountry(user_ID):
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""
-            SELECT C.country_name 
-            FROM Preference P
-            JOIN Country C ON P.top_country = C.country_ID
-            WHERE P.pref_ID = %s
-        """, (pref_id,))
-        result = cursor.fetchone()
+            SELECT pref_ID, top_country
+            FROM Preference
+            WHERE user_ID = %s
+            ORDER BY pref_date DESC
+            LIMIT 5
+        """, (user_ID,))
+        prefs = cursor.fetchall()
         cursor.close()
 
-        if result:
-            return jsonify({"top_country": result[0]}), 200
-        else:
-            return jsonify({"error": "Preference not found"}), 404
+        pref_list = [
+            {"pref_ID": row["pref_ID"], "top_country": row["top_country"]}
+            for row in prefs
+        ]
+
+        return jsonify(pref_list), 200
 
     except Error as e:
         return jsonify({"error": str(e)}), 500
