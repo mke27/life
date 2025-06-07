@@ -1049,7 +1049,7 @@ INSERT INTO Organization(org_name,org_country,org_factor,org_url) VALUES ('Feil,
 INSERT INTO Organization(org_name,org_country,org_factor,org_url) VALUES ('Schulist and Sons',11,2,'https://weather.com/elit/proin/risus/praesent.jsp?etiam=habitasse&justo=platea&etiam=dictumst&pretium=morbi&iaculis=vestibulum&justo=velit&in=id&hac=pretium&habitasse=iaculis&platea=diam&dictumst=erat&etiam=fermentum&faucibus=justo&cursus=nec&urna=condimentum&ut=neque&tellus=sapien&nulla=placerat&ut=ante&erat=nulla&id=justo&mauris=aliquam&vulputate=quis&elementum=turpis&nullam=eget&varius=elit&nulla=sodales&facilisi=scelerisque&cras=mauris&non=sit&velit=amet&nec=eros&nisi=suspendisse&vulputate=accumsan&nonummy=tortor&maecenas=quis&tincidunt=turpis&lacus=sed&at=ante&velit=vivamus&vivamus=tortor&vel=duis&nulla=mattis&eget=egestas&eros=metus&elementum=aenean&pellentesque=fermentum&quisque=donec&porta=ut&volutpat=mauris&erat=eget&quisque=massa&erat=tempor&eros=convallis&viverra=nulla&eget=neque&congue=libero&eget=convallis&semper=eget&rutrum=eleifend&nulla=luctus&nunc=ultricies&purus=eu&phasellus=nibh&in=quisque&felis=id&donec=justo&semper=sit&sapien=amet&a=sapien&libero=dignissim&nam=vestibulum&dui=vestibulum&proin=ante&leo=ipsum&odio=primis&porttitor=in&id=faucibus&consequat=orci&in=luctus&consequat=et&ut=ultrices&nulla=posuere&sed=cubilia');
 
 -- User_Role
-INSERT INTO User_Role(role_name) VALUES ('student'), ('policymaker'), ('activist');
+INSERT INTO User_Role(role_name) VALUES ('Student'), ('Policymaker'), ('Activist');
 
 -- User
 INSERT INTO User(first_name,user_name,role_id) VALUES ('Eimile','ekemwal0',2);
