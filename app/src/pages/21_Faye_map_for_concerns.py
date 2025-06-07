@@ -35,7 +35,10 @@ df = pd.DataFrame.from_dict(results_json)
 df['environment_score'] = -df['environment_score']
 df['safety_score'] = -df['safety_score']
 df_sorted = df.sort_values(input_issue, ascending=True)
-st.table(df_sorted)
+st.table(df_sorted.iloc[0:5])
+
+fig = px.choropleth(df, scope='europe', locations='country_name', locationmode='country names', color=input_issue)
+st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
 
 #fig = px.choropleth(df, scope='europe', color='similarity', locations = 'Country_input', locationmode='country names')
 
