@@ -45,36 +45,42 @@ st.write('\n\n')
 st.write('### Welcome to Best Life! Which user would you like to log in as?')
 
 def get_usernames(role_name):
-     role_id_res = requests.get(f"http://web-api:4000/users/users/role/{role_name}")
-     if role_id_res.status_code != 200:
-        logger.error(f"Failed to get role_id for {role_name}")
-        return []
-     
-     role_id = role_id_res.json()
-     if not role_id:
-         logger.error(f"No role_id found for {role_name}")
+     usernames_res = requests.get(f"http://web-api:4000/users/role/{role_name}")
+     if usernames_res.status_code != 200:
+         logger.error(f"Failed to get users for role_id {role_name}")
          return []
      
-     users_res = requests.get(f"http://web-api:4000/users/users/role/{role_id}")
-     if users_res.status_code != 200:
-         logger.error(f"Failed to get users for role_id {role_id}")
-         return []
-     
-     return users_res.json()
+     return usernames_res.json()
 
 def get_userID(user_name):
-    user_id_res = requests.get(f"http://web-api:4000/users/users/getID/{user_name}")
+    user_id_res = requests.get(f"http://web-api:4000/users/user/id/{user_name}")
+
     if user_id_res.status_code != 200:
         logger.error(f"Failed to get user_id for {user_name}")
         return None
      
     user_id = user_id_res.json()
     
-    if "user_id" not in user_id:
-        logger.error(f"No user_id found for {user_name}")
+    if "user_ID" not in user_id:
+        logger.error(f"No user_ID found for {user_name}")
         return None
     
-    return user_id["user_id"]
+    return user_id["user_ID"]
+
+def get_first_name(user_ID):
+    first_name_res = requests.get(f"http://web-api:4000/users/users/{user_ID}")
+
+    if first_name_res.status_code != 200:
+        logger.error(f"Failed to get first_name for user ID {user_ID}")
+        return None
+     
+    user_data = first_name_res.json()
+    
+    if "first_name" not in user_data:
+        logger.error(f"No first_name found for user ID {user_ID}")
+        return None
+    
+    return user_data["first_name"]
     
 
 student_users = get_usernames("student")
@@ -97,9 +103,10 @@ with row1_col2:
         else:
             st.session_state['grace_warning'] = False
             st.session_state['authenticated'] = True
-            st.session_state['role'] = 'student'
-            st.session_state['username'] = grace_user
+            st.session_state['role'] = 'Student'
+            st.session_state['user_name'] = grace_user
             st.session_state['user_id'] = get_userID(grace_user)
+            st.session_state['first_name'] = get_first_name(st.session_state['user_id'])
             logger.info("Logging in as University Student Persona")
             st.switch_page('pages/00_University_Student_Home.py')
     warning_grace = st.empty()
@@ -127,9 +134,10 @@ with row2_col2:
         else:
             st.session_state['james_warning'] = False
             st.session_state['authenticated'] = True
-            st.session_state['role'] = 'policymaker'
-            st.session_state['username'] = james_user
+            st.session_state['role'] = 'Policymaker'
+            st.session_state['user_name'] = james_user
             st.session_state['user_id'] = get_userID(james_user)
+            st.session_state['first_name'] = get_first_name(st.session_state['user_id'])
             logger.info("Logging in as Policymaker Persona")
             st.switch_page('pages/10_Policymaker_Home.py')
     warning_james = st.empty()
@@ -157,9 +165,10 @@ with row3_col2:
         else:
             st.session_state['faye_warning'] = False
             st.session_state['authenticated'] = True
-            st.session_state['role'] = 'activist'
-            st.session_state['username'] = faye_user
+            st.session_state['role'] = 'Activist'
+            st.session_state['user_name'] = faye_user
             st.session_state['user_id'] = get_userID(faye_user)
+            st.session_state['first_name'] = get_first_name(st.session_state['user_id'])
             logger.info("Logging in as Activist Persona")
             st.switch_page('pages/20_Activist_Home.py')
     warning_faye = st.empty()
