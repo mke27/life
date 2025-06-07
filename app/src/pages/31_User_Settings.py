@@ -24,11 +24,34 @@ st.markdown(f"""
 
             Role: {user_role}
 
-            ### Change username:
+            ### Update first name:
 """)
 
-UPDATE_USERNAME = "http://web-api:4000/users/users/username"
+UPDATE_FIRSTNAME = "http://web-api:4000/users/update/first-name"
 
+update_firstname = st.text_input(
+      label = "Please enter new first name",
+      max_chars = 20,
+      placeholder = "Username here"
+)
+if update_firstname:
+    try:
+        response = requests.put(UPDATE_FIRSTNAME, json={
+              "first_name": update_firstname,
+              "user_id": user_id})
+        if response.status_code == 200:
+            st.session_state['first_name'] = update_firstname
+            st.success(f"Updated first name to: {update_firstname}")
+        else:
+            st.error(f"Failed to change first name: {response.json().get('error', 'Unknown error')}")
+
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error connecting to the API: {str(e)}")
+        st.info("Please ensure the API server is running")
+
+UPDATE_USERNAME = "http://web-api:4000/users/update/username"
+
+st.write("### Update username:")
 update_username = st.text_input(
     label = "Please enter new username",
     max_chars = 20,
@@ -37,19 +60,17 @@ update_username = st.text_input(
 if update_username:
     try:
         response = requests.put(UPDATE_USERNAME, json={
-             "user_name":update_username,
+             "user_name": update_username,
              "user_id": user_id})
         if response.status_code == 200:
             st.session_state['user_name'] = update_username
             st.success(f"Updated username to: {update_username}")
         else:
-            st.error(
-                        f"Failed to change username: {response.json().get('error', 'Unknown error')}"
-                    )
+            st.error(f"Failed to change username: {response.json().get('error', 'Unknown error')}")
     
     except requests.exceptions.RequestException as e:
-                st.error(f"Error connecting to the API: {str(e)}")
-                st.info("Please ensure the API server is running")
+            st.error(f"Error connecting to the API: {str(e)}")
+            st.info("Please ensure the API server is running")
 
 st.write("")
 st.markdown("""

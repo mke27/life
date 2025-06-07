@@ -24,7 +24,7 @@ df = pd.DataFrame()
 st.header('Country Recommendations Map')
 
 # You can access the session state to make a more customized/personalized app experience
-st.write(f"### Hi, {st.session_state['username']}.")
+st.write(f"### Hi, {st.session_state['first_name']}.")
 st.write("Set your preferences below to see the best country recommendations for you.")
 
 col1, col2, col3, col4 = st.columns(4)
