@@ -11,10 +11,10 @@ SideBarLinks()
 from modules.style import style_sidebar
 style_sidebar()
 
-st.title('Recent Policy Implementation')
+st.title('Policy News')
 
 
-st.subheader("View recent EU policy related to: ")
+st.subheader("View recent EU policy news related to: ")
 
 #change to be more dynamic later -- with get factors
 factors = ["Education", "Health", "Safety", "Environment"]
