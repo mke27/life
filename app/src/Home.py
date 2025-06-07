@@ -83,9 +83,9 @@ def get_first_name(user_ID):
     return user_data["first_name"]
     
 
-student_users = get_usernames("student")
-policymaker_users = get_usernames("policymaker")
-activist_users = get_usernames("activist")
+student_users = get_usernames("Student")
+policymaker_users = get_usernames("Policymaker")
+activist_users = get_usernames("Activist")
 
 st.write("#### Prospective University Student:")
 row1_col1, row1_col2 = st.columns([3, 1])
