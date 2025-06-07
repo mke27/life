@@ -106,9 +106,9 @@ def remove_user(user_id):
         return jsonify({'error': str(e)}), 500
 
   
-@users.route('/users/username', methods=['PUT'])
+@users.route('/update/username', methods=['PUT'])
 def update_username():
-    current_app.logger.info('PUT /users/username route')
+    current_app.logger.info('PUT /update/username route')
     try:
         user_info = request.json
         user_id = user_info.get('user_id')
@@ -135,21 +135,35 @@ def update_username():
         current_app.logger.error(f'Error updating user name: {str(e)}')
         return jsonify({'error': 'Internal server error'}), 500
 
-@users.route('/users/first_name', methods=['PUT'])
+@users.route('/update/first-name', methods=['PUT'])
 def update_first_name():
-    current_app.logger.info('PUT /users/name route')
-    user_info = request.json
-    user_id = user_info['user_id']
-    first_name = user_info['first_name']
 
-    query = 'UPDATE User SET user_name = %s WHERE user_id = %s'
-    data = (first_name, user_id)
-    cursor = db.get_db().cursor()
-    cursor.execute(query, data)
-    db.get_db().commit()
-    cursor.close()
+    current_app.logger.info('PUT /update/username route')
+    try:
+        user_info = request.json
+        user_id = user_info.get('user_id')
+        first_name = user_info.get('first_name')
 
-    return jsonify({'message': 'User name updated successfully'}), 200
+        if not user_id or not first_name:
+            return jsonify({'error': 'Missing user_id or user_name'}), 400
+
+        query = 'UPDATE User SET first_name = %s WHERE user_id = %s'
+        data = (first_name, user_id)
+
+        cursor = db.get_db().cursor()
+        cursor.execute(query, data)
+        db.get_db().commit()
+
+        if cursor.rowcount == 0:
+            cursor.close()
+            return jsonify({'error': 'User not found'}), 404
+
+        cursor.close()
+        return jsonify({'message': 'First name updated successfully'}), 200
+
+    except Exception as e:
+        current_app.logger.error(f'Error updating first name: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500
 
 grace = Blueprint("grace", __name__)
 @grace.route("/pred_scores", methods=["GET"])
