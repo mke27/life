@@ -10,10 +10,11 @@ from modules.style import style_sidebar
 style_sidebar()
 
 st.header('Similar Countries')
-API_URL = "http://web-api:4000/country/countries"
-response = requests.get(API_URL)
-if(response.status_code == 200):
-    countries = response.json()
+COUNTRY_API_URL = "http://web-api:4000/country/countries"
+country_response = requests.get(COUNTRY_API_URL)
+
+if(country_response.status_code == 200):
+    countries = country_response.json()
 
 st.subheader("Choose Country")
 

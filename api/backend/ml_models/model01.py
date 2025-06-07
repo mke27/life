@@ -84,7 +84,7 @@ def predict(health_score, education_score, safety_score, environment_score):
 
   #current_app.logger.info(f"Tfetch = {df}, the type is {type(df)}")
   #put the score between 0 and 1
-  vector = np.array([health_score, education_score, safety_score, environment_score])/100
+  vector = np.array([health_score, education_score, -safety_score, -environment_score])/100
 
   #current_app.logger.info(f"input vector = {vector}, the type is {type(vector)}")
 
