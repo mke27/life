@@ -81,7 +81,7 @@ student_users = get_usernames("student")
 policymaker_users = get_usernames("policymaker")
 activist_users = get_usernames("activist")
 
-st.write("#### Act as Grace, an Incoming University Student")
+st.write("#### Prospective University Student:")
 row1_col1, row1_col2 = st.columns([3, 1])
 with row1_col1:
     grace_user = st.selectbox(
@@ -98,7 +98,6 @@ with row1_col2:
             st.session_state['grace_warning'] = False
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'student'
-            st.session_state['first_name'] = 'Grace'
             st.session_state['username'] = grace_user
             st.session_state['user_id'] = get_userID(grace_user)
             logger.info("Logging in as University Student Persona")
@@ -112,7 +111,7 @@ with row1_col2:
 
 st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
-st.write("#### Act as James, a Policymaker")
+st.write("#### Policymaker:")
 row2_col1, row2_col2 = st.columns([3, 1])
 with row2_col1:
     james_user = st.selectbox(
@@ -129,7 +128,6 @@ with row2_col2:
             st.session_state['james_warning'] = False
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'policymaker'
-            st.session_state['first_name'] = 'James'
             st.session_state['username'] = james_user
             st.session_state['user_id'] = get_userID(james_user)
             logger.info("Logging in as Policymaker Persona")
@@ -143,7 +141,7 @@ with row2_col2:
 
 st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
-st.write("#### Act as Faye, an Activist")
+st.write("#### Activist:")
 row3_col1, row3_col2 = st.columns([3, 1])
 with row3_col1:
     faye_user = st.selectbox(
@@ -160,7 +158,6 @@ with row3_col2:
             st.session_state['faye_warning'] = False
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'activist'
-            st.session_state['first_name'] = 'Faye'
             st.session_state['username'] = faye_user
             st.session_state['user_id'] = get_userID(faye_user)
             logger.info("Logging in as Activist Persona")

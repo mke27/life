@@ -42,7 +42,7 @@ def PolicymakerNav():
 
 def PolicyNav():
     st.sidebar.page_link(
-        "pages/11_Policy_Implementation.py", label="Policy Implementation", icon="📰"
+        "pages/11_Policy_Implementation.py", label="Policy News", icon="📰"
     )
 
 
