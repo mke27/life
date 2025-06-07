@@ -10,13 +10,24 @@ import requests
 
 st.write("# User Settings")
 
-username = st.session_state['username']
+user_name = st.session_state['user_name']
 user_id = st.session_state['user_id']
-st.write(f"### Change username from {username}")
+first_name = st.session_state['first_name']
+user_role = st.session_state['role']
+st.markdown(f"""
+            ### About User
+            First Name: {first_name}
 
-st.write(f"Current user_id: {user_id}")
+            Username: {user_name}
 
-UPDATE_USERNAME = "http://web-api:4000/users/users/name"
+            User ID: {user_id}
+
+            Role: {user_role}
+
+            ### Change username:
+""")
+
+UPDATE_USERNAME = "http://web-api:4000/users/users/username"
 
 update_username = st.text_input(
     label = "Please enter new username",
@@ -29,7 +40,7 @@ if update_username:
              "user_name":update_username,
              "user_id": user_id})
         if response.status_code == 200:
-            st.session_state['username'] = update_username
+            st.session_state['user_name'] = update_username
             st.success(f"Updated username to: {update_username}")
         else:
             st.error(

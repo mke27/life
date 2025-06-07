@@ -19,7 +19,7 @@ def get_user_by_id(user_id):
         cursor = db.get_db().cursor()
 
         query = """
-            SELECT u.user_ID, u.user_name, u.user_country, r.role_name
+            SELECT u.user_ID, u.user_name, u.first_name, r.role_name
             FROM User u
             JOIN User_Role r ON u.role_ID = r.role_ID
             WHERE u.user_ID = %s
@@ -36,70 +36,55 @@ def get_user_by_id(user_id):
     except Error as e:
         current_app.logger.error(f'Database error in get_user_by_id: {str(e)}')
         return jsonify({"error": str(e)}), 500
-    
-@users.route("/users/role/<role_name>", methods=["GET"])
-def get_role_id_by_name(role_name):
+
+@users.route("/user/id/<user_name>", methods=["GET"])
+def get_user_id_by_username(user_name):
     try:
         cursor = db.get_db().cursor()
 
         query = """
-            SELECT role_ID
-            FROM User_Role
-            WHERE role_name = %s
+            SELECT user_ID
+            From User
+            WHERE user_name = %s
         """
-        cursor.execute(query, role_name)
-        role = cursor.fetchone()
+        cursor.execute(query, (user_name,))
+        user = cursor.fetchone()
+
+        if not user:
+            cursor.close()
+            return jsonify({"error": "User not found"}), 404
         cursor.close()
-        if role:
-            return jsonify(role["role_ID"]), 200
-        else:
-            return jsonify({"error": "Role not found"}), 404
+        return jsonify(user), 200
+
     except Error as e:
-        current_app.logger.error(f'Database error in get_role_id_by_name: {str(e)}')
+        current_app.logger.error(f'Database error in get_user_by_id: {str(e)}')
         return jsonify({"error": str(e)}), 500
 
-@users.route("/users/role/<int:role_id>", methods=["GET"])
-def get_usernames_by_role_id(role_id):
+    
+@users.route("/role/<role_name>", methods=["GET"])
+def get_usernames_by_role_name(role_name):
     try:
         cursor = db.get_db().cursor()
 
         query = """
-            SELECT user_name
-            FROM User
-            WHERE role_ID = %s
+            SELECT u.user_name
+            FROM User u
+            JOIN User_Role ur ON u.role_ID = ur.role_ID
+            WHERE ur.role_name = %s
         """
-        cursor.execute(query, (role_id))
+        cursor.execute(query, role_name)
         users = cursor.fetchall()
         cursor.close()
-    
+
+        if not users:
+            return jsonify({"error": "No usernames found for this role"})
+
+
         usernames = [user["user_name"] for user in users]
         return jsonify(usernames), 200
 
     except Error as e:
-        current_app.logger.error(f'Database error in get_user_by_role_id: {str(e)}')
-        return jsonify({"error": str(e)}), 500
-    
-@users.route("/users/getID/<user_name>", methods=["GET"])
-def get_user_id(user_name):
-    try:
-        cursor = db.get_db().cursor()
-
-        query = """
-            SELECT user_id
-            FROM User
-            WHERE user_name = %s
-        """
-        cursor.execute(query, (user_name))
-        user = cursor.fetchone()
-        cursor.close()
-
-        if user:
-            return jsonify({"user_id": user["user_id"]}), 200
-        else:
-            return jsonify({"error": "User not found"}), 404
-
-    except Error as e:
-        current_app.logger.error(f'Database error in get_user_by_role_id: {str(e)}')
+        current_app.logger.error(f'Database error in get_user_by_role_name: {str(e)}')
         return jsonify({"error": str(e)}), 500
     
 @users.route('/users/remove/<int:user_id>', methods=["DELETE"])
@@ -121,15 +106,44 @@ def remove_user(user_id):
         return jsonify({'error': str(e)}), 500
 
   
-@users.route('/users/name', methods=['PUT'])
-def update_name():
+@users.route('/users/username', methods=['PUT'])
+def update_username():
+    current_app.logger.info('PUT /users/username route')
+    try:
+        user_info = request.json
+        user_id = user_info.get('user_id')
+        user_name = user_info.get('user_name')
+
+        if not user_id or not user_name:
+            return jsonify({'error': 'Missing user_id or user_name'}), 400
+
+        query = 'UPDATE User SET user_name = %s WHERE user_id = %s'
+        data = (user_name, user_id)
+
+        cursor = db.get_db().cursor()
+        cursor.execute(query, data)
+        db.get_db().commit()
+
+        if cursor.rowcount == 0:
+            cursor.close()
+            return jsonify({'error': 'User not found'}), 404
+
+        cursor.close()
+        return jsonify({'message': 'User name updated successfully'}), 200
+
+    except Exception as e:
+        current_app.logger.error(f'Error updating user name: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500
+
+@users.route('/users/first_name', methods=['PUT'])
+def update_first_name():
     current_app.logger.info('PUT /users/name route')
     user_info = request.json
     user_id = user_info['user_id']
-    user_name = user_info['user_name']
+    first_name = user_info['first_name']
 
     query = 'UPDATE User SET user_name = %s WHERE user_id = %s'
-    data = (user_name, user_id)
+    data = (first_name, user_id)
     cursor = db.get_db().cursor()
     cursor.execute(query, data)
     db.get_db().commit()
