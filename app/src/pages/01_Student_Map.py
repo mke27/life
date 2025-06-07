@@ -77,8 +77,9 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
     # st.write(f"Response text: {df}")
 
     sorted_df = df.sort_values('similarity')
-
-
+    #st.table(df)
+    fig = px.choropleth(df, scope='europe', locations='Country_input', locationmode='country names', color='similarity')
+    st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
     # try:
     #     #JSONifying twice?
     #     json_results = results.json()  # This should be a list of dicts
@@ -143,7 +144,3 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
 
 if st.button('Compare Preference History', type='primary', use_container_width=True):
     st.switch_page('pages/03_Past_Prefs.py')
-
-if len(df) > 1:
-    fig = px.choropleth(df, scope='europe', locations='Country_input', locationmode='country names', color='similarity')
-    st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
