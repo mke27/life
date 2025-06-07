@@ -17,7 +17,6 @@ st.write(f"### Change username from {username}")
 st.write(f"Current user_id: {user_id}")
 
 UPDATE_USERNAME = "http://web-api:4000/users/users/name"
-DELETE_USER = "http://web-api:4000/users/users/remove/{user_id}"
 
 update_username = st.text_input(
     label = "Please enter new username",
@@ -49,5 +48,5 @@ st.markdown("""
             """)
 
 if st.button("Delete user"):
+     requests.delete(f"http://web-api:4000/users/users/remove/{user_id}")
      st.switch_page('Home.py')
-     requests.delete(DELETE_USER)
