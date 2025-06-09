@@ -1127,5 +1127,23 @@ INSERT INTO User(first_name,user_name,role_id) VALUES ('Em','eleyre20',3);
 INSERT INTO User(first_name,user_name,role_id) VALUES ('Shelba','sballston21',3);
 INSERT INTO User(first_name,user_name,role_id) VALUES ('Anstice','asamudio22',1);
 
+
+-- INSERT INTO Factor(factor_ID, factor_name) VALUES (1, 'education');
+-- INSERT INTO Factor(factor_ID, factor_name) VALUES (2, 'health');
+-- INSERT INTO Factor(factor_ID, factor_name) VALUES (3, 'safety');
+-- INSERT INTO Factor(factor_ID, factor_name) VALUES (4, 'environment');
+
 INSERT INTO Policy_News(factor_ID, urls, title, date_created)
-    VALUES (1, "url", "Entrepreneurial skills and compentences throughout life", '2025-06-01')
+    VALUES(1, "https://education.ec.europa.eu/news/studying-in-europe-balancing-part-time-work-and-your-studies", "Studying in Europe? Balancing part-time work and your studies", '2025-05-26'),
+          (1, "https://education.ec.europa.eu/news/student-visas-in-europe-what-you-need-to-know", "Student visas in Europe: what you need to know", '2025-04-16'),
+          (1, "https://education.ec.europa.eu/news/have-your-say-on-how-the-eu-budget-should-support-education-and-training", "Have your say on how the EU budget should support education and training", '2025-04-07'),
+          (2, "https://ec.europa.eu/newsroom/sante/newsletter-archives/63884", "Health Technology Assessment: New Public Consultation and Opportunity to Apply for Joint Scientific Consultations", '2025-05-28'),
+          (2, "https://ec.europa.eu/newsroom/sante/newsletter-archives/63609", "The European Commission Hosts Key One Health Meeting", '2025-05-21'),
+          (2, "https://ec.europa.eu/newsroom/sante/newsletter-archives/63497", "Commission adopts temporary restriction on use of Chikungunya vaccine for older patients", '2025-05-16'),
+          (3, "https://www.europol.europa.eu/media-press/newsroom/news/50-arrested-and-4-tonnes-of-cocaine-seized-in-major-hit-against-drug-trafficking-in-spain", "50 arrested and 4 tonnes of cocaine seized in major hit against drug trafficking in Spain", '2025-06-06'),
+          (3, "https://www.europol.europa.eu/media-press/newsroom/news/bulgarian-authorities-arrest-18-for-smuggling-migrants-across-its-southern-border", "Bulgarian authorities arrest 18 for smuggling migrants across its southern border", '2025-06-05'),
+          (3, "https://www.europol.europa.eu/media-press/newsroom/news/74-handguns-and-automatic-rifles-seized-11-firearms-traffickers-arrested", "74 handguns and automatic rifles seized, 11 firearms traffickers arrested", '2025-06-04'),
+          (4, "https://environment.ec.europa.eu/https://ec.europa.eu/commission/presscorner/detail/en/ip_25_1404", "Commission launches strategy to enhance EU water security", '2025-06-04'),
+          (4, "https://environment.ec.europa.eu/https://cinea.ec.europa.eu/news-events/news/nature-climate-and-circular-economy-projects-emerge-winners-2025-life-awards-2025-06-03_en", "Nature, climate & circular economy projects win at LIFE Awards 2025", '2025-06-03'),
+          (4, "https://environment.ec.europa.eu//news/eu-green-week-2025-circular-solutions-competitive-europe-2025-06-02_en", "EU Green Week 2025: Circular solutions for a competitive Europe", '2025-06-02');
+
