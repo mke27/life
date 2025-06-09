@@ -5,11 +5,14 @@ logger = logging.getLogger(__name__)
 import streamlit as st
 from modules.nav import SideBarLinks
 import requests
+import json
 
 st.set_page_config(layout = 'wide')
 SideBarLinks()
 from modules.style import style_sidebar
 style_sidebar()
+
+API = 'http://web-api:4000/faye/policy'
 
 st.title('Policy News')
 
@@ -20,23 +23,28 @@ st.subheader("View recent EU policy news related to: ")
 factors = ["Education", "Health", "Safety", "Environment"]
 max_selected = 2
 
-selected_count = sum(
-    st.session_state.get(f"checkbox_{i}", False) for i in range(len(factors))
-)
-
+# selected_count = sum(
+#     st.session_state.get(f"checkbox_{i}", False) for i in range(len(factors))
+# )
+current_value = False
+states = list()
 for i, factor in enumerate(factors):
-    current_value = st.session_state.get(f"checkbox_{i}", False)
-    disabled = not current_value and selected_count >= max_selected
-    state = st.checkbox(
+    current_value = st.session_state.get(f"checkbox_{i}")
+    # disabled = not current_value and selected_count >= max_selected
+    states.append(st.checkbox(
         label=factor,
         value=current_value,
         key=f"checkbox_{i}",
-        disabled=disabled
-    )
+        # disabled=disabled
+    ))
 
 if st.button('View Policies'):
     st.subheader("Most Recent News On: ")
     col1, col2, col3 = st.columns(3)
+    response = requests.get(API)
+    response_json = json.loads(response.text)
+
+    st.write(f"response={response_json}")
     with col1:
         st.subheader("Link 1")
         st.write("Title")
