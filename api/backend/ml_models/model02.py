@@ -1,10 +1,10 @@
-# time series auto regression model
-
+from backend.db_connection import db
 import numpy as np
 import pandas as pd
-import plotly.express as px
+import logging
 
-df = pd.read_csv('datasets/preprocessed-datasets/alldata_unstandard.csv')
+from flask import current_app
+
 
 def autoregressor(df):
     """
@@ -113,36 +113,42 @@ def predict(y, w, country, target_year):
     
     return pred
 
-def prediction_table(country):
-    """
-    Predicts QoL score for next five years and returns a dataframe of year and predicted QoL score
 
-    args:
-        - country: string target country name
+def train():
+  """
+  You could have a function that performs training from scratch as well as testing (see below).
+  It could be activated from a route for an "administrator role" or something similar. 
+  """
+  return 'Training the model'
 
-    returns: 
-        - pred_df: dataframe of next five years of QoL scores for inputted country
-    """
-    matrices = autoregressor(df)
-    X = matrices[0]
-    y = matrices[1]
-    w = linreg(X, y)
-    years = list(range(2023, 2028))  
-    predictions = []
+def test():
+  return 'Testing the model'
 
-    for year in years:
-        pred = predict(y, w, country, year)
-        predictions.append({'year': year, 'qol': pred})
+def predict_table(input_country):
+  """
+  Retreives model parameters from the database and predicts QoL score for next five years 
+  and returns a dataframe of year and predicted QoL score
+  """
+  # get a database cursor 
+  cursor = db.get_db().cursor()
+  # get the model params from the database
+  query = 'SELECT country_name, score_year, qol_score FROM ML_Score_US'
+  cursor.execute(query)
+  return_val = cursor.fetchall()
 
+  df = pd.DataFrame.from_dict(return_val)
+
+  matrices = autoregressor(df)
+  X = matrices[0]
+  y = matrices[1]
+  w = linreg(X, y)
+  years = list(range(2023, 2028))  
+  predictions = []
+  
+  for year in years:
+    pred = predict(y, w, input_country, year)
+    predictions.append({'year': year, 'prediction': pred})
+    
     pred_df = pd.DataFrame(predictions)
-
+    
     return pred_df
-
-austria_test = prediction_table("Austria")
-print(austria_test)
-
-
-
-
-    
-    
