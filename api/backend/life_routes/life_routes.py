@@ -295,7 +295,7 @@ def get_pref_topcountry(user_ID):
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""
-            SELECT pref_ID, top_country
+            SELECT pref_ID, top_country, weight1, weight2, weight3, weight4
             FROM Preference
             WHERE user_ID = %s
             ORDER BY pref_date DESC
@@ -305,7 +305,7 @@ def get_pref_topcountry(user_ID):
         cursor.close()
 
         pref_list = [
-            {"pref_ID": row["pref_ID"], "top_country": row["top_country"]}
+            {"pref_ID": row["pref_ID"], "top_country": row["top_country"], "weight1": row["weight1"], "weight2": row["weight2"], "weight3": row["weight3"], "weight4": row["weight4"]}
             for row in prefs
         ]
 
@@ -454,7 +454,8 @@ def get_policy():
         cursor = db.get_db().cursor()
         cursor.execute("""
             SELECT factor_ID, urls, title, date_created
-            FROM Policy
+            FROM Policy_News
+            ORDER BY date_created DESC
         """)
         policies = cursor.fetchall()
         cursor.close()
