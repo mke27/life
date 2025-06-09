@@ -78,7 +78,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
 
     sorted_df = df.sort_values('similarity')
     #st.table(df)
-    fig = px.choropleth(df, scope='europe', locations='Country_input', locationmode='country names', color='similarity')
+    fig = px.choropleth(df, title="Map of Countries That Best Match Your Priorities",scope='europe', locations='Country_input', locationmode='country names', color='similarity')
     st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
     # try:
     #     #JSONifying twice?
