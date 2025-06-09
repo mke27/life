@@ -39,7 +39,7 @@ cols = st.columns(5)
 for i, pref in enumerate(past_prefs):
     country_id = pref["top_country"]
     country_name = country_id_to_name.get(country_id, f"Unknown ID {country_id}")
-    label = f"{i+1}. {country_name}"
+    label = f"{i+1}. {country_name}, Education: {pref['weight1']}, Health: {pref['weight2']}, Safety: {pref['weight3']}, Environment: {pref['weight4']}"
     if cols[i].checkbox(label, key=f"pref_{pref['pref_ID']}"):
         selected_prefs.append(pref)
 
