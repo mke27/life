@@ -20,23 +20,23 @@ def autoregressor(df):
     """
     p = 5
     eu_countries = [
-                "country_Austria", "country_Belgium", "country_Bulgaria", "country_Croatia", "country_Cyprus", "country_Czechia", "country_Denmark",
-                "country_Estonia", "country_Finland", "country_France", "country_Germany", "country_Greece", "country_Hungary", "country_Ireland",
-                "country_Italy", "country_Latvia", "country_Lithuania", "country_Luxembourg", "country_Malta", "country_Netherlands",
-                "country_Poland", "country_Portugal", "country_Romania", "country_Slovakia", "country_Slovenia", "country_Spain"
+                " country_name_Austria", " country_name_Belgium", " country_name_Bulgaria", " country_name_Croatia", " country_name_Cyprus", " country_name_Czechia", " country_name_Denmark",
+                " country_name_Estonia", " country_name_Finland", " country_name_France", " country_name_Germany", " country_name_Greece", " country_name_Hungary", " country_name_Ireland",
+                " country_name_Italy", " country_name_Latvia", " country_name_Lithuania", " country_name_Luxembourg", " country_name_Malta", " country_name_Netherlands",
+                " country_name_Poland", " country_name_Portugal", " country_name_Romania", " country_name_Slovakia", " country_name_Slovenia", " country_name_Spain"
             ]
 
-    df_encoded = pd.get_dummies(df, columns=['country'], dtype = 'int')
+    df_encoded = pd.get_dummies(df, columns=[' country_name'], dtype = 'int')
 
     X = []
     y = []
 
-    for country in df['country'].unique(): 
+    for country in df[' country_name'].unique(): 
 
-        mask = df['country'] == country
-        df_country = df_encoded[mask].sort_values('year')
+        mask = df[' country_name'] == country
+        df_country = df_encoded[mask].sort_values(' score_year')
 
-        qol_country = df_country['qol'].to_numpy()
+        qol_country = df_country[' qol_score'].to_numpy()
         dummy_country = df_country[eu_countries].to_numpy()[0]
 
         for t in range(p, len(qol_country)):
@@ -112,7 +112,6 @@ def predict(y, w, country, target_year):
         current_year += 1
     
     return pred
-
 
 def train():
   """
