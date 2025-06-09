@@ -447,6 +447,8 @@ def get_scores():
         return jsonify(scores)
     except Error as e:
         return jsonify({"error": str(e)}), 500
+    
+@faye.route("/policy")
 
 
 
