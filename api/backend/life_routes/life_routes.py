@@ -38,7 +38,7 @@ def get_user_by_id(user_ID):
         return jsonify({"error": str(e)}), 500
 
 @users.route("/user/id/<user_name>", methods=["GET"])
-def get_user_id_by_username(user_name):
+def get_user_ID_by_username(user_name):
     try:
         cursor = db.get_db().cursor()
 
@@ -205,8 +205,8 @@ def get_all_pred_scores():
         current_app.logger.error(f'Database error in get_all_pred_scores: {str(e)}')
         return jsonify({"error": str(e)}), 500
 
-# @grace.route("/preferences/by_user/<int:user_id>", methods=["GET"])
-# def get_preferences_by_user(user_id):
+# @grace.route("/preferences/by_user/<int:user_ID>", methods=["GET"])
+# def get_preferences_by_user(user_ID):
 #     try:
 #         cursor = db.get_db().cursor(dictionary=True)
 #         cursor.execute("""
@@ -214,7 +214,7 @@ def get_all_pred_scores():
 #             FROM Preference 
 #             WHERE user_ID = %s
 #             ORDER BY pref_date DESC
-#         """, (user_id,))
+#         """, (user_ID,))
 #         preferences = cursor.fetchall()
 #         cursor.close()
 
