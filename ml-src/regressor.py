@@ -3,9 +3,12 @@
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 df = pd.read_csv('datasets/preprocessed-datasets/alldata_unstandard.csv')
 
+# building vectors for autoregresssion
 def autoregressor(df):
     """
     Gives the x and y vector for the autoregressive model predicting QoL with a 5 year lag
@@ -51,6 +54,7 @@ def autoregressor(df):
 
     return [X, y]
 
+# performing linear regression
 def linreg(X, y):
     """
     Returns weight vector for autoregressive model
@@ -67,6 +71,7 @@ def linreg(X, y):
 
     return w
 
+# making predictions
 def predict(y, w, country, target_year):
     """
     Predicts future QoL for a given country and year
@@ -113,6 +118,7 @@ def predict(y, w, country, target_year):
     
     return pred
 
+# creating table of predicted scores for a country
 def prediction_table(country):
     """
     Predicts QoL score for next five years and returns a dataframe of year and predicted QoL score
@@ -138,6 +144,7 @@ def prediction_table(country):
 
     return pred_df
 
+# combining predicted and historical scores
 def qol_df(old_df, pred_df, country):
     """
     Creates a dataframe with existing and predicted QoL scores for a particular country.
@@ -156,9 +163,10 @@ def qol_df(old_df, pred_df, country):
 
     return merged
 
+# plotting historical and predicted qol for a country
 def plot_qol(qol_data, country):
     """
-    Plots actual vs predicted QoL scores for a single country
+    Plots actual and predicted QoL scores over time for a single country
     
     Args:
         - qol_data: DataFrame with 'year', 'qol_score', and 'Projected?'
@@ -197,9 +205,132 @@ def plot_qol(qol_data, country):
 
     fig.show()
 
-austria_test = prediction_table("Austria")
-test = qol_df(df, austria_test, "Austria")
-plot_qol(test, "Austria")
+# performs loocv on autoregressor
+def loocv_autoreg(df):
+    """
+    LOOCV for time series autoregressor
+
+    args:
+        - df: dataframe with QoL scores for EU countries
+
+    returns:
+        - dict with averaged mse and r2 across all folds
+    """
+    p = 5
+    results = []
+
+    df_encoded = pd.get_dummies(df, columns=[' country_name'], dtype='int')
+    country_dummy_cols = sorted([col for col in df_encoded.columns if col.startswith(' country_name_')])
+    n_countries = len(country_dummy_cols)
+
+    y_all = []
+    y_preds = []
+
+    for country in df[' country_name'].unique():
+        mask = df[' country_name'] == country
+        df_country = df_encoded[mask].sort_values(' score_year').reset_index(drop=True)
+
+        qol_country = df_country[' qol_score'].to_numpy()
+        country_vec = np.array([
+            1 if col == f' country_name_{country}' else 0
+            for col in country_dummy_cols
+        ])
+
+        n_samples = len(qol_country)
+
+        for t in range(p, n_samples):
+            
+            X_train = []
+            y_train = []
+
+            for i in range(p, n_samples):
+                # leave out test point
+                if i == t:
+                    continue 
+
+                lags = qol_country[i-p:i][::-1]
+                row = np.concatenate([country_vec, lags])
+                X_train.append(row)
+                y_train.append(qol_country[i])
+
+            X_train = np.array(X_train)
+            y_train = np.array(y_train)
+
+            # lambda to fix for singular matrix error
+            lambda_reg = 1e-5
+            XtX = X_train.T @ X_train + lambda_reg * np.eye(X_train.shape[1])
+            Xty = X_train.T @ y_train
+            w = np.linalg.solve(XtX, Xty)
+
+            lags_test = qol_country[t-p:t][::-1]
+            X_test = np.concatenate([country_vec, lags_test])
+
+            pred = np.dot(X_test, w)
+
+            y_all.append(qol_country[t])
+            y_preds.append(pred)
+
+    y_all = np.array(y_all)
+    y_preds = np.array(y_preds)
+
+    resids = y_all - y_preds
+
+    mse = np.mean((resids) ** 2)
+    
+    ss_res = np.sum((resids) ** 2)
+    ss_tot = np.sum((y_all - np.mean(y_all)) ** 2)
+    r2 = 1 - (ss_res / ss_tot)
+
+    return {'mse': mse, 'r2': r2, "residuals": resids}
+
+# plots testing linearity
+def linearity_plots(df, lag_index):
+    """
+    Creates plots testing the linearity of the autoregressive model
+    """
+    results = loocv_autoreg(df)
+    resids = results['residuals']
+
+    matrices = autoregressor(df)
+    X_all = matrices[0]
+
+    lag_col = 26 + lag_index - 1  
+    x_feature = [x[lag_col] for x in X_all]
+
+    # resids vs. x vals
+    plt.scatter(x_feature, resids, alpha=0.5)
+    plt.axhline(0, color='red', linestyle='--')
+    plt.xlabel(f'QoL Lag {lag_index} Year(s) Ago')
+    plt.ylabel('Residuals')
+    plt.title(f'Residuals vs QoL Lag {lag_index} Year(s) Ago')
+    plt.show()
+
+    # reisds vs. order
+    plt.figure(figsize=(10, 5))
+    plt.plot(resids, marker='o', linestyle='-', alpha=0.7)
+    plt.axhline(0, color='red', linestyle='--')
+    plt.xlabel('Index/Order')
+    plt.ylabel('Residuals')
+    plt.title('Residuals vs. Order')
+    plt.show()
+
+    # resids histogram
+    sns.histplot(resids, kde=False)
+    plt.xlabel("Residuals")
+    plt.title("Residuals Histogram")
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
