@@ -105,8 +105,8 @@ with row1_col2:
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'Student'
             st.session_state['user_name'] = grace_user
-            st.session_state['user_id'] = get_userID(grace_user)
-            st.session_state['first_name'] = get_first_name(st.session_state['user_id'])
+            st.session_state['user_ID'] = get_userID(grace_user)
+            st.session_state['first_name'] = get_first_name(st.session_state['user_ID'])
             logger.info("Logging in as University Student Persona")
             st.switch_page('pages/00_University_Student_Home.py')
     warning_grace = st.empty()
@@ -136,8 +136,8 @@ with row2_col2:
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'Policymaker'
             st.session_state['user_name'] = james_user
-            st.session_state['user_id'] = get_userID(james_user)
-            st.session_state['first_name'] = get_first_name(st.session_state['user_id'])
+            st.session_state['user_ID'] = get_userID(james_user)
+            st.session_state['first_name'] = get_first_name(st.session_state['user_ID'])
             logger.info("Logging in as Policymaker Persona")
             st.switch_page('pages/10_Policymaker_Home.py')
     warning_james = st.empty()
@@ -167,8 +167,8 @@ with row3_col2:
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'Activist'
             st.session_state['user_name'] = faye_user
-            st.session_state['user_id'] = get_userID(faye_user)
-            st.session_state['first_name'] = get_first_name(st.session_state['user_id'])
+            st.session_state['user_ID'] = get_userID(faye_user)
+            st.session_state['first_name'] = get_first_name(st.session_state['user_ID'])
             logger.info("Logging in as Activist Persona")
             st.switch_page('pages/20_Activist_Home.py')
     warning_faye = st.empty()

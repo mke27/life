@@ -11,7 +11,7 @@ import requests
 st.write("# User Settings")
 
 user_name = st.session_state['user_name']
-user_id = st.session_state['user_id']
+user_ID = st.session_state['user_ID']
 first_name = st.session_state['first_name']
 user_role = st.session_state['role']
 st.markdown(f"""
@@ -20,7 +20,7 @@ st.markdown(f"""
 
             Username: {user_name}
 
-            User ID: {user_id}
+            User ID: {user_ID}
 
             Role: {user_role}
 
@@ -61,7 +61,7 @@ if update_username:
     try:
         response = requests.put(UPDATE_USERNAME, json={
              "user_name": update_username,
-             "user_id": user_id})
+             "user_ID": user_ID})
         if response.status_code == 200:
             st.session_state['user_name'] = update_username
             st.success(f"Updated username to: {update_username}")
@@ -80,5 +80,5 @@ st.markdown("""
             """)
 
 if st.button("Delete user"):
-     requests.delete(f"http://web-api:4000/users/users/remove/{user_id}")
+     requests.delete(f"http://web-api:4000/users/users/remove/{user_ID}")
      st.switch_page('Home.py')

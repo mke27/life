@@ -110,7 +110,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         st.stop()   
 
     pref_data = {
-        "user_ID": st.session_state["user_id"],
+        "user_ID": st.session_state["user_ID"],
         "pref_date": datetime.now().isoformat(), 
         "top_country": top_country_id,
         "factorID_1": 1,
