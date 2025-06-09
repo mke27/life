@@ -5,6 +5,7 @@ logger = logging.getLogger(__name__)
 import streamlit as st
 from modules.nav import SideBarLinks
 import requests
+import json
 
 st.set_page_config(layout = 'wide')
 SideBarLinks()
@@ -14,7 +15,6 @@ style_sidebar()
 API = 'http://web-api:4000/james/policy'
 
 st.title('Policy News')
-
 
 st.subheader("View recent EU policy news related to: ")
 
@@ -68,11 +68,15 @@ if len(relevant_articles) != 0:
     #displays the relevant articles in the rows
     for i, article in enumerate(relevant_articles):
         with newsColList[i%len(newsColList)]:
-            st.write(article)
+            st.subheader(article['title'])
+            st.write(article['urls'])
+            st.write(article['date_created'])
 else:
     for i, article in enumerate(response_json):
         with newsColList[i%len(newsColList)]:
-            st.write(article)
+            st.subheader(article['title'])
+            st.write(article['urls'])
+            st.write(article['date_created'])
 
 
 
