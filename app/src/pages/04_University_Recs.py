@@ -62,4 +62,5 @@ if st.button('View top universities', type='primary', use_container_width=True):
             st.error(f"Failed to fetch universities: {e}")
 
 
+st.write("*University rankings according to https://www.mastersportal.com*")
 
