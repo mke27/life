@@ -53,19 +53,19 @@ def get_usernames(role_name):
      return usernames_res.json()
 
 def get_userID(user_name):
-    user_id_res = requests.get(f"http://web-api:4000/users/user/id/{user_name}")
+    user_ID_res = requests.get(f"http://web-api:4000/users/user/id/{user_name}")
 
-    if user_id_res.status_code != 200:
-        logger.error(f"Failed to get user_id for {user_name}")
+    if user_ID_res.status_code != 200:
+        logger.error(f"Failed to get user_ID for {user_name}")
         return None
      
-    user_id = user_id_res.json()
+    user_ID = user_ID_res.json()
     
-    if "user_ID" not in user_id:
+    if "user_ID" not in user_ID:
         logger.error(f"No user_ID found for {user_name}")
         return None
     
-    return user_id["user_ID"]
+    return user_ID["user_ID"]
 
 def get_first_name(user_ID):
     first_name_res = requests.get(f"http://web-api:4000/users/users/{user_ID}")
