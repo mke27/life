@@ -13,8 +13,8 @@ from backend.ml_models import model01
 
 
 users = Blueprint("users", __name__)
-@users.route("/users/<int:user_id>", methods=["GET"])
-def get_user_by_id(user_id):
+@users.route("/users/<int:user_ID>", methods=["GET"])
+def get_user_by_id(user_ID):
     try:
         cursor = db.get_db().cursor()
 
@@ -24,7 +24,7 @@ def get_user_by_id(user_id):
             JOIN User_Role r ON u.role_ID = r.role_ID
             WHERE u.user_ID = %s
         """
-        cursor.execute(query, (user_id,))
+        cursor.execute(query, (user_ID,))
         user = cursor.fetchone()
 
         if not user:
@@ -87,12 +87,12 @@ def get_usernames_by_role_name(role_name):
         current_app.logger.error(f'Database error in get_user_by_role_name: {str(e)}')
         return jsonify({"error": str(e)}), 500
     
-@users.route('/users/remove/<int:user_id>', methods=["DELETE"])
-def remove_user(user_id):
+@users.route('/users/remove/<int:user_ID>', methods=["DELETE"])
+def remove_user(user_ID):
     try:
         cursor = db.get_db().cursor()
         query = 'DELETE FROM User WHERE user_ID = %s'
-        cursor.execute(query, (user_id,))
+        cursor.execute(query, (user_ID,))
         
         if cursor.rowcount == 0:
             cursor.close()
@@ -100,7 +100,7 @@ def remove_user(user_id):
 
         db.get_db().commit()
         cursor.close()
-        return jsonify({'message': f'User {user_id} deleted successfully'}), 200
+        return jsonify({'message': f'User {user_ID} deleted successfully'}), 200
 
     except Error as e:
         return jsonify({'error': str(e)}), 500
@@ -111,14 +111,14 @@ def update_username():
     current_app.logger.info('PUT /update/username route')
     try:
         user_info = request.json
-        user_id = user_info.get('user_id')
+        user_ID = user_info.get('user_ID')
         user_name = user_info.get('user_name')
 
-        if not user_id or not user_name:
-            return jsonify({'error': 'Missing user_id or user_name'}), 400
+        if not user_ID or not user_name:
+            return jsonify({'error': 'Missing user_ID or user_name'}), 400
 
-        query = 'UPDATE User SET user_name = %s WHERE user_id = %s'
-        data = (user_name, user_id)
+        query = 'UPDATE User SET user_name = %s WHERE user_ID = %s'
+        data = (user_name, user_ID)
 
         cursor = db.get_db().cursor()
         cursor.execute(query, data)
@@ -141,14 +141,14 @@ def update_first_name():
     current_app.logger.info('PUT /update/username route')
     try:
         user_info = request.json
-        user_id = user_info.get('user_id')
+        user_ID = user_info.get('user_ID')
         first_name = user_info.get('first_name')
 
-        if not user_id or not first_name:
-            return jsonify({'error': 'Missing user_id or user_name'}), 400
+        if not user_ID or not first_name:
+            return jsonify({'error': 'Missing user_ID or user_name'}), 400
 
-        query = 'UPDATE User SET first_name = %s WHERE user_id = %s'
-        data = (first_name, user_id)
+        query = 'UPDATE User SET first_name = %s WHERE user_ID = %s'
+        data = (first_name, user_ID)
 
         cursor = db.get_db().cursor()
         cursor.execute(query, data)
