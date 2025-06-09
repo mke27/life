@@ -447,8 +447,10 @@ def get_scores():
         return jsonify(scores)
     except Error as e:
         return jsonify({"error": str(e)}), 500
+
+james = Blueprint("james", __name__)
     
-@faye.route("/policy", methods=["GET"])
+@james.route("/policy", methods=["GET"])
 def get_policy():
     try:
         cursor = db.get_db().cursor()
