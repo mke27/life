@@ -447,6 +447,18 @@ def get_scores():
         return jsonify(scores)
     except Error as e:
         return jsonify({"error": str(e)}), 500
+    
+@faye.route("/policy", methods=["GET"])
+def get_policy():
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("""
+            SELECT factor_ID, urls, title, date_created
+            FROM Policy
+        """)
+        policies = cursor.fetchall()
+        cursor.close()
 
-
-
+        return jsonify(policies), 200
+    except Error as e:
+        return jsonify({"error": str(e)}), 500

@@ -101,12 +101,10 @@ CREATE TABLE IF NOT EXISTS Policy_News
 (
     policy_ID  INT AUTO_INCREMENT PRIMARY KEY,
     factor_ID  INT UNSIGNED NOT NULL,
-    country_ID INT UNSIGNED NOT NULL,
     urls        VARCHAR(500),
     title      VARCHAR(500),
     date_created       DATE,
-    FOREIGN KEY (factor_ID) REFERENCES Factor (factor_ID),
-    FOREIGN KEY (country_ID) REFERENCES Country (country_ID)
+    FOREIGN KEY (factor_ID) REFERENCES Factor (factor_ID)
 );
 
 CREATE TABLE IF NOT EXISTS ML_Country
@@ -189,9 +187,9 @@ INSERT INTO Country
           (27,"Sweden");
 
 INSERT INTO University(country_ID, university_name, uni_url)
-    VALUES(1, "University of Vienna", "https://www.univie.ac.at/en/"), (1, "Vienna University of Technology", "https://www.univie.ac.at/en/"), (1, "University of Innsbruck", "https://www.univie.ac.at/en/"),
-          (2, "KU Leuven", "url"), (2, "University of Antwerp", "url"), (2, "Ghent University", "url"),
-          (3, "Sofia University", "url"), (3, "International School of Culinary Arts and Crafts 'Sharena Fabrika'", "url"), (3, "University of Ruse", "url"),
+    VALUES(1, "University of Vienna", "https://www.univie.ac.at/en/"), (1, "Vienna University of Technology", "https://www.tuwien.at/en/"), (1, "University of Innsbruck", "https://www.uibk.ac.at/en/"),
+          (2, "KU Leuven", "https://www.kuleuven.be/kuleuven"), (2, "University of Antwerp", "https://www.uantwerpen.be/en/"), (2, "Ghent University", "https://www.ugent.be/en"),
+          (3, "Sofia University", "https://www.uni-sofia.bg/eng"), (3, "International School of Culinary Arts and Crafts 'Sharena Fabrika'", "https://www.sharenafabrika.com/en"), (3, "University of Ruse", "https://www.uni-ruse.bg/en"),
           (4, "University of Zagreb", "url"), (4, "University of Split", "url"), (4, "Josip Juraj Strossmayer University of Osijek", "url"),
           (5, "University of Cyprus", "https://www.cyi.ac.cy/"), (5, "University of Nicosia", "https://www.unic.ac.cy/"), (5, "Cyprus University of Technology", "https://www.cut.ac.cy/"),
           (6, "Charles University", "url"), (6, "Czech Technical University in Prague", "url"), (6, "Masaryk University", "url"),
@@ -1129,3 +1127,5 @@ INSERT INTO User(first_name,user_name,role_id) VALUES ('Em','eleyre20',3);
 INSERT INTO User(first_name,user_name,role_id) VALUES ('Shelba','sballston21',3);
 INSERT INTO User(first_name,user_name,role_id) VALUES ('Anstice','asamudio22',1);
 
+INSERT INTO Policy_News(factor_ID, urls, title, date_created)
+    VALUES (1, "url", "Entrepreneurial skills and compentences throughout life", '2025-06-01')
