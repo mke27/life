@@ -14,14 +14,16 @@ def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
 def UserSettingsNav():
-    st.sidebar.page_link("pages/31_User_Profile.py", label="User Profile", icon="👤")
+    st.sidebar.page_link("pages/31_User_Profile.py", label="My Profile", icon="👤")
 
-
+def UserInfo():
+    st.sidebar.header(f"{st.session_state['first_name']}")
+    st.sidebar.write(f"Role: {st.session_state['role']}")
 
 #### ------------------------ Examples for Role of student ------------------------
 def StudentHomeNav():
     st.sidebar.page_link(
-        "pages/00_University_Student_Home.py", label="University Student Home", icon="👩‍🎓"
+        "pages/00_University_Student_Home.py", label="Home", icon="👩‍🎓"
     )
 
 
@@ -37,7 +39,7 @@ def UniversityNav():
 
 ## ------------------------ Examples for Role of policymaker ------------------------
 def PolicymakerNav():
-    st.sidebar.page_link("pages/10_Policymaker_Home.py", label="Policymaker Home", icon="👨‍💼")
+    st.sidebar.page_link("pages/10_Policymaker_Home.py", label="Home", icon="👨‍💼")
 
 
 def PolicyNav():
@@ -53,7 +55,7 @@ def SimilarityNav():
 
 #### ------------------------ Activist Role ------------------------
 def ActivistHomeNav():
-    st.sidebar.page_link("pages/20_Activist_Home.py", label="Activist Home", icon="👩‍💼")
+    st.sidebar.page_link("pages/20_Activist_Home.py", label="Home", icon="👩‍💼")
 
 def ExpansionNav():
     st.sidebar.page_link("pages/21_Faye_map_for_concerns.py", label="Expansion Map", icon="🗺️")
@@ -84,6 +86,7 @@ def SideBarLinks(show_home=False):
 
     # Show the other page navigators depending on the users' role.
     if st.session_state["authenticated"]:
+        UserInfo()
 
         # Show World Bank Link and Map Demo Link if the user is a political strategy advisor role.
         if st.session_state["role"] == "Student":
