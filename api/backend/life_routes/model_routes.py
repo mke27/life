@@ -63,3 +63,22 @@ def get_pred_scores(var_01, var_02):
         response.status_code = 500
         return response
     
+
+@model.route("/weights", methods=["GET"])
+def get_weights():
+    try:
+        current_app.logger.info("GET /weights handler")
+        
+        weights = model01.get_weights()
+        current_app.logger.info(f"Model weights returned: {weights}")
+
+        response_data = {"weights": weights}
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        response = make_response(
+            jsonify({"error": "Error processing weights request"}, {'e':e})
+        )
+        response.status_code = 500
+        return response
+    
