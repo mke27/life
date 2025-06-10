@@ -35,12 +35,23 @@ country_id_to_name = {item["country_ID"]: item["country_name"] for item in count
 selected_prefs = []
 st.subheader("Select 2 Past Preferences")
 
-cols = st.columns(5)
+cols = st.columns(3)
+selected_prefs = []
+
 for i, pref in enumerate(past_prefs):
     country_id = pref["top_country"]
     country_name = country_id_to_name.get(country_id, f"Unknown ID {country_id}")
-    label = f"{i+1}. {country_name}, Education: {pref['weight1']}, Health: {pref['weight2']}, Safety: {pref['weight3']}, Environment: {pref['weight4']}"
-    if cols[i].checkbox(label, key=f"pref_{pref['pref_ID']}"):
+    
+    label = f"""
+    {i+1}. {country_name}
+    Your input:
+    - Education: {pref['weight1']:.2f}
+    - Health: {pref['weight2']:.2f}
+    - Safety: {pref['weight3']:.2f}
+    - Environment: {pref['weight4']:.2f}
+    """
+    col = cols[i % 3]
+    if col.checkbox(label, key=f"pref_{pref['pref_ID']}"):
         selected_prefs.append(pref)
 
 if len(selected_prefs) != 2:

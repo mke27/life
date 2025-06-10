@@ -332,8 +332,11 @@ def linearity_plots(df, lag_index):
     plt.title("Residuals Histogram")
     plt.show()
 
-
-
+matrices = autoregressor(df)
+X_matrix = matrices[0]
+y_vector = matrices[1]
+weights = linreg(X_matrix, y_vector)
+print(weights)
 
 
 

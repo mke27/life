@@ -6,7 +6,12 @@ from logging.handlers import RotatingFileHandler
 
 from backend.db_connection import db
 from backend.simple.simple_routes import simple_routes
-from backend.life_routes.life_routes import users, grace, model, country, faye, james
+from backend.life_routes.country_routes import country
+from backend.life_routes.faye_routes import faye
+from backend.life_routes.grace_routes import grace
+from backend.life_routes.james_routes import james
+from backend.life_routes.model_routes import model
+from backend.life_routes.users_routes import users
 
 def create_app():
     app = Flask(__name__)
@@ -46,12 +51,12 @@ def create_app():
     # and give a url prefix to each
     app.logger.info("create_app(): registering blueprints with Flask app object.")
     app.register_blueprint(simple_routes)
-    app.register_blueprint(users, url_prefix="/users")
-    app.register_blueprint(grace, url_prefix="/grace")
-    app.register_blueprint(model, url_prefix="/model")
     app.register_blueprint(country,url_prefix="/country")
     app.register_blueprint(faye, url_prefix="/faye")
+    app.register_blueprint(grace, url_prefix="/grace")
     app.register_blueprint(james, url_prefix="/james")
+    app.register_blueprint(model, url_prefix="/model")
+    app.register_blueprint(users, url_prefix="/users")
 
     # Don't forget to return the app object
     return app
