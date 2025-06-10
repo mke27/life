@@ -46,21 +46,30 @@ if st.button('View top universities', type='primary', use_container_width=True):
                 st.info(f"No universities found in {country}.")
             else:
                 st.subheader(f"Top Universities in {country}")
-                cols = st.columns(3)
 
+                cols = st.columns(3)
                 for i, uni in enumerate(universities):
                     col = cols[i % 3]
                     with col:
-                        st.markdown(f"### {uni['university_name']}")
-                        st.write(f"**Website:** [{uni['uni_url']}]({uni['uni_url']})")
+                        st.markdown(
+                            f"""
+                            <div style="border:1px solid #ccc; border-radius:10px; padding:15px; margin:5px; background-color:#f9f9f9;">
+                                <h4 style='margin-bottom:5px'>{uni['university_name']}</h4>
+                                <p><a href="{uni['uni_url']}" target="_blank">Visit Website</a></p>
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
 
                         with st.popover("Join mailing list"):
                             st.markdown(f"Join {uni['university_name']}'s mailing list for more information.")
                             email = st.text_input("Enter your email.", key=f"email_{uni['university_ID']}")
+                            if st.button("Subscribe", key=f"subscribe_{uni['university_ID']}"):
+                                st.success(f"Subscribed to {uni['university_name']}!")
 
         except Exception as e:
             st.error(f"Failed to fetch universities: {e}")
 
 
-st.write("*University rankings according to https://www.mastersportal.com*")
+st.caption("*University rankings sourced from [mastersportal.com](https://www.mastersportal.com)*")
 
