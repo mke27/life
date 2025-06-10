@@ -11,11 +11,15 @@ import requests
 
 UPDATE_FIRSTNAME = "http://web-api:4000/users/update/first-name"
 UPDATE_USERNAME = "http://web-api:4000/users/update/username"
-st.title("Edit User")
+st.title("Edit Profile")
 st.write("Please fill out this form to change your first name or username.")
 with st.form(key = "form"):
-    first_name = st.text_input(label = "Change first name", max_chars = 20, placeholder = st.session_state['first_name'])
-    user_name = st.text_input(label = "Change username", max_chars = 20, placeholder = st.session_state['user_name'])
+    col1, col2 = st.columns(2)
+    with col1:
+        first_name = st.text_input(label = "Change first name:", max_chars = 20, placeholder = st.session_state['first_name'])
+
+    with col2:
+        user_name = st.text_input(label = "Change username:", max_chars = 20, placeholder = st.session_state['user_name'])
 
     submit_button = st.form_submit_button(label="Update Profile")
 
@@ -61,7 +65,7 @@ with st.form(key = "form"):
 
 st.write("")
 
-if st.button("Delete user"):
+if st.button("Delete Profile"):
      st.switch_page("pages/33_Remove_User.py")
      # requests.delete(f"http://web-api:4000/users/users/remove/{user_ID}")
 

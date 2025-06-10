@@ -8,7 +8,7 @@ style_sidebar()
 
 import requests
 
-st.write("# User Profile")
+st.write("# My Profile")
 
 st.info(f"""
             ### About User
@@ -21,5 +21,5 @@ st.info(f"""
             Role: {st.session_state['role']}
 """
 )
-if st.button("Edit User", type="primary"):
+if st.button("Edit Profile", type="primary"):
     st.switch_page("pages/32_User_Edit.py")
