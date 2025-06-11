@@ -68,11 +68,15 @@ if len(relevant_articles) != 0:
     #displays the relevant articles in the rows
     for i, article in enumerate(relevant_articles):
         with newsColList[i%len(newsColList)]:
-            st.write(article)
+            st.subheader(article['title'])
+            st.write(article['urls'])
+            st.write(article['date_created'])
 else:
     for i, article in enumerate(response_json):
         with newsColList[i%len(newsColList)]:
-            st.write(article)
+            st.subheader(article['title'])
+            st.write(article['urls'])
+            st.write(article['date_created'])
 
 
 
