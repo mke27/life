@@ -38,11 +38,26 @@ def get_scores():
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""
-            SELECT C.country_name, S.health_score, S.education_score, S.safety_score, S.environment_score
-            FROM ML_Score S
-            JOIN Country C ON S.country_ID = C.country_ID
-            WHERE S.score_year = 2022
+            SELECT country_name, health_score, education_score, safety_score, environment_score
+            FROM ML_Score
+            WHERE score_year = 2022
         """)
+        scores = cursor.fetchall()
+        cursor.close()
+
+        return jsonify(scores)
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+    
+@faye.route("/scores/<country_name>}", methods=["GET"])
+def get_scores_by_country(country_name):
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("""
+            SELECT country_name, health_score, education_score, safety_score, environment_score
+            FROM ML_Score
+            WHERE score_year = 2022 AND country_name = %s
+        """, (country_name,))
         scores = cursor.fetchall()
         cursor.close()
 
