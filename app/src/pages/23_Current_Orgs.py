@@ -48,7 +48,7 @@ if st.button('Submit', type='primary', use_container_width=True):
                         st.markdown(f"### {org['org_name']}")
                         org_url = org.get('org_url')
                         if org_url: 
-                            st.write(f"**Link:** {org_url}")
+                            st.link_button(f"Learn more about {org['org_name']}!", org_url)
 
         except Exception as e:
             st.error(f"Failed to fetch data: {e}")
