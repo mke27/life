@@ -42,7 +42,8 @@ logger.info("Loading the Home page of the app")
 st.title('Best Life')
 
 st.write('\n\n')
-st.write('### Welcome to Best Life! Which user would you like to log in as?')
+st.write('## Welcome to Best Life! Let us help you improve your quality of life today.') 
+st.write('### Which user would you like to log in as?')
 
 def get_usernames(role_name):
      usernames_res = requests.get(f"http://web-api:4000/users/role/{role_name}")
