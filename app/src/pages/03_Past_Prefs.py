@@ -40,7 +40,7 @@ st.subheader("Select 2 Past Preferences")
 cols = st.columns(3)
 selected_prefs = []
 
-def plot_qol(qol_data, country):
+def plot_qol(qol_data, country, qol_data2 = None, country2 = None):
     """
     Plots actual and predicted QoL scores over time for a single country
     
@@ -60,33 +60,65 @@ def plot_qol(qol_data, country):
 
     fig = go.Figure()
 
+    qol_df = pd.DataFrame(qol_data)
+    qol_df["Source"] = qol_df["year"].apply(
+        lambda y: "Historical Score" if y in historical_years else (
+            "Predicted Score" if y in predicted_years else "Unknown"
+        )
+    )
+
     fig.add_trace(go.Scatter(
         x=qol_df['year'],
         y=qol_df['qol_score'],
         mode='lines+markers',
-        name='QoL Score',
+        name=f'{country} QoL',
         line=dict(color='royalblue'),
-        customdata=qol_df[['Projected?']], 
+        customdata=qol_df[["Source"]],
         hovertemplate=
+            f'<b>{country}</b><br>' +
             'Year: %{x}<br>' +
             'QoL Score: %{y:.3f}<br>' +
-            'Projected?: %{customdata[0]}<extra></extra>'
+            'Type: %{customdata[0]}<extra></extra>'
     ))
+
+    if qol_data2 is not None and country2 is not None:
+        qol_df2 = pd.DataFrame(qol_data2)
+        qol_df2["Source"] = qol_df2["year"].apply(
+            lambda y: "Historical Score" if y in historical_years else (
+                "Predicted Score" if y in predicted_years else "Unknown"
+            )
+        )
+
+        fig.add_trace(go.Scatter(
+            x=qol_df2['year'],
+            y=qol_df2['qol_score'],
+            mode='lines+markers',
+            name=f'{country2} QoL',
+            line=dict(color='crimson'),
+            customdata=qol_df2[["Source"]],
+            hovertemplate=
+                f'<b>{country2}</b><br>' +
+                'Year: %{x}<br>' +
+                'QoL Score: %{y:.3f}<br>' +
+                'Type: %{customdata[0]}<extra></extra>'
+        ))
 
     fig.add_vline(x=2022.5, line_width=2, line_dash="dash", line_color="gray")
 
     fig.add_vrect(
-        x0=2023, x1=qol_df['year'].max(),
+        x0=2023, x1=max(
+            qol_df['year'].max(),
+            qol_df2['year'].max() if qol_data2 else 2027
+        ),
         fillcolor="lightgray", opacity=0.3,
         layer="below", line_width=0,
         annotation_text="Predicted", annotation_position="top left"
     )
 
     fig.update_layout(
-        title= f"Quality of Life (Historical and Projected) for {country}",
+        title="Quality of Life (Historical and Projected)",
         xaxis_title="Year",
-        yaxis_title="Quality of Life Score",
-        hovermode="x unified"
+        yaxis_title="Quality of Life Score"
     )
 
     st.plotly_chart(fig, use_container_width=True, key=f"qol_chart_{country}")
@@ -133,22 +165,30 @@ else:
             fig.update_layout(title_text=f"Preference {i+1}: {country}")
             col.plotly_chart(fig, use_container_width=True)
 
-            st.subheader(f"{country} Scores")
-            qol_url = f"http://web-api:4000/model/get_model_scores/{country}"
-            qol_response = requests.get(qol_url)
-            if qol_response.status_code == 200:
-                try:
-                    qol_data = qol_response.json()
-                    if isinstance(qol_data, list) and len(qol_data) > 0:
-                        plot_qol(qol_data, country)
-                    else:
-                        st.warning(f"No QoL data available for {country}.")
-                except Exception as e:
-                    st.error(f"Error parsing QoL data for {country}: {str(e)}")
-                    st.text(f"Raw response: {qol_response.text}")
-                
-            else:
-                st.error(f"Failed to fetch QoL data for {country}. Status code: {qol_response.status_code}")
-                st.text(f"Response: {qol_response.text}")
+        country_id_1 = selected_prefs[0]["top_country"]
+        country_id_2 = selected_prefs[1]["top_country"]
+
+        country_name_1 = country_id_to_name.get(country_id_1, f"Unknown ID {country_id_1}")
+        country_name_2 = country_id_to_name.get(country_id_2, f"Unknown ID {country_id_2}")
+
+        url_1 = f"http://web-api:4000/model/get_model_scores/{country_name_1}"
+        response_1 = requests.get(url_1)
+        url_2 = f"http://web-api:4000/model/get_model_scores/{country_name_2}"
+        response_2 = requests.get(url_2)
+
+        if response_1.status_code == 200 and response_2.status_code == 200:
+            try:
+                data_1 = response_1.json()
+                data_2 = response_2.json()
+                if isinstance(data_1, list) and isinstance(data_2, list):
+                    st.subheader("Quality of Life Comparison")
+                    fig = plot_qol(data_1, country_name_1, data_2, country_name_2)
+                else:
+                    st.warning("Invalid data format received from the model API.")
+            except Exception as e:
+                st.error(f"Error parsing model data: {str(e)}")
+                    
+        else:
+            st.error(f"Failed to fetch QoL data for countries")
             
 
