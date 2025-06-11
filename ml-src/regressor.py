@@ -414,43 +414,8 @@ def autoregressor_all(df, input_country):
 
     return merged_dict
 
-test = autoregressor_all(df, "Austria")
-print(test)
 
-"""
-country_list = [
-                "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
-                "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland",
-                "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
-                "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"
-            ]
 
-matricies = autoregressor(df)
-X = matricies[0]
-y = matricies[1]
-w = linreg(X, y)
-
-predictions = []
-
-years = list(range(2023, 2028)) 
-for year in years:
-    for country in country_list:
-        pred = predict(y, w, country, year)
-        predictions.append(pred)
-
-y_all = np.array(y)
-y_preds = np.array(predictions)
-
-resids = y_all - y_preds
-
-mse = np.mean((resids) ** 2)
-
-ss_res = np.sum((resids) ** 2)
-ss_tot = np.sum((y_all - np.mean(y_all)) ** 2)
-r2 = 1 - (ss_res / ss_tot)
-
-print(r2)
-"""
 
 
 

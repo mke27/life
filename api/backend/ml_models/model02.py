@@ -32,7 +32,7 @@ def autoregressor_all(input_country):
                 "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
                 "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland",
                 "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
-                "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"
+                "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain"
             ]
     country_list = [
                 "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
