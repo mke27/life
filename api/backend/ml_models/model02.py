@@ -96,44 +96,14 @@ def autoregressor_all(input_country):
 
     actual = df[df[" country_name"] == input_country][[" score_year", " qol_score"]].copy()
     actual.columns = ["year", "qol_score"]
-    actual["Projected?"] = "Historical Score"
 
     predicted = pred_df.copy()
     predicted.columns = ["year", "qol_score"]
-    predicted["Projected?"] = "Projected Score"
 
     merged = pd.concat([actual, predicted], ignore_index=True)
     merged = merged.sort_values("year").reset_index(drop=True)
 
-    fig = go.Figure()
+    merged_dict = merged.to_dict(orient="records")
 
-    fig.add_trace(go.Scatter(
-        x=merged['year'],
-        y=merged['qol_score'],
-        mode='lines+markers',
-        name='QoL Score',
-        line=dict(color='royalblue'),
-        customdata=merged[['Projected?']],
-        hovertemplate=
-            'Year: %{x}<br>' +
-            'QoL Score: %{y:.3f}<br>' +
-            'Projected?: %{customdata[0]}<extra></extra>'
-    ))
+    return merged_dict
 
-    fig.add_vline(x=2022.5, line_width=2, line_dash="dash", line_color="gray")
-
-    fig.add_vrect(
-        x0=2023, x1=merged['year'].max(),
-        fillcolor="lightgray", opacity=0.3,
-        layer="below", line_width=0,
-        annotation_text="Predicted", annotation_position="top left"
-    )
-
-    fig.update_layout(
-        title=f"Quality of Life (Historical and Projected) for {input_country}",
-        xaxis_title="Year",
-        yaxis_title="Quality of Life Score",
-        hovermode="x unified"
-    )
-
-    fig.show()

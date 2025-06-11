@@ -6,17 +6,6 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-"""
-weights
-[ 1.81952075e-03 -4.07870304e-03  1.90541805e-01  7.64124007e-02
-  5.25036761e-02  5.78521487e-02  8.38125369e-03  1.32514417e-01
-  6.53118509e-02  2.34825091e-02 -3.65365025e-04  9.41455234e-02
-  1.38478789e-01  2.93264072e-03  6.15568612e-02  1.00058952e-01
-  1.52119991e-01  4.83862691e-02  8.59009850e-03  1.19565338e-02
-  7.01476999e-02  1.26321234e-01  1.54296666e-01  6.16161791e-02
-  1.16114729e-01  1.29620941e-02  1.26888731e+00 -3.12212667e-01
- -2.12275567e-01  2.27612041e-01  2.71121069e-02]
-"""
 
 df = pd.read_csv('datasets/preprocessed-datasets/alldata_unstandard.csv')
 
@@ -127,7 +116,7 @@ def predict(y, w, country, target_year):
         pred = np.dot(X, w)
         endY = [pred] + endY[:p - 1]  
         current_year += 1
-    
+
     return pred
 
 # creating table of predicted scores for a country
@@ -332,6 +321,7 @@ def linearity_plots(df, lag_index):
     plt.title("Residuals Histogram")
     plt.show()
 
+# combined data pipeline
 def autoregressor_all(df, input_country):
     """
     Given a country, predicts next five years of QoL scores and returns a graph of historical and predicted scores
@@ -413,52 +403,54 @@ def autoregressor_all(df, input_country):
 
     actual = df[df[" country_name"] == input_country][[" score_year", " qol_score"]].copy()
     actual.columns = ["year", "qol_score"]
-    actual["Projected?"] = "Historical Score"
 
     predicted = pred_df.copy()
     predicted.columns = ["year", "qol_score"]
-    predicted["Projected?"] = "Projected Score"
 
     merged = pd.concat([actual, predicted], ignore_index=True)
     merged = merged.sort_values("year").reset_index(drop=True)
 
-    fig = go.Figure()
+    merged_dict = merged.to_dict(orient="records")
 
-    fig.add_trace(go.Scatter(
-        x=merged['year'],
-        y=merged['qol_score'],
-        mode='lines+markers',
-        name='QoL Score',
-        line=dict(color='royalblue'),
-        customdata=merged[['Projected?']],
-        hovertemplate=
-            'Year: %{x}<br>' +
-            'QoL Score: %{y:.3f}<br>' +
-            'Projected?: %{customdata[0]}<extra></extra>'
-    ))
+    return merged_dict
 
-    fig.add_vline(x=2022.5, line_width=2, line_dash="dash", line_color="gray")
+test = autoregressor_all(df, "Austria")
+print(test)
 
-    fig.add_vrect(
-        x0=2023, x1=merged['year'].max(),
-        fillcolor="lightgray", opacity=0.3,
-        layer="below", line_width=0,
-        annotation_text="Predicted", annotation_position="top left"
-    )
+"""
+country_list = [
+                "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
+                "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland",
+                "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
+                "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"
+            ]
 
-    fig.update_layout(
-        title=f"Quality of Life (Historical and Projected) for {input_country}",
-        xaxis_title="Year",
-        yaxis_title="Quality of Life Score",
-        hovermode="x unified"
-    )
+matricies = autoregressor(df)
+X = matricies[0]
+y = matricies[1]
+w = linreg(X, y)
 
-    fig.show()
+predictions = []
 
+years = list(range(2023, 2028)) 
+for year in years:
+    for country in country_list:
+        pred = predict(y, w, country, year)
+        predictions.append(pred)
 
+y_all = np.array(y)
+y_preds = np.array(predictions)
 
-autoregressor_all(df, "Austria")
+resids = y_all - y_preds
 
+mse = np.mean((resids) ** 2)
+
+ss_res = np.sum((resids) ** 2)
+ss_tot = np.sum((y_all - np.mean(y_all)) ** 2)
+r2 = 1 - (ss_res / ss_tot)
+
+print(r2)
+"""
 
 
 
