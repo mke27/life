@@ -18,7 +18,7 @@ st.header('Similar Countries')
 COUNTRY_API_URL = "http://web-api:4000/country/countries"
 country_response = requests.get(COUNTRY_API_URL)
 
-SCORES_API_URL = "http://web-api:4000/faye/scores"
+SCORES_API_URL = "http://web-api:4000/faye/scores_standardized"
 scores_response = requests.get(SCORES_API_URL)
 
 if(country_response.status_code == 200):

@@ -34,7 +34,7 @@ match struggle:
         input_name = 'Health Score'
 
 results = requests.get(
-            f"http://web-api:4000/faye/scores")
+            f"http://web-api:4000/faye/scores_unstandardized")
 results_json = json.loads(results.text)
 df = pd.DataFrame.from_dict(results_json)
 df['environment_score'] = -df['environment_score']
