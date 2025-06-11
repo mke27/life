@@ -2,10 +2,25 @@
 
 import numpy as np
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+"""
+weights
+[ 1.81952075e-03 -4.07870304e-03  1.90541805e-01  7.64124007e-02
+  5.25036761e-02  5.78521487e-02  8.38125369e-03  1.32514417e-01
+  6.53118509e-02  2.34825091e-02 -3.65365025e-04  9.41455234e-02
+  1.38478789e-01  2.93264072e-03  6.15568612e-02  1.00058952e-01
+  1.52119991e-01  4.83862691e-02  8.59009850e-03  1.19565338e-02
+  7.01476999e-02  1.26321234e-01  1.54296666e-01  6.16161791e-02
+  1.16114729e-01  1.29620941e-02  1.26888731e+00 -3.12212667e-01
+ -2.12275567e-01  2.27612041e-01  2.71121069e-02]
+"""
 
 df = pd.read_csv('datasets/preprocessed-datasets/alldata_unstandard.csv')
 
+# building vectors for autoregresssion
 def autoregressor(df):
     """
     Gives the x and y vector for the autoregressive model predicting QoL with a 5 year lag
@@ -20,23 +35,23 @@ def autoregressor(df):
     """
     p = 5
     eu_countries = [
-                "country_Austria", "country_Belgium", "country_Bulgaria", "country_Croatia", "country_Cyprus", "country_Czechia", "country_Denmark",
-                "country_Estonia", "country_Finland", "country_France", "country_Germany", "country_Greece", "country_Hungary", "country_Ireland",
-                "country_Italy", "country_Latvia", "country_Lithuania", "country_Luxembourg", "country_Malta", "country_Netherlands",
-                "country_Poland", "country_Portugal", "country_Romania", "country_Slovakia", "country_Slovenia", "country_Spain"
+                " country_name_Austria", " country_name_Belgium", " country_name_Bulgaria", " country_name_Croatia", " country_name_Cyprus", " country_name_Czechia", " country_name_Denmark",
+                " country_name_Estonia", " country_name_Finland", " country_name_France", " country_name_Germany", " country_name_Greece", " country_name_Hungary", " country_name_Ireland",
+                " country_name_Italy", " country_name_Latvia", " country_name_Lithuania", " country_name_Luxembourg", " country_name_Malta", " country_name_Netherlands",
+                " country_name_Poland", " country_name_Portugal", " country_name_Romania", " country_name_Slovakia", " country_name_Slovenia", " country_name_Spain"
             ]
 
-    df_encoded = pd.get_dummies(df, columns=['country'], dtype = 'int')
+    df_encoded = pd.get_dummies(df, columns=[' country_name'], dtype = 'int')
 
     X = []
     y = []
 
-    for country in df['country'].unique(): 
+    for country in df[' country_name'].unique(): 
 
-        mask = df['country'] == country
-        df_country = df_encoded[mask].sort_values('year')
+        mask = df[' country_name'] == country
+        df_country = df_encoded[mask].sort_values(' score_year')
 
-        qol_country = df_country['qol'].to_numpy()
+        qol_country = df_country[' qol_score'].to_numpy()
         dummy_country = df_country[eu_countries].to_numpy()[0]
 
         for t in range(p, len(qol_country)):
@@ -51,6 +66,7 @@ def autoregressor(df):
 
     return [X, y]
 
+# performing linear regression
 def linreg(X, y):
     """
     Returns weight vector for autoregressive model
@@ -67,6 +83,7 @@ def linreg(X, y):
 
     return w
 
+# making predictions
 def predict(y, w, country, target_year):
     """
     Predicts future QoL for a given country and year
@@ -113,6 +130,7 @@ def predict(y, w, country, target_year):
     
     return pred
 
+# creating table of predicted scores for a country
 def prediction_table(country):
     """
     Predicts QoL score for next five years and returns a dataframe of year and predicted QoL score
@@ -132,14 +150,203 @@ def prediction_table(country):
 
     for year in years:
         pred = predict(y, w, country, year)
-        predictions.append({'year': year, 'qol': pred})
+        predictions.append({'year': year, 'predictions': pred})
 
-    pred_df = pd.DataFrame(predictions)
+    pred_df = pd.DataFrame(predictions)       
 
     return pred_df
 
-austria_test = prediction_table("Austria")
-print(austria_test)
+# combining predicted and historical scores
+def qol_df(old_df, pred_df, country):
+    """
+    Creates a dataframe with existing and predicted QoL scores for a particular country.
+    Returns a single column 'qol_score' with an indicator 'predicted'
+    """
+    actual = old_df[old_df[" country_name"] == country][[" score_year", " qol_score"]].copy()
+    actual.columns = ["year", "qol_score"]
+    actual["Projected?"] = "Historical Score"
+
+    predicted = pred_df.copy()
+    predicted.columns = ["year", "qol_score"]
+    predicted["Projected?"] = "Projected Score"
+
+    merged = pd.concat([actual, predicted], ignore_index=True)
+    merged = merged.sort_values("year").reset_index(drop=True)
+
+    return merged
+
+# plotting historical and predicted qol for a country
+def plot_qol(qol_data, country):
+    """
+    Plots actual and predicted QoL scores over time for a single country
+    
+    Args:
+        - qol_data: DataFrame with 'year', 'qol_score', and 'Projected?'
+        - country: Name of the country (str)
+    """  
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=qol_data['year'],
+        y=qol_data['qol_score'],
+        mode='lines+markers',
+        name='QoL Score',
+        line=dict(color='royalblue'),
+        customdata=qol_data[['Projected?']], 
+        hovertemplate=
+            'Year: %{x}<br>' +
+            'QoL Score: %{y:.3f}<br>' +
+            'Projected?: %{customdata[0]}<extra></extra>'
+    ))
+
+    fig.add_vline(x=2022.5, line_width=2, line_dash="dash", line_color="gray")
+
+    fig.add_vrect(
+        x0=2023, x1=qol_data['year'].max(),
+        fillcolor="lightgray", opacity=0.3,
+        layer="below", line_width=0,
+        annotation_text="Predicted", annotation_position="top left"
+    )
+
+    fig.update_layout(
+        title= f"Quality of Life (Historical and Projected) for {country}",
+        xaxis_title="Year",
+        yaxis_title="Quality of Life Score",
+        hovermode="x unified"
+    )
+
+    fig.show()
+
+# performs loocv on autoregressor
+def loocv_autoreg(df):
+    """
+    LOOCV for time series autoregressor
+
+    args:
+        - df: dataframe with QoL scores for EU countries
+
+    returns:
+        - dict with averaged mse and r2 across all folds
+    """
+    p = 5
+    results = []
+
+    df_encoded = pd.get_dummies(df, columns=[' country_name'], dtype='int')
+    country_dummy_cols = sorted([col for col in df_encoded.columns if col.startswith(' country_name_')])
+    n_countries = len(country_dummy_cols)
+
+    y_all = []
+    y_preds = []
+
+    for country in df[' country_name'].unique():
+        mask = df[' country_name'] == country
+        df_country = df_encoded[mask].sort_values(' score_year').reset_index(drop=True)
+
+        qol_country = df_country[' qol_score'].to_numpy()
+        country_vec = np.array([
+            1 if col == f' country_name_{country}' else 0
+            for col in country_dummy_cols
+        ])
+
+        n_samples = len(qol_country)
+
+        for t in range(p, n_samples):
+            
+            X_train = []
+            y_train = []
+
+            for i in range(p, n_samples):
+                # leave out test point
+                if i == t:
+                    continue 
+
+                lags = qol_country[i-p:i][::-1]
+                row = np.concatenate([country_vec, lags])
+                X_train.append(row)
+                y_train.append(qol_country[i])
+
+            X_train = np.array(X_train)
+            y_train = np.array(y_train)
+
+            # lambda to fix for singular matrix error
+            lambda_reg = 1e-5
+            XtX = X_train.T @ X_train + lambda_reg * np.eye(X_train.shape[1])
+            Xty = X_train.T @ y_train
+            w = np.linalg.solve(XtX, Xty)
+
+            lags_test = qol_country[t-p:t][::-1]
+            X_test = np.concatenate([country_vec, lags_test])
+
+            pred = np.dot(X_test, w)
+
+            y_all.append(qol_country[t])
+            y_preds.append(pred)
+
+    y_all = np.array(y_all)
+    y_preds = np.array(y_preds)
+
+    resids = y_all - y_preds
+
+    mse = np.mean((resids) ** 2)
+    
+    ss_res = np.sum((resids) ** 2)
+    ss_tot = np.sum((y_all - np.mean(y_all)) ** 2)
+    r2 = 1 - (ss_res / ss_tot)
+
+    return {'mse': mse, 'r2': r2, "residuals": resids}
+
+# plots testing linearity
+def linearity_plots(df, lag_index):
+    """
+    Creates plots testing the linearity of the autoregressive model
+    """
+    results = loocv_autoreg(df)
+    resids = results['residuals']
+
+    matrices = autoregressor(df)
+    X_all = matrices[0]
+
+    lag_col = 26 + lag_index - 1  
+    x_feature = [x[lag_col] for x in X_all]
+
+    # resids vs. x vals
+    plt.scatter(x_feature, resids, alpha=0.5)
+    plt.axhline(0, color='red', linestyle='--')
+    plt.xlabel(f'QoL Lag {lag_index} Year(s) Ago')
+    plt.ylabel('Residuals')
+    plt.title(f'Residuals vs QoL Lag {lag_index} Year(s) Ago')
+    plt.show()
+
+    # reisds vs. order
+    plt.figure(figsize=(10, 5))
+    plt.plot(resids, marker='o', linestyle='-', alpha=0.7)
+    plt.axhline(0, color='red', linestyle='--')
+    plt.xlabel('Index/Order')
+    plt.ylabel('Residuals')
+    plt.title('Residuals vs. Order')
+    plt.show()
+
+    # resids histogram
+    sns.histplot(resids, kde=False)
+    plt.xlabel("Residuals")
+    plt.title("Residuals Histogram")
+    plt.show()
+
+matrices = autoregressor(df)
+X_matrix = matrices[0]
+y_vector = matrices[1]
+weights = linreg(X_matrix, y_vector)
+print(weights)
+
+
+
+
+
+
+
+
+
+
 
 
 

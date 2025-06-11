@@ -2,6 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 import streamlit as st
 import requests
+import pandas as pd
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
 import json
@@ -19,7 +20,6 @@ country_response = requests.get(COUNTRY_API_URL)
 
 SCORES_API_URL = "http://web-api:4000/faye/scores"
 scores_response = requests.get(SCORES_API_URL)
-
 
 if(country_response.status_code == 200):
     countries = country_response.json()
@@ -69,4 +69,3 @@ if st.session_state.show_sim_country:
 
     st.write(df_renamed.iloc[1:,:])
 
-    #st.write(df_renamed['Country_input'].iloc[1])
