@@ -83,8 +83,7 @@ def get_graph(country_name):
         predicted_scores = model02.autoregressor_all(country_name)
         current_app.logger.info(f"Predicted scores for {country_name}: {predicted_scores}")
 
-        response_data = similarity.to_dict()
-        return jsonify(response_data), 200
+        return jsonify(predicted_scores), 200
 
     except Error as e:
         return jsonify({"error": str(e)}), 500

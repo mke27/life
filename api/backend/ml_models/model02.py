@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 import logging
+import requests
 
 from flask import current_app
 
@@ -65,7 +66,8 @@ def autoregressor_all(input_country):
     X = np.array(X)
     y = np.array(y)
 
-    w = "access weights from db"
+    response = requests.get("http://web-api:4000/model/weights")
+    w = np.array(response.json())
 
     # creating one-hot encoding columns
     startX = np.zeros(len(eu_countries))
