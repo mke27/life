@@ -16,6 +16,7 @@ country = Blueprint("country", __name__)
 
 @country.route("/countries", methods=["GET"])
 def get_countries():
+    current_app.logger.info('GET /countries route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute('SELECT country_name FROM Country')
@@ -30,6 +31,7 @@ def get_countries():
     
 @country.route("/country", methods=["GET"])
 def get_country_ID():
+    current_app.logger.info('GET /country route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute('SELECT country_ID, country_name FROM Country')
@@ -42,9 +44,10 @@ def get_country_ID():
     except Error as e:
         return jsonify({"error": str(e)}), 500
     
-
+# potentially move to another blueprint
 @country.route("/factor", methods=["GET"])
 def get_factor_ID():
+    current_app.logger.info('GET /factor route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute('SELECT factor_ID, factor_name FROM Factor')
