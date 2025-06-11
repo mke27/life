@@ -80,3 +80,9 @@ else:
             fig.update_coloraxes(showscale=False)
             fig.update_layout(title_text=f"Preference {i+1}: {country}")
             col.plotly_chart(fig, use_container_width=True)
+
+            st.subheader(f"{country} Scores")
+            score_response = requests.get(f"http://web-api:4000/faye/scores/{pref['top_country']}")
+            
+            
+

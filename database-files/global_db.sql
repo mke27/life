@@ -107,12 +107,6 @@ CREATE TABLE IF NOT EXISTS Policy_News
     FOREIGN KEY (factor_ID) REFERENCES Factor (factor_ID)
 );
 
-CREATE TABLE IF NOT EXISTS ML_Country
-(
-    country_ID   INT UNSIGNED PRIMARY KEY,
-    country_name VARCHAR(30) NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS ML_Score
 (
     score_ID  INT AUTO_INCREMENT PRIMARY KEY,
@@ -123,9 +117,8 @@ CREATE TABLE IF NOT EXISTS ML_Score
     education_score   FLOAT NOT NULL,
     safety_score     FLOAT NOT NULL,
     environment_score FLOAT NOT NULL,
-    qol_score FLOAT NOT NULL,
-    FOREIGN KEY (country_ID) REFERENCES ML_Country (country_ID)
-);
+    qol_score FLOAT NOT NULL
+    );
 
 CREATE TABLE IF NOT EXISTS ML_Score_US
 (
@@ -137,39 +130,9 @@ CREATE TABLE IF NOT EXISTS ML_Score_US
     education_score   FLOAT NOT NULL,
     safety_score     FLOAT NOT NULL,
     environment_score FLOAT NOT NULL,
-    qol_score FLOAT NOT NULL,
-    FOREIGN KEY (country_ID) REFERENCES ML_Country (country_ID)
+    qol_score FLOAT NOT NULL
 );
         
-INSERT INTO ML_Country 
-    VALUES(1,"Austria"),
-          (2,"Belgium"), 
-          (3,"Bulgaria"), 
-          (4,"Croatia"), 
-          (5,"Cyprus"),
-          (6,"Czechia"), 
-          (7,"Denmark"), 
-          (8,"Estonia"), 
-          (9,"Finland"), 
-          (10,"France"), 
-          (11,"Germany"), 
-          (12,"Greece"),
-          (13,"Hungary"), 
-          (14,"Ireland"), 
-          (15,"Italy"), 
-          (16,"Latvia"), 
-          (17,"Lithuania"), 
-          (18,"Luxembourg"), 
-          (19,"Malta"),
-          (20,"Netherlands"),
-          (21,"Poland"), 
-          (22,"Portugal"),
-          (23,"Romania"), 
-          (24,"Slovakia"), 
-          (25,"Slovenia"), 
-          (26,"Spain"), 
-          (27,"Sweden");
-
 INSERT INTO Country 
     VALUES(1,"Austria"),
           (2,"Belgium"), 
