@@ -77,7 +77,7 @@ def autoregressor_all(input_country):
         startX[country_index] = 1
 
     base_index = country_list.index(input_country)
-    start = base_index * values_per_country + 2
+    start = base_index * values_per_country
     end = start + 5
     endY = y[start:end][::-1].tolist()
 
