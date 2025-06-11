@@ -19,14 +19,19 @@ struggle = st.radio("Select the feature you would like to tackle", options=['Hea
 match struggle:
     case 'Health':
         input_issue = 'health_score'
+        input_name = 'Health Score'
     case 'Education':
         input_issue = 'education_score'
+        input_name = 'Education Score'
     case 'Environment':
         input_issue = 'environment_score'
+        input_name = 'Environment Score'
     case 'Safety':
         input_issue = 'safety_score'
+        input_name = 'Safety Score'
     case _:
         input_issue = 'health_score'
+        input_name = 'Health Score'
 
 results = requests.get(
             f"http://web-api:4000/faye/scores")
@@ -35,11 +40,17 @@ df = pd.DataFrame.from_dict(results_json)
 df['environment_score'] = -df['environment_score']
 df['safety_score'] = -df['safety_score']
 df_sorted = df.sort_values(input_issue, ascending=True)
-st.table(df_sorted.iloc[0:5])
 
-fig = px.choropleth(df, scope='europe', locations='country_name', locationmode='country names', color=input_issue)
+df_renamed = df_sorted.rename(columns={'country_name': 'Country',
+                                       'environment_score': 'Environment Score', 
+                                       'safety_score': 'Safety Score', 
+                                       'health_score': 'Health Score', 
+                                       'education_score':'Education Score'})
+
+fig = px.choropleth(df_renamed, scope='europe', locations='Country', locationmode='country names', color=input_name)
 st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
 
+st.write(df_renamed)
 #fig = px.choropleth(df, scope='europe', color='similarity', locations = 'Country_input', locationmode='country names')
 
 #st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
