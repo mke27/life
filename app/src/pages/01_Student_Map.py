@@ -16,6 +16,21 @@ SideBarLinks()
 from modules.style import style_sidebar
 style_sidebar()
 
+
+def inv_sigmoid(value):
+    """ returns the inverse sigmoid of the input. If the input is 0 or 1, rebounds the sigmoid to -3 or 3
+        Args:
+            value (int): value to be inversed sigmoided
+        Returns:
+            inv_sig (int): inverse sigmoid of input bounded between -3 and 3
+    """
+    if value == 1:
+        value = .95
+    elif value == 0:
+        value = 0.05
+
+    return np.log(value) - np.log(1-value)
+
 API_URL = "http://web-api:4000/grace/preference"
 df = pd.DataFrame()
 
@@ -68,7 +83,16 @@ logger.info(f"safety = {safety}")
 logger.info(f"environment = {environment}")
 
 if st.button("Save Preferences", type="primary", use_container_width=True):
-    results = requests.get(f"http://web-api:4000/model/predict/{education}/{health}/{safety}/{environment}")
+
+    input_vector = np.array([education, health, safety, environment])
+    #relativises
+    for factor in range(len(input_vector)):
+        input_vector[factor] = input_vector[factor]/np.sum(input_vector)
+
+    # inverse sigmoids
+    inv_sig_input = np.array(list(map(inv_sigmoid, input_vector)))
+
+    results = requests.get(f"http://web-api:4000/model/predict/{inv_sig_input[0]}/{inv_sig_input[1]}/{inv_sig_input[2]}/{inv_sig_input[3]}")
     results_json = json.loads(results.text)
     df = pd.DataFrame.from_dict(results_json)
     #logger.info(f"{type(results)}")
