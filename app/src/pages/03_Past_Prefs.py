@@ -54,8 +54,8 @@ def plot_qol(qol_data, country):
     qol_df = pd.DataFrame(qol_data)
 
     qol_df["Projected?"] = "Unknown"  
-    qol_df.loc[qol_df["year"].isin(historical_years), "Projected?"] = "Historical Score"
 
+    qol_df.loc[qol_df["year"].isin(historical_years), "Projected?"] = "Historical Score"
     qol_df.loc[qol_df["year"].isin(predicted_years), "Projected?"] = "Predicted Score"
 
     fig = go.Figure()
@@ -89,7 +89,8 @@ def plot_qol(qol_data, country):
         hovermode="x unified"
     )
 
-    fig.show()
+    st.plotly_chart(fig, use_container_width=True, key=f"qol_chart_{country}")
+
 
 for i, pref in enumerate(past_prefs):
     country_id = pref["top_country"]
