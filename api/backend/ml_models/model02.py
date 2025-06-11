@@ -29,10 +29,10 @@ def autoregressor_all(input_country):
     df = pd.DataFrame.from_dict(return_val)
 
     eu_countries = [
-                " country_name_Austria", " country_name_Belgium", " country_name_Bulgaria", " country_name_Croatia", " country_name_Cyprus", " country_name_Czechia", " country_name_Denmark",
-                " country_name_Estonia", " country_name_Finland", " country_name_France", " country_name_Germany", " country_name_Greece", " country_name_Hungary", " country_name_Ireland",
-                " country_name_Italy", " country_name_Latvia", " country_name_Lithuania", " country_name_Luxembourg", " country_name_Malta", " country_name_Netherlands",
-                " country_name_Poland", " country_name_Portugal", " country_name_Romania", " country_name_Slovakia", " country_name_Slovenia", " country_name_Spain"
+                "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
+                "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland",
+                "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
+                "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"
             ]
     country_list = [
                 "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
@@ -43,17 +43,17 @@ def autoregressor_all(input_country):
     values_per_country = 7
     p = 5
 
-    df_encoded = pd.get_dummies(df, columns=[' country_name'], dtype='int')
+    df_encoded = pd.get_dummies(df, columns=['country_name'], prefix='', prefix_sep='', dtype='int')
 
     X = []
     y = []
 
-    for country in df[' country_name'].unique():
+    for country in df['country_name'].unique():
 
-        mask = df[' country_name'] == country
-        df_country = df_encoded[mask].sort_values(' score_year')
+        mask = df['country_name'] == country
+        df_country = df_encoded[mask].sort_values('score_year')
 
-        qol_country = df_country[' qol_score'].to_numpy()
+        qol_country = df_country['qol_score'].to_numpy()
         dummy_country = df_country[eu_countries].to_numpy()[0]
 
         for t in range(p, len(qol_country)):
@@ -71,7 +71,7 @@ def autoregressor_all(input_country):
 
     # creating one-hot encoding columns
     startX = np.zeros(len(eu_countries))
-    input_eu_country_names = [c.replace(" country_name_", "") for c in eu_countries]
+    input_eu_country_names = [c.replace("country_name_", "") for c in eu_countries]
     if input_country in input_eu_country_names:
         country_index = input_eu_country_names.index(input_country)
         startX[country_index] = 1
@@ -96,7 +96,7 @@ def autoregressor_all(input_country):
 
     pred_df = pd.DataFrame(predictions)
 
-    actual = df[df[" country_name"] == input_country][[" score_year", " qol_score"]].copy()
+    actual = df[df["country_name"] == input_country][["score_year", "qol_score"]].copy()
     actual.columns = ["year", "qol_score"]
 
     predicted = pred_df.copy()

@@ -46,9 +46,9 @@ def get_weights():
 
         query = "SELECT * FROM Predicted_Score"
         cursor.execute(query)
-        results = cursor.fetchall()
+        result = cursor.fetchone()
         cursor.close()
-        return jsonify(results), 200
+        return jsonify(list(result)), 200
 
     except Exception as e:
         response = make_response(
