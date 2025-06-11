@@ -34,14 +34,31 @@ def get_orgs_by_country_and_factor(country_ID, factor_ID):
     except Error as e:
         return jsonify({"error": str(e)}), 500
     
-@faye.route("/scores", methods=["GET"])
-def get_scores():
-    current_app.logger.info('GET /scores route')
+@faye.route("/scores_standardized", methods=["GET"])
+def get_scores_standardized():
+    current_app.logger.info('GET /scores_standardized route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""
             SELECT country_name, health_score, education_score, safety_score, environment_score
             FROM ML_Score
+            WHERE score_year = 2022
+        """)
+        scores = cursor.fetchall()
+        cursor.close()
+
+        return jsonify(scores)
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+    
+@faye.route("/scores_unstandardized", methods=["GET"])
+def get_scores_unstandardized():
+    current_app.logger.info('GET /scores_unstandardized route')
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("""
+            SELECT country_name, health_score, education_score, safety_score, environment_score
+            FROM ML_Score_US
             WHERE score_year = 2022
         """)
         scores = cursor.fetchall()
