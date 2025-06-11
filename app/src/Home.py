@@ -45,55 +45,27 @@ st.write('\n\n')
 st.write('## Welcome to Best Life! Let us help you improve your quality of life today.') 
 st.write('### Which user would you like to log in as?')
 
-def get_usernames(role_name):
-     usernames_res = requests.get(f"http://web-api:4000/users/role/{role_name}")
-     if usernames_res.status_code != 200:
+def get_users(role_name):
+    user_info_res = requests.get(f"http://web-api:4000/users/role/{role_name}")
+    if user_info_res.status_code != 200:
          logger.error(f"Failed to get users for role_id {role_name}")
          return []
-     
-     return usernames_res.json()
-
-def get_userID(user_name):
-    user_ID_res = requests.get(f"http://web-api:4000/users/user/id/{user_name}")
-
-    if user_ID_res.status_code != 200:
-        logger.error(f"Failed to get user_ID for {user_name}")
-        return None
-     
-    user_ID = user_ID_res.json()
     
-    if "user_ID" not in user_ID:
-        logger.error(f"No user_ID found for {user_name}")
-        return None
-    
-    return user_ID["user_ID"]
+    user_info = user_info_res.json()
+    user_map = {f"{user['first_name']} ({user['user_name']})": user for user in user_info}
+    return user_map
+      
 
-def get_first_name(user_ID):
-    first_name_res = requests.get(f"http://web-api:4000/users/users/{user_ID}")
-
-    if first_name_res.status_code != 200:
-        logger.error(f"Failed to get first_name for user ID {user_ID}")
-        return None
-     
-    user_data = first_name_res.json()
-    
-    if "first_name" not in user_data:
-        logger.error(f"No first_name found for user ID {user_ID}")
-        return None
-    
-    return user_data["first_name"]
-    
-
-student_users = get_usernames("Student")
-policymaker_users = get_usernames("Policymaker")
-activist_users = get_usernames("Activist")
+student_user_map = get_users("Student")
+policymaker_user_map = get_users("Policymaker")
+activist_user_map = get_users("Activist")
 
 st.write("#### Prospective University Student:")
 row1_col1, row1_col2 = st.columns([3, 1])
 with row1_col1:
     grace_user = st.selectbox(
         label='',
-        options=["Select username"] + student_users,
+        options=["Select username"] + list(student_user_map.keys()),
         label_visibility='collapsed',
         key='grace'
     )
@@ -102,12 +74,14 @@ with row1_col2:
         if grace_user == "Select username":
             st.session_state['grace_warning'] = True
         else:
+            selected_user = student_user_map[grace_user]
             st.session_state['grace_warning'] = False
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'Student'
-            st.session_state['user_name'] = grace_user
-            st.session_state['user_ID'] = get_userID(grace_user)
-            st.session_state['first_name'] = get_first_name(st.session_state['user_ID'])
+            st.session_state['role_ID'] = selected_user['role_ID']
+            st.session_state['user_name'] = selected_user['user_name']
+            st.session_state['user_ID'] = selected_user['user_ID']
+            st.session_state['first_name'] = selected_user['first_name']
             logger.info("Logging in as University Student Persona")
             st.switch_page('pages/00_University_Student_Home.py')
     warning_grace = st.empty()
@@ -124,7 +98,7 @@ row2_col1, row2_col2 = st.columns([3, 1])
 with row2_col1:
     james_user = st.selectbox(
         label='',
-        options=["Select username"] + policymaker_users,
+        options=["Select username"] + list(policymaker_user_map.keys()),
         label_visibility='collapsed',
         key='james'
     )
@@ -133,12 +107,14 @@ with row2_col2:
         if james_user == "Select username":
             st.session_state['james_warning'] = True
         else:
+            selected_user = policymaker_user_map[james_user]
             st.session_state['james_warning'] = False
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'Policymaker'
-            st.session_state['user_name'] = james_user
-            st.session_state['user_ID'] = get_userID(james_user)
-            st.session_state['first_name'] = get_first_name(st.session_state['user_ID'])
+            st.session_state['role_ID'] = selected_user['role_ID']
+            st.session_state['user_name'] = selected_user['user_name']
+            st.session_state['user_ID'] = selected_user['user_ID']
+            st.session_state['first_name'] = selected_user['first_name']
             logger.info("Logging in as Policymaker Persona")
             st.switch_page('pages/10_Policymaker_Home.py')
     warning_james = st.empty()
@@ -155,7 +131,7 @@ row3_col1, row3_col2 = st.columns([3, 1])
 with row3_col1:
     faye_user = st.selectbox(
         label='',
-        options=["Select username"] + activist_users,
+        options=["Select username"] + list(activist_user_map.keys()),
         label_visibility='collapsed',
         key='faye'
     )
@@ -164,12 +140,14 @@ with row3_col2:
         if faye_user == "Select username":
             st.session_state['faye_warning'] = True
         else:
+            selected_user = activist_user_map[faye_user]
             st.session_state['faye_warning'] = False
             st.session_state['authenticated'] = True
             st.session_state['role'] = 'Activist'
-            st.session_state['user_name'] = faye_user
-            st.session_state['user_ID'] = get_userID(faye_user)
-            st.session_state['first_name'] = get_first_name(st.session_state['user_ID'])
+            st.session_state['role_ID'] = selected_user['role_ID']
+            st.session_state['user_name'] = selected_user['user_name']
+            st.session_state['user_ID'] = selected_user['user_ID']
+            st.session_state['first_name'] = selected_user['first_name']
             logger.info("Logging in as Activist Persona")
             st.switch_page('pages/20_Activist_Home.py')
     warning_faye = st.empty()

@@ -16,6 +16,7 @@ faye = Blueprint("faye", __name__)
 
 @faye.route("/orgs/<int:country_ID>/<int:factor_ID>", methods=["GET"])
 def get_orgs_by_country_and_factor(country_ID, factor_ID):
+    current_app.logger.info('GET /orgs route')
     try:   
         cursor = db.get_db().cursor()
         query = """
@@ -35,6 +36,7 @@ def get_orgs_by_country_and_factor(country_ID, factor_ID):
     
 @faye.route("/scores", methods=["GET"])
 def get_scores():
+    current_app.logger.info('GET /scores route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""

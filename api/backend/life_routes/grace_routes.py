@@ -16,6 +16,7 @@ grace = Blueprint("grace", __name__)
 
 @grace.route("/pred_scores", methods=["GET"])
 def get_all_pred_scores():
+    current_app.logger.info('GET /pred_scores route')
     try:
         current_app.logger.info('Starting get_all_pred_scores request')
         cursor = db.get_db().cursor()
@@ -52,26 +53,10 @@ def get_all_pred_scores():
     except Error as e:
         current_app.logger.error(f'Database error in get_all_pred_scores: {str(e)}')
         return jsonify({"error": str(e)}), 500
-
-# @grace.route("/preferences/by_user/<int:user_ID>", methods=["GET"])
-# def get_preferences_by_user(user_ID):
-#     try:
-#         cursor = db.get_db().cursor(dictionary=True)
-#         cursor.execute("""
-#             SELECT pref_ID, pref_date, top_country 
-#             FROM Preference 
-#             WHERE user_ID = %s
-#             ORDER BY pref_date DESC
-#         """, (user_ID,))
-#         preferences = cursor.fetchall()
-#         cursor.close()
-
-#         return jsonify(preferences), 200
-#     except Error as e:
-#         return jsonify({"error": str(e)}), 500
     
 @grace.route("/pred_scores/<int:country_id>", methods=["GET"])
 def get_pred_scores_by_country(country_id):
+    current_app.logger.info('GET /pred_scores route')
     try:
         cursor = db.get_db().cursor(dictionary=True)
         cursor.execute("""
@@ -91,6 +76,7 @@ def get_pred_scores_by_country(country_id):
 
 @grace.route("/university/<int:country_id>", methods=["GET"])
 def get_unis_by_country(country_id):
+    current_app.logger.info('GET /university route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute("SELECT * FROM University WHERE Country_ID = %s", (country_id,))

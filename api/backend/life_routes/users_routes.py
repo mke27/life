@@ -14,61 +14,13 @@ from backend.ml_models import model01
 
 users = Blueprint("users", __name__)
 
-@users.route("/users/<int:user_ID>", methods=["GET"])
-def get_user_by_id(user_ID):
-    try:
-        cursor = db.get_db().cursor()
-
-        query = """
-            SELECT u.user_ID, u.user_name, u.first_name, r.role_name
-            FROM User u
-            JOIN User_Role r ON u.role_ID = r.role_ID
-            WHERE u.user_ID = %s
-        """
-        cursor.execute(query, (user_ID,))
-        user = cursor.fetchone()
-
-        if not user:
-            cursor.close()
-            return jsonify({"error": "User not found"}), 404
-        cursor.close()
-        return jsonify(user), 200
-
-    except Error as e:
-        current_app.logger.error(f'Database error in get_user_by_id: {str(e)}')
-        return jsonify({"error": str(e)}), 500
-
-@users.route("/user/id/<user_name>", methods=["GET"])
-def get_user_ID_by_username(user_name):
-    try:
-        cursor = db.get_db().cursor()
-
-        query = """
-            SELECT user_ID
-            From User
-            WHERE user_name = %s
-        """
-        cursor.execute(query, (user_name,))
-        user = cursor.fetchone()
-
-        if not user:
-            cursor.close()
-            return jsonify({"error": "User not found"}), 404
-        cursor.close()
-        return jsonify(user), 200
-
-    except Error as e:
-        current_app.logger.error(f'Database error in get_user_by_id: {str(e)}')
-        return jsonify({"error": str(e)}), 500
-
-    
 @users.route("/role/<role_name>", methods=["GET"])
 def get_usernames_by_role_name(role_name):
     try:
         cursor = db.get_db().cursor()
 
         query = """
-            SELECT u.user_name
+            SELECT u.user_name, u.user_ID, u.first_name, ur.role_ID
             FROM User u
             JOIN User_Role ur ON u.role_ID = ur.role_ID
             WHERE ur.role_name = %s
@@ -80,9 +32,7 @@ def get_usernames_by_role_name(role_name):
         if not users:
             return jsonify({"error": "No usernames found for this role"})
 
-
-        usernames = [user["user_name"] for user in users]
-        return jsonify(usernames), 200
+        return jsonify(users), 200
 
     except Error as e:
         current_app.logger.error(f'Database error in get_user_by_role_name: {str(e)}')
