@@ -23,16 +23,13 @@ def cosine_similarity(df, input_vector):
     """ returns a sorted dataframe of countries and their cosine similarity scores compared to the input vector.
         Args:
             df (pandas DataFrame): dataframe of all country's most recent data for all five features.
-            input_vector (numpy.array): array of the input of the sliders in the order healthcare, education, safety, environment, infrastructure.
+            input_vector (numpy.array):array of the input of standardised scores to be compared.
         Returns:
             sorted_df_scores (pandas DataFrame): a sorted dataframe of countries and their cosine similarity scores compared to the input vector.
     """
     cos_scores = []
 
-    for factor in range(len(input_vector)):
-       input_vector[factor] = input_vector[factor]/np.sum(input_vector)
-
-    inv_sig_input = np.array(list(map(inv_sigmoid, input_vector)))
+    inv_sig_input = input_vector
 
     #current_app.logger.info(f"sigmoided vector = {inv_sig_input}, the type is {type(df)}")
 
