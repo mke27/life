@@ -78,10 +78,13 @@ def get_scores(country_name):
 @model.route("/graph_scores/<country_name>", methods=["GET"])
 def get_graph(country_name):
     try:
+        current_app.logger.info("GET /graph_scores handler")
         cursor = db.get_db().cursor()
-        predicted_scores = model02.plot_qol(country_name)
+        predicted_scores = model02.autoregressor_all(country_name)
+        current_app.logger.info(f"Predicted scores for {country_name}: {predicted_scores}")
 
-        #return jsonify(response_data), 200
+        response_data = similarity.to_dict()
+        return jsonify(response_data), 200
 
     except Error as e:
         return jsonify({"error": str(e)}), 500
