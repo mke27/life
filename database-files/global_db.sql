@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS Preference
     weight3     FLOAT,
     factorID_4  INT UNSIGNED NOT NULL,
     weight4     FLOAT,
-    FOREIGN KEY (user_ID) REFERENCES User (user_ID) ON DELETE CASCADE,
+    FOREIGN KEY (user_ID) REFERENCES User (user_ID),
     FOREIGN KEY (top_country) REFERENCES Country (country_ID)
 );
 
