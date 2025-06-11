@@ -67,7 +67,7 @@ def autoregressor_all(input_country):
     y = np.array(y)
 
     response = requests.get("http://web-api:4000/model/weights")
-    w = np.array(response.json())
+    w = np.array(response.json(), dtype=float)
 
     # creating one-hot encoding columns
     startX = np.zeros(len(eu_countries))
@@ -88,7 +88,7 @@ def autoregressor_all(input_country):
     for target_year in prediction_years:
         while current_year <= target_year:
             row = np.concatenate([startX, endY])
-            X = np.array(row)
+            X = np.array(row, dtype=float)
             pred = np.dot(X, w)
             endY = [pred] + endY[:p - 1]
             predictions.append({'year': current_year, 'predictions': pred})

@@ -48,7 +48,7 @@ def get_weights():
         cursor.execute(query)
         result = cursor.fetchone()
         cursor.close()
-        return jsonify(list(result)), 200
+        return jsonify(list(result.values())), 200
 
     except Exception as e:
         response = make_response(
@@ -75,8 +75,8 @@ def get_scores(country_name):
         return jsonify({"error": str(e)}), 500
         
 
-@model.route("/graph_scores/<country_name>", methods=["GET"])
-def get_graph(country_name):
+@model.route("/get_model_scores/<country_name>", methods=["GET"])
+def get_model_scores(country_name):
     try:
         current_app.logger.info("GET /graph_scores handler")
         cursor = db.get_db().cursor()
