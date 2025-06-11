@@ -332,11 +332,133 @@ def linearity_plots(df, lag_index):
     plt.title("Residuals Histogram")
     plt.show()
 
-matrices = autoregressor(df)
-X_matrix = matrices[0]
-y_vector = matrices[1]
-weights = linreg(X_matrix, y_vector)
-print(weights)
+def autoregressor_all(df, input_country):
+    """
+    Given a country, predicts next five years of QoL scores and returns a graph of historical and predicted scores
+
+    args:
+        - input_country: country name
+
+    returns:
+        - None, graphs historical and predicted QoL
+    """
+
+    eu_countries = [
+                " country_name_Austria", " country_name_Belgium", " country_name_Bulgaria", " country_name_Croatia", " country_name_Cyprus", " country_name_Czechia", " country_name_Denmark",
+                " country_name_Estonia", " country_name_Finland", " country_name_France", " country_name_Germany", " country_name_Greece", " country_name_Hungary", " country_name_Ireland",
+                " country_name_Italy", " country_name_Latvia", " country_name_Lithuania", " country_name_Luxembourg", " country_name_Malta", " country_name_Netherlands",
+                " country_name_Poland", " country_name_Portugal", " country_name_Romania", " country_name_Slovakia", " country_name_Slovenia", " country_name_Spain"
+            ]
+    country_list = [
+                "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
+                "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland",
+                "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
+                "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"
+            ]
+    values_per_country = 7
+    p = 5
+
+    df_encoded = pd.get_dummies(df, columns=[' country_name'], dtype='int')
+
+    X = []
+    y = []
+
+    for country in df[' country_name'].unique():
+
+        mask = df[' country_name'] == country
+        df_country = df_encoded[mask].sort_values(' score_year')
+
+        qol_country = df_country[' qol_score'].to_numpy()
+        dummy_country = df_country[eu_countries].to_numpy()[0]
+
+        for t in range(p, len(qol_country)):
+            lags = qol_country[t - p:t][::-1]
+
+            row = np.concatenate([dummy_country, lags])
+            X.append(row)
+            y.append(qol_country[t])
+
+    X = np.array(X)
+    y = np.array(y)
+
+    XtXinv = np.linalg.inv(np.matmul(X.T, X))
+    w = np.matmul(XtXinv, np.matmul(X.T, y))
+
+    # creating one-hot encoding columns
+    startX = np.zeros(len(eu_countries))
+    input_eu_country_names = [c.replace(" country_name_", "") for c in eu_countries]
+    if input_country in input_eu_country_names:
+        country_index = input_eu_country_names.index(input_country)
+        startX[country_index] = 1
+
+    base_index = country_list.index(input_country)
+    start = base_index * values_per_country + 2
+    end = start + 5
+    endY = y[start:end][::-1].tolist()
+
+    prediction_years = [2023, 2024, 2025, 2026, 2027]
+    current_year = 2023
+    predictions = []
+
+    for target_year in prediction_years:
+        while current_year <= target_year:
+            row = np.concatenate([startX, endY])
+            X = np.array(row)
+            pred = np.dot(X, w)
+            endY = [pred] + endY[:p - 1]
+            predictions.append({'year': current_year, 'predictions': pred})
+            current_year += 1
+
+    pred_df = pd.DataFrame(predictions)
+
+    actual = df[df[" country_name"] == input_country][[" score_year", " qol_score"]].copy()
+    actual.columns = ["year", "qol_score"]
+    actual["Projected?"] = "Historical Score"
+
+    predicted = pred_df.copy()
+    predicted.columns = ["year", "qol_score"]
+    predicted["Projected?"] = "Projected Score"
+
+    merged = pd.concat([actual, predicted], ignore_index=True)
+    merged = merged.sort_values("year").reset_index(drop=True)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=merged['year'],
+        y=merged['qol_score'],
+        mode='lines+markers',
+        name='QoL Score',
+        line=dict(color='royalblue'),
+        customdata=merged[['Projected?']],
+        hovertemplate=
+            'Year: %{x}<br>' +
+            'QoL Score: %{y:.3f}<br>' +
+            'Projected?: %{customdata[0]}<extra></extra>'
+    ))
+
+    fig.add_vline(x=2022.5, line_width=2, line_dash="dash", line_color="gray")
+
+    fig.add_vrect(
+        x0=2023, x1=merged['year'].max(),
+        fillcolor="lightgray", opacity=0.3,
+        layer="below", line_width=0,
+        annotation_text="Predicted", annotation_position="top left"
+    )
+
+    fig.update_layout(
+        title=f"Quality of Life (Historical and Projected) for {input_country}",
+        xaxis_title="Year",
+        yaxis_title="Quality of Life Score",
+        hovermode="x unified"
+    )
+
+    fig.show()
+
+
+
+autoregressor_all(df, "Austria")
+
 
 
 
