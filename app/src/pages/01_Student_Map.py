@@ -144,3 +144,6 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
 
 if st.button('Compare Preference History', type='primary', use_container_width=True):
     st.switch_page('pages/03_Past_Prefs.py')
+
+st.caption("*All chosen preference values are relative to other chosen preference values.*")
+st.caption("*Education = Percent in tertiary education, Health = Life expectancy at birth, Safety = Drug crimes, Environment = Carbon emissions*")
