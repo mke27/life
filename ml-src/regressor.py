@@ -164,48 +164,6 @@ def qol_df(old_df, pred_df, country):
 
     return merged
 
-# plotting historical and predicted qol for a country
-def plot_qol(qol_data, country):
-    """
-    Plots actual and predicted QoL scores over time for a single country
-    
-    Args:
-        - qol_data: DataFrame with 'year', 'qol_score', and 'Projected?'
-        - country: Name of the country (str)
-    """  
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatter(
-        x=qol_data['year'],
-        y=qol_data['qol_score'],
-        mode='lines+markers',
-        name='QoL Score',
-        line=dict(color='royalblue'),
-        customdata=qol_data[['Projected?']], 
-        hovertemplate=
-            'Year: %{x}<br>' +
-            'QoL Score: %{y:.3f}<br>' +
-            'Projected?: %{customdata[0]}<extra></extra>'
-    ))
-
-    fig.add_vline(x=2022.5, line_width=2, line_dash="dash", line_color="gray")
-
-    fig.add_vrect(
-        x0=2023, x1=qol_data['year'].max(),
-        fillcolor="lightgray", opacity=0.3,
-        layer="below", line_width=0,
-        annotation_text="Predicted", annotation_position="top left"
-    )
-
-    fig.update_layout(
-        title= f"Quality of Life (Historical and Projected) for {country}",
-        xaxis_title="Year",
-        yaxis_title="Quality of Life Score",
-        hovermode="x unified"
-    )
-
-    fig.show()
-
 # performs loocv on autoregressor
 def loocv_autoreg(df):
     """
@@ -413,6 +371,61 @@ def autoregressor_all(df, input_country):
     merged_dict = merged.to_dict(orient="records")
 
     return merged_dict
+
+# plotting historical and predicted qol for a country
+def plot_qol(qol_data, country):
+    """
+    Plots actual and predicted QoL scores over time for a single country
+    
+    Args:
+        - qol_data: list of dicts with keys 'year' and 'qol_score'
+        - country: Name of the country (str)
+    """  
+    historical_years = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
+    predicted_years = [2023, 2024, 2025, 2026, 2027]
+
+    qol_df = pd.DataFrame(qol_data)
+
+    qol_df["Projected?"] = "Unknown"  
+
+    qol_df.loc[qol_df["year"].isin(historical_years), "Projected?"] = "Historical Score"
+    qol_df.loc[qol_df["year"].isin(predicted_years), "Projected?"] = "Predicted Score"
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=qol_df['year'],
+        y=qol_df['qol_score'],
+        mode='lines+markers',
+        name='QoL Score',
+        line=dict(color='royalblue'),
+        customdata=qol_df[['Projected?']], 
+        hovertemplate=
+            'Year: %{x}<br>' +
+            'QoL Score: %{y:.3f}<br>' +
+            'Projected?: %{customdata[0]}<extra></extra>'
+    ))
+
+    fig.add_vline(x=2022.5, line_width=2, line_dash="dash", line_color="gray")
+
+    fig.add_vrect(
+        x0=2023, x1=qol_df['year'].max(),
+        fillcolor="lightgray", opacity=0.3,
+        layer="below", line_width=0,
+        annotation_text="Predicted", annotation_position="top left"
+    )
+
+    fig.update_layout(
+        title= f"Quality of Life (Historical and Projected) for {country}",
+        xaxis_title="Year",
+        yaxis_title="Quality of Life Score",
+        hovermode="x unified"
+    )
+
+    fig.show()
+
+
+
 
 
 
