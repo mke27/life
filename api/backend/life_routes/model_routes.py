@@ -9,7 +9,7 @@ from flask import (
 )
 from backend.db_connection import db 
 from mysql.connector import Error
-from backend.ml_models import model01
+from backend.ml_models import model01, model02
 
 
 model = Blueprint("model", __name__)
@@ -37,43 +37,18 @@ def get_predict(education, health, safety, environment):
         )
         response.status_code = 500
         return response
-
-
-@model.route("/pred_scores/<var_01>/<var_02>", methods=["GET"])
-def get_pred_scores(var_01, var_02):
-    current_app.logger.info("GET /prediction handler")
-
-    try:
-        prediction = model03.predict(var_01, var_02)
-        current_app.logger.info(f"prediction value returned is {prediction}")
-        
-        response_data = {
-            "prediction": prediction,
-            "input_variables": {"var01": var_01, "var02": var_02},
-        }
-
-        response = make_response(jsonify(response_data))
-        response.status_code = 200
-        return response
-
-    except Exception as e:
-        response = make_response(
-            jsonify({"error": "Error processing prediction request"})
-        )
-        response.status_code = 500
-        return response
     
 
 @model.route("/weights", methods=["GET"])
 def get_weights():
     try:
-        current_app.logger.info("GET /weights handler")
-        
-        weights = model01.get_weights()
-        current_app.logger.info(f"Model weights returned: {weights}")
+        cursor = db.get_db().cursor()
 
-        response_data = {"weights": weights}
-        return jsonify(response_data), 200
+        query = "SELECT * FROM Predicted_Score"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        cursor.close()
+        return jsonify(results), 200
 
     except Exception as e:
         response = make_response(
@@ -81,4 +56,36 @@ def get_weights():
         )
         response.status_code = 500
         return response
+
+
+@model.route("/raw_score/<country_name>", methods=["GET"])
+def get_scores(country_name):
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("""
+            SELECT country_name, score_year, qol_score
+            FROM ML_Score_US
+            WHERE country_name = %s
+        """, (country_name,))
+        scores = cursor.fetchall()
+        cursor.close()
+
+        return jsonify(scores)
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
+        
+
+@model.route("/graph_scores/<country_name>", methods=["GET"])
+def get_graph(country_name):
+    try:
+        current_app.logger.info("GET /graph_scores handler")
+        cursor = db.get_db().cursor()
+        predicted_scores = model02.autoregressor_all(country_name)
+        current_app.logger.info(f"Predicted scores for {country_name}: {predicted_scores}")
+
+        response_data = similarity.to_dict()
+        return jsonify(response_data), 200
+
+    except Error as e:
+        return jsonify({"error": str(e)}), 500
     

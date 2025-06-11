@@ -24,7 +24,7 @@ st.write("# Creators")
 cols = st.columns(4)
 
 people = [
-    {"photo": "assets/maya.jpeg", "name": "Max Robinson", "info": "Computer Science and Mathematics at Northeastern University"},
+    {"photo": "assets/max.jpeg", "name": "Max Robinson", "info": "Computer Science and Mathematics at Northeastern University"},
     {"photo": "assets/maya.jpeg", "name": "Maya Ellis", "info": "Data Science and Economics at Northeastern University"},
     {"photo": "assets/zoya.jpeg", "name": "Are Makropoulos", "info": "Computer Science at Northeastern University"},
     {"photo": "assets/zoya.jpeg", "name": "Zoya Siddiqui", "info": "Data Science and Biochemistry at Northeastern University"}

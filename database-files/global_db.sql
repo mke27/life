@@ -80,12 +80,37 @@ CREATE TABLE IF NOT EXISTS Preference
 
 CREATE TABLE IF NOT EXISTS Predicted_Score
 (
-    pred_ID    INT AUTO_INCREMENT PRIMARY KEY,
-    factor_ID  INT UNSIGNED NOT NULL,
-    country_ID INT UNSIGNED NOT NULL,
-    pred_score FLOAT,
-    FOREIGN KEY (factor_ID) REFERENCES Factor (factor_ID),
-    FOREIGN KEY (country_ID) REFERENCES Country (country_ID)
+    austria_weight FLOAT,
+    belgium_weight FLOAT,
+    bulgaria_weight FLOAT,
+    croatia_weight FLOAT,
+    cyprus_weight FLOAT,
+    czechia_weight FLOAT,
+    denmark_weight FLOAT,
+    estonia_weight FLOAT,
+    finland_weight FLOAT,
+    france_weight FLOAT,
+    germany_weight FLOAT,
+    greece_weight FLOAT,
+    hungary_weight FLOAT,
+    ireland_weight FLOAT,
+    italy_weight FLOAT,
+    latvia_weight FLOAT,
+    lithuania_weight FLOAT,
+    luxembourg_weight FLOAT,
+    malta_weight FLOAT,
+    netherlands_weight FLOAT,
+    poland_weight FLOAT,
+    portugal_weight FLOAT,
+    romania_weight FLOAT,
+    slovakia_weight FLOAT,
+    slovenia_weight FLOAT,
+    spain_weight FLOAT,
+    lag1 FLOAT,
+    lag2 FLOAT,
+    lag3 FLOAT,
+    lag4 FLOAT,
+    lag5 FLOAT
 );
 
 CREATE TABLE IF NOT EXISTS University
@@ -107,12 +132,6 @@ CREATE TABLE IF NOT EXISTS Policy_News
     FOREIGN KEY (factor_ID) REFERENCES Factor (factor_ID)
 );
 
-CREATE TABLE IF NOT EXISTS ML_Country
-(
-    country_ID   INT UNSIGNED PRIMARY KEY,
-    country_name VARCHAR(30) NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS ML_Score
 (
     score_ID  INT AUTO_INCREMENT PRIMARY KEY,
@@ -123,9 +142,8 @@ CREATE TABLE IF NOT EXISTS ML_Score
     education_score   FLOAT NOT NULL,
     safety_score     FLOAT NOT NULL,
     environment_score FLOAT NOT NULL,
-    qol_score FLOAT NOT NULL,
-    FOREIGN KEY (country_ID) REFERENCES ML_Country (country_ID)
-);
+    qol_score FLOAT NOT NULL
+    );
 
 CREATE TABLE IF NOT EXISTS ML_Score_US
 (
@@ -137,39 +155,9 @@ CREATE TABLE IF NOT EXISTS ML_Score_US
     education_score   FLOAT NOT NULL,
     safety_score     FLOAT NOT NULL,
     environment_score FLOAT NOT NULL,
-    qol_score FLOAT NOT NULL,
-    FOREIGN KEY (country_ID) REFERENCES ML_Country (country_ID)
+    qol_score FLOAT NOT NULL
 );
         
-INSERT INTO ML_Country 
-    VALUES(1,"Austria"),
-          (2,"Belgium"), 
-          (3,"Bulgaria"), 
-          (4,"Croatia"), 
-          (5,"Cyprus"),
-          (6,"Czechia"), 
-          (7,"Denmark"), 
-          (8,"Estonia"), 
-          (9,"Finland"), 
-          (10,"France"), 
-          (11,"Germany"), 
-          (12,"Greece"),
-          (13,"Hungary"), 
-          (14,"Ireland"), 
-          (15,"Italy"), 
-          (16,"Latvia"), 
-          (17,"Lithuania"), 
-          (18,"Luxembourg"), 
-          (19,"Malta"),
-          (20,"Netherlands"),
-          (21,"Poland"), 
-          (22,"Portugal"),
-          (23,"Romania"), 
-          (24,"Slovakia"), 
-          (25,"Slovenia"), 
-          (26,"Spain"), 
-          (27,"Sweden");
-
 INSERT INTO Country 
     VALUES(1,"Austria"),
           (2,"Belgium"), 
@@ -1464,6 +1452,16 @@ INSERT INTO User(first_name,user_name,role_id) VALUES ('Orran','olosano1z',3);
 INSERT INTO User(first_name,user_name,role_id) VALUES ('Em','eleyre20',3);
 INSERT INTO User(first_name,user_name,role_id) VALUES ('Shelba','sballston21',3);
 INSERT INTO User(first_name,user_name,role_id) VALUES ('Anstice','asamudio22',1);
+
+INSERT INTO Predicted_Score
+    VALUES (1.81952075e-03, -4.07870304e-03,  1.90541805e-01,  7.64124007e-02, 
+    5.25036761e-02,  5.78521487e-02,  8.38125369e-03,  1.32514417e-01, 
+    6.53118509e-02,  2.34825091e-02, -3.65365025e-04,  9.41455234e-02, 
+    1.38478789e-01,  2.93264072e-03,  6.15568612e-02,  1.00058952e-01,
+    1.52119991e-01,  4.83862691e-02,  8.59009850e-03,  1.19565338e-02, 
+    7.01476999e-02,  1.26321234e-01,  1.54296666e-01,  6.16161791e-02, 
+    1.16114729e-01,  1.29620941e-02,  1.26888731e+00, -3.12212667e-01, 
+    -2.12275567e-01,  2.27612041e-01,  2.71121069e-02);
 
 
 -- INSERT INTO Factor(factor_ID, factor_name) VALUES (1, 'education');
