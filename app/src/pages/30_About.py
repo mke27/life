@@ -10,11 +10,11 @@ st.write("# About Best Life")
 
 st.markdown(
     """
-A country's quality of life provides important insight into the well-being of citizens and their satisfaction with the standards of living. Rather than simply relying on a single statistic to determine a country's success, quality of life encapsulates a broader sense of how people feel about their experiences. This is typically based on several factors, and for our project we will be focusing on the following: Healthcare, Education, Safety, and Environment.
+    A country's quality of life provides essential insight into citizens' well-being and satisfaction with their standards of living. Rather than simply relying on a single statistic to determine a country's success, quality of life encapsulates a broader sense of how people feel about their experiences. This is typically based on several factors, and for our project we will be focusing on the following: Health, Education, Safety, and Environment.
 
-Our application aims to provide decision-making assistance for users looking to improve their quality of life. By utilizing data about the quality of life in EU member states, we are able to recommend countries to prospective international students, help policymakers implement new legislation, and guide activists in their expansion efforts. 
+    Our application aims to provide decision-making assistance for users looking to improve their quality of life. By utilizing data about the quality of life in EU member states, we can recommend countries to prospective international students, help policymakers implement new legislation, and guide activists in their expansion efforts. 
 
-Best Life utilizes a combination of time series auto-regression and cosine similarity scoring in order to provide valuable insights to its users. The ultimate goal is to help users understand the factors that determine their quality of life and subsequently make informed decisions through moving, policy implementation, or providing aid.
+    Best Life utilizes a combination of time series auto-regression and cosine similarity scoring in order to provide valuable insights to its users. The ultimate goal is to help users understand the factors that determine their quality of life and subsequently make informed decisions about moving, policy implementation, or providing aid.
     """
 )
 
