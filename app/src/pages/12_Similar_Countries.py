@@ -186,3 +186,8 @@ if st.session_state.show_sim_country:
                     
     else:
         st.error(f"Failed to fetch QoL data for countries")
+
+st.caption("*Similarity scores based on education, health, safety, and environment.*")
+st.caption("*Education = Percent in tertiary education, Health = Life expectancy at birth, Safety = Drug crimes, Environment = Carbon emissions, QoL = World Happiness Index Scores*")
+
+

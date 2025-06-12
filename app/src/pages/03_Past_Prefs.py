@@ -9,6 +9,7 @@ from modules.nav import SideBarLinks
 import plotly.express as px
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import json
 
 
 
@@ -152,15 +153,33 @@ else:
         for i, (pref, col) in enumerate(zip(selected_prefs, columns)):
             country_id = pref["top_country"]
             country = country_id_to_name.get(country_id, f"Unknown ID {country_id}")
-            df = pd.DataFrame({"Country": [country], "Highlight": [1]})
+            df = pd.DataFrame({
+                    "Country": [country],
+                    "Highlight": [1],
+                    "Education": [pref["weight1"]],
+                    "Health": [pref["weight2"]],
+                    "Safety": [pref["weight3"]],
+                    "Environment": [pref["weight4"]],
+                })
+ 
             fig = px.choropleth(
                 df,
                 scope="europe",
                 locations="Country",
                 locationmode="country names",
                 color="Highlight",
-                color_continuous_scale=["lightgray", "red"]
+                color_continuous_scale=["lightgray", "red"],
+                hover_name= "Country",
+                hover_data={
+                    "Country": False,
+                    "Education": True,
+                    "Health": True,
+                    "Safety": True,
+                    "Environment": True,
+                    "Highlight": False  # Hide this internal field
+                }
             )
+
             fig.update_coloraxes(showscale=False)
             fig.update_layout(title_text=f"Preference {i+1}: {country}")
             col.plotly_chart(fig, use_container_width=True)
@@ -190,5 +209,9 @@ else:
                     
         else:
             st.error(f"Failed to fetch QoL data for countries")
+
+st.caption("*All chosen preference values are relative to other chosen preference values.*")
+st.caption("*Education = Percent in tertiary education, Health = Life expectancy at birth, Safety = Drug crimes, Environment = Carbon emissions, QoL = World Happiness Index Scores*")
+
             
 
