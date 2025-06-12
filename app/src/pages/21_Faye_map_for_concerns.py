@@ -48,7 +48,7 @@ df_renamed = df_sorted.rename(columns={'country_name': 'Country',
                                        'education_score':'Education Score'})
 
 fig = px.choropleth(df_renamed, scope='europe', locations='Country', locationmode='country names', color=input_name)
-st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
+st.plotly_chart(fig, use_container_width=True, theme="streamlit")
 
 st.write(df_renamed)
 #fig = px.choropleth(df, scope='europe', color='similarity', locations = 'Country_input', locationmode='country names')

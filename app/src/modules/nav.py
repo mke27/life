@@ -11,7 +11,7 @@ def HomeNav():
 
 
 def AboutPageNav():
-    st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
+    st.sidebar.page_link("pages/30_About.py", label="About", icon="❔")
 
 def UserSettingsNav():
     st.sidebar.page_link("pages/31_User_Profile.py", label="My Profile", icon="👤")
