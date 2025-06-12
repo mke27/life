@@ -16,6 +16,7 @@ users = Blueprint("users", __name__)
 
 @users.route("/role/<role_name>", methods=["GET"])
 def get_usernames_by_role_name(role_name):
+    current_app.logger.info('GET /role/<role_name> route')
     try:
         cursor = db.get_db().cursor()
 
@@ -40,6 +41,7 @@ def get_usernames_by_role_name(role_name):
     
 @users.route('/users/remove/<int:user_ID>', methods=["DELETE"])
 def remove_user(user_ID):
+    current_app.logger.info('DELETE /users/remove/<int:user_ID> route')
     try:
         cursor = db.get_db().cursor()
         query = 'DELETE FROM User WHERE user_ID = %s'

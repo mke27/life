@@ -16,6 +16,7 @@ james = Blueprint("james", __name__)
     
 @james.route("/policy", methods=["GET"])
 def get_policy():
+    current_app.logger.info('GET /policy route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""

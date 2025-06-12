@@ -90,6 +90,7 @@ def get_unis_by_country(country_id):
 
 @grace.route("/preference", methods=["POST"])
 def create_preference():
+    current_app.logger.info('POST /preference route')
     try:
         current_app.logger.info('Starting create_preference request')
         data = request.get_json()
@@ -126,6 +127,7 @@ def create_preference():
     
 @grace.route("/preference/<int:user_ID>", methods=["GET"])
 def get_pref_topcountry(user_ID):
+    current_app.logger.info('GET /preference/<int:user_ID> route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""

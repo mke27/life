@@ -38,6 +38,7 @@ Lastly, the activist persona can maximize their impact in EU member states. They
 Maya worked extensively on the REST API routes and their on-page functionality, as well as user interface design and the initial Entity Relationship Diagram for the database. She also contributed to the implementation of the ML models for both the cosine similarity scores and the timeseries autoregression.
 
 ### Areti Makropoulos
+Areti contributed significantly on developing the database, REST API, an UI layers of the application. In creating the database layer, she focused on designing well structured entities and relationships aligned with our application's needs, as well as generating mock data to support development. Additionally, she collaborated with Maya on the design of the REST API and implemented the UI for the application ensuring a smooth personalized performance. 
 
 ### Max Robinson
 
