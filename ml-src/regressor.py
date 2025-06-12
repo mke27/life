@@ -338,6 +338,8 @@ def autoregressor_all(df, input_country):
     if input_country in input_eu_country_names:
         country_index = input_eu_country_names.index(input_country)
         startX[country_index] = 1
+    else:
+        startX = np.zeros(len(country_list) - 1)
 
     base_index = country_list.index(input_country)
     start = base_index * values_per_country 
@@ -373,7 +375,7 @@ def autoregressor_all(df, input_country):
     return merged_dict
 
 # plotting historical and predicted qol for a country
-def plot_qol(qol_data, country):
+def plot_qol(qol_data, country, qol_data2 = None, country2 = None):
     """
     Plots actual and predicted QoL scores over time for a single country
     
@@ -393,33 +395,65 @@ def plot_qol(qol_data, country):
 
     fig = go.Figure()
 
+    qol_df = pd.DataFrame(qol_data)
+    qol_df["Source"] = qol_df["year"].apply(
+        lambda y: "Historical Score" if y in historical_years else (
+            "Predicted Score" if y in predicted_years else "Unknown"
+        )
+    )
+
     fig.add_trace(go.Scatter(
         x=qol_df['year'],
         y=qol_df['qol_score'],
         mode='lines+markers',
-        name='QoL Score',
+        name=f'{country} QoL',
         line=dict(color='royalblue'),
-        customdata=qol_df[['Projected?']], 
+        customdata=qol_df[["Source"]],
         hovertemplate=
+            f'<b>{country}</b><br>' +
             'Year: %{x}<br>' +
             'QoL Score: %{y:.3f}<br>' +
-            'Projected?: %{customdata[0]}<extra></extra>'
+            'Type: %{customdata[0]}<extra></extra>'
     ))
+
+    if qol_data2 is not None and country2 is not None:
+        qol_df2 = pd.DataFrame(qol_data2)
+        qol_df2["Source"] = qol_df2["year"].apply(
+            lambda y: "Historical Score" if y in historical_years else (
+                "Predicted Score" if y in predicted_years else "Unknown"
+            )
+        )
+
+        fig.add_trace(go.Scatter(
+            x=qol_df2['year'],
+            y=qol_df2['qol_score'],
+            mode='lines+markers',
+            name=f'{country2} QoL',
+            line=dict(color='crimson'),
+            customdata=qol_df2[["Source"]],
+            hovertemplate=
+                f'<b>{country2}</b><br>' +
+                'Year: %{x}<br>' +
+                'QoL Score: %{y:.3f}<br>' +
+                'Type: %{customdata[0]}<extra></extra>'
+        ))
 
     fig.add_vline(x=2022.5, line_width=2, line_dash="dash", line_color="gray")
 
     fig.add_vrect(
-        x0=2023, x1=qol_df['year'].max(),
+        x0=2023, x1=max(
+            qol_df['year'].max(),
+            qol_df2['year'].max() if qol_data2 else 2027
+        ),
         fillcolor="lightgray", opacity=0.3,
         layer="below", line_width=0,
         annotation_text="Predicted", annotation_position="top left"
     )
 
     fig.update_layout(
-        title= f"Quality of Life (Historical and Projected) for {country}",
+        title="Quality of Life (Historical and Projected)",
         xaxis_title="Year",
-        yaxis_title="Quality of Life Score",
-        hovermode="x unified"
+        yaxis_title="Quality of Life Score"
     )
 
     fig.show()

@@ -11,7 +11,7 @@ SideBarLinks()
 from modules.style import style_sidebar
 style_sidebar()
 
-st.title(f"Welcome Prospective Univerity Student, {st.session_state['first_name']}.")
+st.title(f"Welcome Prospective University Student, {st.session_state['first_name']}.")
 st.write('')
 st.write('')
 st.write('### What would you like to do today?')

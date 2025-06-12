@@ -11,15 +11,29 @@ def HomeNav():
 
 
 def AboutPageNav():
-    st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
+    st.sidebar.page_link("pages/30_About.py", label="About", icon="❔")
 
 def UserSettingsNav():
     st.sidebar.page_link("pages/31_User_Profile.py", label="My Profile", icon="👤")
 
 def UserInfo():
-    st.sidebar.header(f"{st.session_state['first_name']}")
-    st.sidebar.write(f"Role: {st.session_state['role']}")
-
+    st.sidebar.markdown(
+        f"""
+        <div style='
+            background-color:#e6f2ff;
+            padding:15px;
+            border-radius:10px;
+            color:#003366;
+            font-weight:500;
+            margin-top:15px;
+            margin-bottom:15px;
+        '>
+            <h2 style='margin: 0 0 5px 0; padding: 0;'>{st.session_state['first_name']}</h2>
+            <p style='margin: 0; padding: 0;'>Role: {st.session_state['role']}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 #### ------------------------ Examples for Role of student ------------------------
 def StudentHomeNav():
     st.sidebar.page_link(
@@ -73,7 +87,7 @@ def SideBarLinks(show_home=False):
     """
 
     # add a logo to the sidebar always
-    st.sidebar.image("assets/logo.png", width=285)
+    st.sidebar.image("assets/logo.png", width=290)
 
     # If there is no logged in user, redirect to the Home (Landing) page
     if "authenticated" not in st.session_state:
