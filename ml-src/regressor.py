@@ -104,7 +104,7 @@ def predict(y, w, country, target_year):
         startX[country_index] = 1
 
     base_index = country_list.index(country)  
-    start = base_index * values_per_country + 2
+    start = base_index * values_per_country 
     end = start + 5
     endY = y[start:end][::-1].tolist()
 
