@@ -139,8 +139,8 @@ if not st.session_state.compare:
 else:
     country_1 = st.session_state.country_1
     country_2 = st.session_state.country_2
-    url_1 = f"http://web-api:4000/model/get_model_scores/{country_1}"
-    url_2 = f"http://web-api:4000/model/get_model_scores/{country_2}"
+    url_1 = f"http://web-api:4000/model/model_scores/{country_1}"
+    url_2 = f"http://web-api:4000/model/model_scores/{country_2}"
     response_1 = requests.get(url_1)
     response_2 = requests.get(url_2)
     if response_1.status_code == 200 and response_2.status_code == 200:

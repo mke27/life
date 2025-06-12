@@ -70,6 +70,7 @@ def get_scores_unstandardized():
     
 @faye.route("/scores/<country_name>", methods=["GET"])
 def get_scores_by_country(country_name):
+    current_app.logger.info('GET /scores/<country_name> route')
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""
