@@ -150,10 +150,13 @@ if st.session_state.show_sim_country:
     df_renamed = df_sorted.rename(columns={'Country_input':'Country', 'similarity':'Similarity Score'})
 
     fig = px.choropleth(df_renamed, title="Map of Most similar Countries",scope='europe', locations='Country', locationmode='country names', color='Similarity Score', hover_data='Similarity Score')
-    st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
+    st.plotly_chart(fig, use_container_width=True, theme="streamlit")
     st.subheader(f"Most similar countries to {option}")
 
-    st.write(df_renamed.iloc[1:][["Country", "Similarity Score"]])
+    df_displayable = df_renamed.iloc[1:][["Country", "Similarity Score"]]
+    df_no_index = df_displayable.reset_index(drop=True)
+
+    st.write(df_no_index)
 
 
     country_1 = df_renamed.iloc[0]["Country"]
