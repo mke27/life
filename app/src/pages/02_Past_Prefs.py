@@ -20,7 +20,7 @@ add_logo("assets/logo.png", height=400)
 st.markdown('''
             # Preference History
 
-            Select 2 preference sets below to compare your recommended countries.        
+            Compare previous recommended countries. Displayed are the past preferences of education, health, safety, and environment.
 ''')
 
 user_ID = st.session_state.get("user_ID", 1)
@@ -156,13 +156,17 @@ else:
         for i, (pref, col) in enumerate(zip(selected_prefs, columns)):
             country_id = pref["top_country"]
             country = country_id_to_name.get(country_id, f"Unknown ID {country_id}")
+            SCORE_URL = f"http://web-api:4000/faye/scores/{country}"
+            response_scores = requests.get(SCORE_URL)
+            data_scores = response_scores.json()[0]
+
             df = pd.DataFrame({
                     "Country": [country],
                     "Highlight": [1],
-                    "Education": [pref["weight1"]],
-                    "Health": [pref["weight2"]],
-                    "Safety": [pref["weight3"]],
-                    "Environment": [pref["weight4"]],
+                    "Education": [data_scores["education_score"]],
+                    "Health": [data_scores["health_score"]],
+                    "Safety": [data_scores["safety_score"]],
+                    "Environment": [data_scores["environment_score"]],
                 })
  
             fig = px.choropleth(
@@ -186,6 +190,8 @@ else:
             fig.update_coloraxes(showscale=False)
             fig.update_layout(title_text=f"Preference {i+1}: {country}")
             col.plotly_chart(fig, use_container_width=True)
+        
+        st.write("Hover over the country for more information regarding education, health, safety and environment scores. The scores represent the number of standard deviations away from the mean score the value is. A negative value indicates the factor score is below the mean while a positive value shows that the factor score is a certain amount of standard deviations above the mean.")
 
         country_id_1 = selected_prefs[0]["top_country"]
         country_id_2 = selected_prefs[1]["top_country"]
@@ -203,7 +209,12 @@ else:
                 data_1 = response_1.json()
                 data_2 = response_2.json()
                 if isinstance(data_1, list) and isinstance(data_2, list):
-                    st.subheader("Quality of Life Comparison")
+                    st.markdown('''
+                                ## Quality of Life Comparison
+                                
+                                Compares the historical and predicted happiness scores of the countries. 
+                                The scores for each country evaluate their citizens quality of life on a 0 (worst possible life) to 10 (best possible life) scale.
+                    ''')
                     fig = plot_qol(data_1, country_name_1, data_2, country_name_2)
                 else:
                     st.warning("Invalid data format received from the model API.")
@@ -212,9 +223,6 @@ else:
                     
         else:
             st.error(f"Failed to fetch QoL data for countries")
-
-st.caption("*All chosen preference values are relative to other chosen preference values.*")
-st.caption("*Education = Percent in tertiary education, Health = Life expectancy at birth, Safety = Drug crimes, Environment = Carbon emissions, QoL = World Happiness Index Scores*")
 
             
 
