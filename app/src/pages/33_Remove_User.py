@@ -26,7 +26,7 @@ if st.button("Confirm Deletion"):
           deletion_bar.progress(i)
           status_text.text("Deleting Profile...")
 
-     requests.delete(f"http://web-api:4000/users/users/remove/{st.session_state['user_ID']}")
+     requests.delete(f"http://web-api:4000/users/user/{st.session_state['user_ID']}")
      st.switch_page('Home.py')
 
 

@@ -9,8 +9,8 @@ style_sidebar()
 import requests
 
 
-UPDATE_FIRSTNAME = "http://web-api:4000/users/update/first-name"
-UPDATE_USERNAME = "http://web-api:4000/users/update/username"
+UPDATE_FIRSTNAME = "http://web-api:4000/users/first-name"
+UPDATE_USERNAME = "http://web-api:4000/users/username"
 st.title("Edit Profile")
 st.write("Please fill out this form to change your first name or username.")
 with st.form(key = "form"):
@@ -67,6 +67,6 @@ st.write("")
 
 if st.button("Delete Profile"):
      st.switch_page("pages/33_Remove_User.py")
-     # requests.delete(f"http://web-api:4000/users/users/remove/{user_ID}")
+     # requests.delete(f"http://web-api:4000/users/user/{user_ID}")
 
 

@@ -14,7 +14,7 @@ from backend.ml_models import model01, model02
 
 model = Blueprint("model", __name__)
 
-@model.route("/predict/<education>/<health>/<safety>/<environment>", methods=["GET"])
+@model.route("/prediction/<education>/<health>/<safety>/<environment>", methods=["GET"])
 def get_predict(education, health, safety, environment):
     try:
         current_app.logger.info("GET /predict handler")
