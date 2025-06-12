@@ -159,7 +159,7 @@ if st.session_state.show_sim_country:
         st.plotly_chart(fig, use_container_width=True, theme="streamlit")
 
     with col2:
-        st.dataframe(df_renamed.iloc[1:][["Country", "Similarity Score"]].reset_index(drop=True), use_container_width=True, height=400)
+        st.dataframe(df_renamed.iloc[1:][["Country", "Similarity Score"]].reset_index(drop=True), use_container_width=True, height=400, hide_index=True)
         st.caption("The similarity score is a value between -1 and 1 indicating how similar two countries are. A value of -1 means direct opposites whereas a value of 1 means completely identical.")
 
     st.divider()
