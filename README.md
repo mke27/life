@@ -35,6 +35,7 @@ Lastly, the activist persona can maximize their impact in EU member states. They
 
 ## Team Contribution Overview
 ### Maya Ellis
+Maya worked extensively on the REST API routes and their on-page functionality, as well as user interface design and the initial Entity Relationship Diagram for the database. She also contributed to the implementation of the ML models for both the cosine similarity scores and the timeseries autoregression.
 
 ### Areti Makropoulos
 
