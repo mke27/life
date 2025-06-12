@@ -68,7 +68,7 @@ def get_scores_unstandardized():
     except Error as e:
         return jsonify({"error": str(e)}), 500
     
-@faye.route("/scores/<country_name>}", methods=["GET"])
+@faye.route("/scores/<country_name>", methods=["GET"])
 def get_scores_by_country(country_name):
     try:
         cursor = db.get_db().cursor()
