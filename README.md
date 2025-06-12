@@ -33,6 +33,18 @@ The next persona of a policymaker is able to learn more about recent policy and 
 
 Lastly, the activist persona can maximize their impact in EU member states. They are able to countries with the largest need for improvement in the key factors of health, education, environment, or safety to learn more about where they should expand their reach in. They are also able to view predicted quality of life scores by countries to be able to recognize declines and address them before they occur. Activism is stronger together, so they are also able to view organizations in countries that address their area of interest to be able learn more about them and expand their outreach.
 
+## Team Contribution Overview
+### Maya Ellis
+
+### Areti Makropoulos
+
+### Max Robinson
+
+### Zoya Siddiqui
+Zoya worked primarily on developing our time-series autoregressive model that was used to predict future quality of life for the next five years. She also procured, cleaned, and performed EDA on most of the data used for the ML models.
+
+To learn more about specific individual contributions and our overall app development process, you can read [our team blog.](https://maxr21.github.io/belgiumsquad/)
+
 ## Future Considerations
 
 One point to improve on is the factors we use to judge each country's 'health', 'education', 'environment' and 'safety' score. It is somewhat arbitrary at the moment and would be better if we had constructed a metric that combined many statistics collected on a Nation's safety. For example, we currently only look at life expectancy to guage the health score. If we combined hospital waiting times, number of doctors per person we could already get a better sense of how well a nation provides healthcare.
