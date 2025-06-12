@@ -108,7 +108,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
 
     #st.write(f"invserse sigmoided input: {inv_sig_input}")
 
-    results = requests.get(f"http://web-api:4000/model/predict/{inv_sig_input[0]}/{inv_sig_input[1]}/{inv_sig_input[2]}/{inv_sig_input[3]}")
+    results = requests.get(f"http://web-api:4000/model/prediction/{inv_sig_input[0]}/{inv_sig_input[1]}/{inv_sig_input[2]}/{inv_sig_input[3]}")
     results_json = json.loads(results.text)
     df = pd.DataFrame.from_dict(results_json)
     #logger.info(f"{type(results)}")

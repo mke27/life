@@ -140,7 +140,7 @@ if st.session_state.show_sim_country:
                                   selected_row['safety_score'], selected_row['environment_score']])
     #st.write(comparison_vector)
     model_results = requests.get(
-        f"http://web-api:4000/model/predict/{comparison_vector[0][0]}/{comparison_vector[1][0]}/{comparison_vector[2][0]}/{comparison_vector[3][0]}")
+        f"http://web-api:4000/model/prediction/{comparison_vector[0][0]}/{comparison_vector[1][0]}/{comparison_vector[2][0]}/{comparison_vector[3][0]}")
     #st.write(model_results.text)
     results_json = json.loads(model_results.text)
     df_similarites = pd.DataFrame.from_dict(results_json)
