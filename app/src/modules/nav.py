@@ -48,7 +48,7 @@ def StudentMapNav():
 
 
 def UniversityNav():
-    st.sidebar.page_link("pages/04_University_Recs.py", label="University Recommendations", icon="🏫")
+    st.sidebar.page_link("pages/03_University_Recs.py", label="University Recommendations", icon="🏫")
 
 
 ## ------------------------ Examples for Role of policymaker ------------------------
