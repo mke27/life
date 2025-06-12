@@ -43,7 +43,7 @@ def StudentHomeNav():
 
 def StudentMapNav():
     st.sidebar.page_link(
-        "pages/01_Student_Map.py", label="Country Recommendation Map", icon="🗺️"
+        "pages/01_Student_Map.py", label="Country Recommendations Map", icon="🗺️"
     )
 
 
@@ -75,7 +75,7 @@ def ExpansionNav():
     st.sidebar.page_link("pages/21_Faye_map_for_concerns.py", label="Expansion Map", icon="🗺️")
 
 def QoLChangeNav():
-    st.sidebar.page_link("pages/22_QoL_Change.py", label="QoL Change", icon="📈")
+    st.sidebar.page_link("pages/22_QoL_Change.py", label="QoL Comparison", icon="📈")
 
 def CurrentOrgsNav():
     st.sidebar.page_link("pages/23_Current_Orgs.py", label="Current Organizations", icon="🏢")
