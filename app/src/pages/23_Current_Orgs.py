@@ -45,10 +45,16 @@ if st.button('Submit', type='primary', use_container_width=True):
                 cols = st.columns(3)
                 for col, org in zip(cols, json_results):
                     with col:
-                        st.markdown(f"### {org['org_name']}")
                         org_url = org.get('org_url')
-                        if org_url: 
-                            st.link_button(f"Learn more about {org['org_name']}!", org_url)
+                        st.markdown(
+                            f"""
+                            <div style="background-color: #e6f2ff; padding: 15px; border-radius: 10px;">
+                                <h3>{org['org_name']}</h3>
+                                {'<a href="' + org_url + '" target="_blank" style="text-decoration: none;"><button style="padding: 10px 15px; background-color: #458bd1; color: white; border: none; border-radius: 8px; cursor: pointer;">Learn more about ' + org['org_name'] + '!</button></a>' if org_url else ''}
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )                        
 
         except Exception as e:
             st.error(f"Failed to fetch data: {e}")

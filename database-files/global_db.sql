@@ -856,10 +856,10 @@ INSERT INTO ML_Score_US(country_ID,country_name,score_year,health_score,educatio
 
 
 -- Factor Data
-INSERT INTO Factor(factor_ID, factor_name) VALUES (1, 'education');
-INSERT INTO Factor(factor_ID, factor_name) VALUES (2, 'health');
-INSERT INTO Factor(factor_ID, factor_name) VALUES (3, 'safety');
-INSERT INTO Factor(factor_ID, factor_name) VALUES (4, 'environment');
+INSERT INTO Factor(factor_ID, factor_name) VALUES (1, 'Education');
+INSERT INTO Factor(factor_ID, factor_name) VALUES (2, 'Health');
+INSERT INTO Factor(factor_ID, factor_name) VALUES (3, 'Safety');
+INSERT INTO Factor(factor_ID, factor_name) VALUES (4, 'Environment');
 
 -- Org Mock Data
 INSERT INTO Organization(org_name,org_country,org_factor,org_url) VALUES ('Douglas Group',22,2,'http://lulu.com/vel/lectus/in/quam.json?purus=morbi&phasellus=a&in=ipsum&felis=integer&donec=a&semper=nibh&sapien=in&a=quis&libero=justo&nam=maecenas&dui=rhoncus&proin=aliquam&leo=lacus&odio=morbi&porttitor=quis&id=tortor&consequat=id&in=nulla&consequat=ultrices&ut=aliquet&nulla=maecenas&sed=leo&accumsan=odio&felis=condimentum&ut=id&at=luctus&dolor=nec&quis=molestie&odio=sed&consequat=justo&varius=pellentesque&integer=viverra&ac=pede&leo=ac&pellentesque=diam&ultrices=cras&mattis=pellentesque&odio=volutpat&donec=dui&vitae=maecenas&nisi=tristique&nam=est&ultrices=et&libero=tempus&non=semper&mattis=est&pulvinar=quam&nulla=pharetra&pede=magna&ullamcorper=ac&augue=consequat&a=metus&suscipit=sapien&nulla=ut&elit=nunc&ac=vestibulum&nulla=ante&sed=ipsum&vel=primis&enim=in&sit=faucibus&amet=orci&nunc=luctus&viverra=et');
