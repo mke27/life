@@ -19,7 +19,7 @@ def get_policy():
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""
-            SELECT factor_ID, urls, title, date_created
+            SELECT factor_ID, urls, title, DATE_FORMAT(date_created, '%Y-%m-%d') as date_created
             FROM Policy_News
             ORDER BY date_created DESC
         """)
