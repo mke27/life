@@ -5,7 +5,6 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 from backend.db_connection import db
-from backend.simple.simple_routes import simple_routes
 from backend.life_routes.country_routes import country
 from backend.life_routes.faye_routes import faye
 from backend.life_routes.grace_routes import grace
@@ -50,7 +49,6 @@ def create_app():
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
     app.logger.info("create_app(): registering blueprints with Flask app object.")
-    app.register_blueprint(simple_routes)
     app.register_blueprint(country,url_prefix="/country")
     app.register_blueprint(faye, url_prefix="/faye")
     app.register_blueprint(grace, url_prefix="/grace")
