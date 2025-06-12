@@ -14,7 +14,8 @@ style_sidebar()
 
 add_logo("assets/logo.png", height=400)
 
-st.header("University Recommendations")
+st.markdown('''
+# University Recommendations''')
 st.write("""Select a country.""")
 
 response = requests.get("http://web-api:4000/country/country")

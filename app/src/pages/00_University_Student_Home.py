@@ -24,4 +24,4 @@ if st.button('View Country Recommendations',
 if st.button('View University Recommendations', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/04_University_Recs.py')
+  st.switch_page('pages/03_University_Recs.py')

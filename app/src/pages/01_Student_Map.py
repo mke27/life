@@ -34,13 +34,16 @@ def inv_sigmoid(value):
 API_URL = "http://web-api:4000/grace/preference"
 df = pd.DataFrame()
 
+st.markdown('''
+            # Country Recommendations Map
 
-# set the header of the page
-st.header('Country Recommendations Map')
-
-# You can access the session state to make a more customized/personalized app experience
-st.write(f"### Hi, {st.session_state['first_name']}.")
-st.write("Set your preferences below to see the best country recommendations for you.")
+            Set your preferences below to receive personalized country recommendations.
+            Your selected reference values are relative to one another, meaning higher values indicate greater value to you.
+            - **Education** refers to the the percentage of the population that completed tertiary education. 
+            - **Health** is based on life expectancy at birth.
+            - **Safety** reflects the amount of drug crimes.
+            - **Environment** is measured by the country's carbon emissions.    
+''')
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -183,7 +186,5 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         st.info("Please ensure the API server is running")
 
 if st.button('Compare Preference History', type='primary', use_container_width=True):
-    st.switch_page('pages/03_Past_Prefs.py')
+    st.switch_page('pages/02_Past_Prefs.py')
 
-st.caption("*All chosen preference values are relative to other chosen preference values.*")
-st.caption("*Education = Percent in tertiary education, Health = Life expectancy at birth, Safety = Drug crimes, Environment = Carbon emissions*")
