@@ -140,7 +140,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         country_name_to_id = {c["country_name"]: c["country_ID"] for c in country_data}
 
         top_country_name = sorted_df.iloc[0]["Country_input"]
-        st.write(f"top country = {top_country_name}")
+        #st.write(f"top country = {top_country_name}")
 
         top_country_id = country_name_to_id.get(top_country_name)
 

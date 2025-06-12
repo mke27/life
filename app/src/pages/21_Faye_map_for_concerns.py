@@ -55,6 +55,9 @@ fig = px.choropleth(df_renamed, scope='europe', locations='Country', locationmod
 st.plotly_chart(fig, use_container_width=True, theme="streamlit")
 
 st.write(df_renamed.reset_index(drop=True))
+st.caption("""
+The scores shown in the above table are standardised. This means that for the factor, we take all the previous values for that factor and find the mean and standard deviation. We then subtract the mean from the real value and divide by the standard deviation to get the standardised score. This score can be understood as the number of standard deviations away from the mean score this value is. For example, a score of -0.5 means that the real value is 0.5 standard deviations below the mean.
+""")
 #fig = px.choropleth(df, scope='europe', color='similarity', locations = 'Country_input', locationmode='country names')
 
 #st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
