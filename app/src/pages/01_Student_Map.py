@@ -38,7 +38,7 @@ st.markdown('''
             # Country Recommendations Map
 
             Set your preferences below to receive personalized country recommendations.
-            Your selected reference values are relative to one another, meaning higher values indicate greater value to you.
+            Your selected reference values are relative to one another, meaning that if all sliders are set at 0, you will receive the same recommendation as setting them all at 100. To prioritise factors, the user must place it above the other factors.
             - **Education** refers to the the percentage of the population that completed tertiary education. 
             - **Health** is based on life expectancy at birth.
             - **Safety** reflects the amount of drug crimes.
