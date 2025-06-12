@@ -155,7 +155,7 @@ if st.session_state.show_sim_country:
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        fig = px.choropleth(df_renamed, title="Map of Most similar Countries",scope='europe', locations='Country', locationmode='country names', color='Similarity Score', hover_data='Similarity Score')
+        fig = px.choropleth(df_renamed, title="Map of Most Similar Countries",scope='europe', locations='Country', locationmode='country names', color='Similarity Score', hover_data='Similarity Score')
         st.plotly_chart(fig, use_container_width=True, theme="streamlit")
 
     with col2:
