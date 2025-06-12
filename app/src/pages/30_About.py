@@ -26,16 +26,14 @@ cols = st.columns(4)
 people = [
     {"photo": "assets/max.jpeg", "name": "Max Robinson", "info": "Computer Science and Mathematics at Northeastern University"},
     {"photo": "assets/maya.jpeg", "name": "Maya Ellis", "info": "Data Science and Economics at Northeastern University"},
-    {"photo": "assets/zoya.jpeg", "name": "Are Makropoulos", "info": "Computer Science at Northeastern University"},
+    {"photo": "assets/aretim.jpeg", "name": "Are Makropoulos", "info": "Computer Science at Northeastern University"},
     {"photo": "assets/zoya.jpeg", "name": "Zoya Siddiqui", "info": "Data Science and Biochemistry at Northeastern University"}
 ]
 
 for col, member in zip(cols, people):
     with col:
-        # Display the image (Streamlit handles sizing better here)
-        st.image(member["photo"], width=100, caption=None)
+        st.image(member["photo"], width=200, caption=None)
 
-        # Display the name and description
         st.markdown(f"**{member['name']}**")
         st.markdown(
             f"<p style='font-size: 0.85rem; color: #555; min-height: 80px'>{member['info']}</p>",
