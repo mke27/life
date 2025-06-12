@@ -149,12 +149,20 @@ if st.session_state.show_sim_country:
 
     df_renamed = df_sorted.rename(columns={'Country_input':'Country', 'similarity':'Similarity Score'})
 
-    fig = px.choropleth(df_renamed, title="Map of Most similar Countries",scope='europe', locations='Country', locationmode='country names', color='Similarity Score', hover_data='Similarity Score')
-    st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")
     st.subheader(f"Most similar countries to {option}")
+    st.markdown("Use the map and table to explore countries most similar in quality of life indicators.")
+    
+    col1, col2 = st.columns([2, 1])
 
-    st.write(df_renamed.iloc[1:][["Country", "Similarity Score"]])
+    with col1:
+        fig = px.choropleth(df_renamed, title="Map of Most similar Countries",scope='europe', locations='Country', locationmode='country names', color='Similarity Score', hover_data='Similarity Score')
+        st.plotly_chart(fig, use_container_width=True, theme="streamlit")
 
+    with col2:
+        st.dataframe(df_renamed.iloc[1:][["Country", "Similarity Score"]], use_container_width=True, height=400)
+
+    st.divider()
+    st.subheader("Quality of Life Comparison")
 
     country_1 = df_renamed.iloc[0]["Country"]
     country_2 = df_renamed.iloc[1]["Country"]
@@ -169,7 +177,6 @@ if st.session_state.show_sim_country:
             data_1 = response_1.json()
             data_2 = response_2.json()
             if isinstance(data_1, list) and isinstance(data_2, list):
-                st.subheader("Quality of Life Comparison")
                 fig = plot_qol(data_1, country_1, data_2, country_2)
             else:
                 st.warning("Invalid data format received from the model API.")

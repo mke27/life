@@ -24,16 +24,6 @@ CREATE TABLE IF NOT EXISTS Factor
     factor_name VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Rate
-(
-    rate_ID        INT AUTO_INCREMENT PRIMARY KEY,
-    factor_ID      INT UNSIGNED NOT NULL,
-    country_ID     INT UNSIGNED NOT NULL,
-    rate_of_change FLOAT        NOT NULL,
-    FOREIGN KEY (factor_ID) REFERENCES Factor (factor_ID),
-    FOREIGN KEY (country_ID) REFERENCES Country (country_ID)
-);
-
 CREATE TABLE IF NOT EXISTS User_Role
 (
     role_ID INT AUTO_INCREMENT PRIMARY KEY,

@@ -39,11 +39,16 @@ style_sidebar()
 # set the title of the page and provide a simple prompt. 
 logger.info("Loading the Home page of the app")
 
-st.title('Best Life')
+st.markdown("""
+<div style='background-color: #458bd1; padding: 50px 0; text-align: center; color: white;'>
+    <h1 style='margin: 0;'>Best Life</h1>
+    <h2 style='margin: 10px 0 0 0;'>Improve your quality of life today.</h2>
+</div>
+""", unsafe_allow_html=True)
 
-st.write('\n\n')
-st.write('## Welcome to Best Life! Let us help you improve your quality of life today.') 
-st.write('### Which user would you like to log in as?')
+st.divider()
+
+st.write('### Choose a user:')
 
 def get_users(role_name):
     user_info_res = requests.get(f"http://web-api:4000/users/role/{role_name}")
