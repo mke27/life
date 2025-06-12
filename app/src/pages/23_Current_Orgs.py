@@ -10,11 +10,11 @@ SideBarLinks()
 from modules.style import style_sidebar
 style_sidebar()
 
-st.title('View Existing Organizations')
+st.markdown("""
+            # View Existing Organizations
 
-st.write(
-    """Select a country."""
-)
+            Expand your outreach! Please select a country and factor below to connect with organizations involved in that area.
+            """)
 
 response = requests.get("http://web-api:4000/country/country")
 data = response.json()

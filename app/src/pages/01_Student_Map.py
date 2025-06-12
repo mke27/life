@@ -85,12 +85,25 @@ logger.info(f"environment = {environment}")
 if st.button("Save Preferences", type="primary", use_container_width=True):
 
     input_vector = np.array([education, health, safety, environment])
+    #st.write(f"exact input: {input_vector}")
+
+    vector_sum = np.sum(input_vector)
+
+    relativised_val_list = []
+
     #relativises
     for factor in range(len(input_vector)):
-        input_vector[factor] = input_vector[factor]/np.sum(input_vector)
+        #st.write(f"og value: {input_vector[factor]}, sum values: {vector_sum}, result: {float(input_vector[factor])/float(vector_sum)}")
+        relativised_val = float(input_vector[factor])/float(vector_sum)
+        relativised_val_list.append(relativised_val)
 
+    relativised_vector = np.array([relativised_val_list[0], relativised_val_list[1], relativised_val_list[2], relativised_val_list[3]])
+
+    #st.write(f"relativised input: {relativised_vector}")
     # inverse sigmoids
-    inv_sig_input = np.array(list(map(inv_sigmoid, input_vector)))
+    inv_sig_input = np.array(list(map(inv_sigmoid, relativised_vector)))
+
+    #st.write(f"invserse sigmoided input: {inv_sig_input}")
 
     results = requests.get(f"http://web-api:4000/model/predict/{inv_sig_input[0]}/{inv_sig_input[1]}/{inv_sig_input[2]}/{inv_sig_input[3]}")
     results_json = json.loads(results.text)
@@ -100,10 +113,12 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
     # st.write(f"Response text: {results.text}, Response text type: {type(results.text)}")
     # st.write(f"Response text: {df}")
 
-    sorted_df = df.sort_values('similarity')
+    sorted_df = df.sort_values('similarity', ascending=False)
     #st.table(df)
-    fig = px.choropleth(df, title="Map of Countries That Best Match Your Priorities",scope='europe', locations='Country_input', locationmode='country names', color='similarity')
+    fig = px.choropleth(sorted_df, title="Map of Countries That Best Match Your Priorities", scope='europe', locations='Country_input', locationmode='country names', color='similarity')
     st.plotly_chart(fig, use_container_width=True, theme="streamlit")
+
+    #st.write(sorted_df)
     # try:
     #     #JSONifying twice?
     #     json_results = results.json()  # This should be a list of dicts
@@ -122,6 +137,7 @@ if st.button("Save Preferences", type="primary", use_container_width=True):
         country_name_to_id = {c["country_name"]: c["country_ID"] for c in country_data}
 
         top_country_name = sorted_df.iloc[0]["Country_input"]
+        st.write(f"top country = {top_country_name}")
 
         top_country_id = country_name_to_id.get(top_country_name)
 

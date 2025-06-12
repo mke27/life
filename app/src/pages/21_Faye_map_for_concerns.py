@@ -12,7 +12,11 @@ from modules.nav import SideBarLinks
 SideBarLinks()
 from modules.style import style_sidebar
 style_sidebar()
+st.markdown('''
+            # Expansion Map
 
+            The map demonstrates countries on a gradient scale that are deeply affected by each factor. Lighter blue areas indicate lower scores, highlighting greater needs and opportunities for improvement in health, education, environment, or safety.
+            ''')
 struggle = st.radio("Select the feature you would like to tackle", options=['Health', 'Education', 'Environment', 'Safety'], 
          index=0, horizontal=True, label_visibility="visible")
 
@@ -34,7 +38,7 @@ match struggle:
         input_name = 'Health Score'
 
 results = requests.get(
-            f"http://web-api:4000/faye/scores_unstandardized")
+            f"http://web-api:4000/faye/scores_standardized")
 results_json = json.loads(results.text)
 df = pd.DataFrame.from_dict(results_json)
 df['environment_score'] = -df['environment_score']
@@ -50,7 +54,7 @@ df_renamed = df_sorted.rename(columns={'country_name': 'Country',
 fig = px.choropleth(df_renamed, scope='europe', locations='Country', locationmode='country names', color=input_name)
 st.plotly_chart(fig, use_container_width=True, theme="streamlit")
 
-st.write(df_renamed)
+st.write(df_renamed.reset_index(drop=True))
 #fig = px.choropleth(df, scope='europe', color='similarity', locations = 'Country_input', locationmode='country names')
 
 #st.plotly_chart(fig, use_container_width=True, sharing="streamlit", theme="streamlit")

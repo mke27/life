@@ -17,7 +17,11 @@ SideBarLinks()
 from modules.style import style_sidebar
 style_sidebar()
 
-st.title('Quality of Life Comparison')
+st.markdown('''
+            # Quality of Life Comparison
+
+            Choose two countries to compare their historical and predicted happiness scores. The scores for each country evaluate their citizens quality of life on a 0 (worst possible life) to 10 (best possible life) scale.
+            ''')
 
 def plot_qol(qol_data, country, qol_data2 = None, country2 = None):
     """
