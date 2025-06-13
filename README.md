@@ -34,13 +34,19 @@ The next persona of a policymaker is able to learn more about recent policy and 
 Lastly, the activist persona can maximize their impact in EU member states. They are able to countries with the largest need for improvement in the key factors of health, education, environment, or safety to learn more about where they should expand their reach in. They are also able to view predicted quality of life scores by countries to be able to recognize declines and address them before they occur. Activism is stronger together, so they are also able to view organizations in countries that address their area of interest to be able learn more about them and expand their outreach.
 
 ## Team Contribution Overview
+
 ### Maya Ellis
 
 ### Areti Makropoulos
 
 ### Max Robinson
 
+Max worked on building the cosine similarities model and implementing the model on all pages it was needed. Max also made the Policy maker's policy page and webscraped all the policy news as well as requesting from the eurostat APIs.
+
+Max built the Chloropleth maps for all users and built The activist's first page, both policymaker's pages (exlcuding the implementation of the autoregressive model) and the prospective university student's first page (excluding the compare preferences page).
+
 ### Zoya Siddiqui
+
 Zoya worked primarily on developing our time-series autoregressive model that was used to predict future quality of life for the next five years. She also procured, cleaned, and performed EDA on most of the data used for the ML models.
 
 To learn more about specific individual contributions and our overall app development process, you can read [our team blog.](https://maxr21.github.io/belgiumsquad/)
