@@ -16,7 +16,7 @@ add_logo("assets/logo.png", height=400)
 
 st.markdown('''
 # University Recommendations''')
-st.write("""Select a country.""")
+st.write("""Select a country to view its top three universities.""")
 
 response = requests.get("http://web-api:4000/country/country")
 data = response.json()
