@@ -51,7 +51,7 @@ df_renamed = df_sorted.rename(columns={'country_name': 'Country',
                                        'health_score': 'Health Score', 
                                        'education_score':'Education Score'})
 
-fig = px.choropleth(df_renamed, scope='europe', locations='Country', locationmode='country names', color=input_name)
+fig = px.choropleth(df_renamed, scope='europe', locations='Country', locationmode='country names', color=input_name, color_continuous_scale='Blues_r')
 st.plotly_chart(fig, use_container_width=True, theme="streamlit")
 
 st.dataframe(df_renamed.iloc[1:].reset_index(drop=True), use_container_width=True, height=400, hide_index=True)
