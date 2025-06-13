@@ -40,9 +40,9 @@ style_sidebar()
 logger.info("Loading the Home page of the app")
 
 st.markdown("""
-<div style='background-color: #458bd1; padding: 50px 0; text-align: center; color: white;'>
-    <h1 style='margin: 0;'>Best Life</h1>
-    <h2 style='margin: 10px 0 0 0;'>Improve your quality of life today.</h2>
+<div style='text-align: center; color: #458bd1;'>
+    <h1 style='margin: 0; font-size: 4.5em;'>Best Life</h1>
+    <h2 style='margin: 10px 0 0 0; font-size: 2.5em;'>Improve your quality of life today.</h2>
 </div>
 """, unsafe_allow_html=True)
 

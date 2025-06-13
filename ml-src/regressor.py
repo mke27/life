@@ -1,4 +1,4 @@
-# time series auto regression model
+# time series auto regression model data pipeline
 
 import numpy as np
 import pandas as pd
@@ -163,84 +163,6 @@ def qol_df(old_df, pred_df, country):
     merged = merged.sort_values("year").reset_index(drop=True)
 
     return merged
-
-# performs loocv on autoregressor
-def loocv_autoreg(df):
-    """
-    LOOCV for time series autoregressor
-
-    args:
-        - df: dataframe with QoL scores for EU countries
-
-    returns:
-        - dict with averaged mse and r2 across all folds
-    """
-    p = 5
-    results = []
-
-    df_encoded = pd.get_dummies(df, columns=[' country_name'], dtype='int')
-    country_dummy_cols = sorted([col for col in df_encoded.columns if col.startswith(' country_name_')])
-    n_countries = len(country_dummy_cols)
-
-    y_all = []
-    y_preds = []
-
-    for country in df[' country_name'].unique():
-        mask = df[' country_name'] == country
-        df_country = df_encoded[mask].sort_values(' score_year').reset_index(drop=True)
-
-        qol_country = df_country[' qol_score'].to_numpy()
-        country_vec = np.array([
-            1 if col == f' country_name_{country}' else 0
-            for col in country_dummy_cols
-        ])
-
-        n_samples = len(qol_country)
-
-        for t in range(p, n_samples):
-            
-            X_train = []
-            y_train = []
-
-            for i in range(p, n_samples):
-                # leave out test point
-                if i == t:
-                    continue 
-
-                lags = qol_country[i-p:i][::-1]
-                row = np.concatenate([country_vec, lags])
-                X_train.append(row)
-                y_train.append(qol_country[i])
-
-            X_train = np.array(X_train)
-            y_train = np.array(y_train)
-
-            # lambda to fix for singular matrix error
-            lambda_reg = 1e-5
-            XtX = X_train.T @ X_train + lambda_reg * np.eye(X_train.shape[1])
-            Xty = X_train.T @ y_train
-            w = np.linalg.solve(XtX, Xty)
-
-            lags_test = qol_country[t-p:t][::-1]
-            X_test = np.concatenate([country_vec, lags_test])
-
-            pred = np.dot(X_test, w)
-
-            y_all.append(qol_country[t])
-            y_preds.append(pred)
-
-    y_all = np.array(y_all)
-    y_preds = np.array(y_preds)
-
-    resids = y_all - y_preds
-
-    mse = np.mean((resids) ** 2)
-    
-    ss_res = np.sum((resids) ** 2)
-    ss_tot = np.sum((y_all - np.mean(y_all)) ** 2)
-    r2 = 1 - (ss_res / ss_tot)
-
-    return {'mse': mse, 'r2': r2, "residuals": resids}
 
 # plots testing linearity
 def linearity_plots(df, lag_index):
@@ -458,9 +380,6 @@ def plot_qol(qol_data, country, qol_data2 = None, country2 = None):
 
     fig.show()
 
-
-test = autoregressor_all(df, "Sweden")
-plot_qol(test, "Sweden")
 
 
 

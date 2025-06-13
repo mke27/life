@@ -14,7 +14,7 @@ from backend.ml_models import model01, model02
 
 model = Blueprint("model", __name__)
 
-@model.route("/predict/<education>/<health>/<safety>/<environment>", methods=["GET"])
+@model.route("/prediction/<education>/<health>/<safety>/<environment>", methods=["GET"])
 def get_predict(education, health, safety, environment):
     try:
         current_app.logger.info("GET /predict handler")
@@ -41,6 +41,8 @@ def get_predict(education, health, safety, environment):
 
 @model.route("/weights", methods=["GET"])
 def get_weights():
+    current_app.logger.info("GET /weights route")
+
     try:
         cursor = db.get_db().cursor()
 
@@ -60,6 +62,8 @@ def get_weights():
 
 @model.route("/raw_score/<country_name>", methods=["GET"])
 def get_scores(country_name):
+    current_app.logger.info("GET /raw_score/<country_name> route")
+
     try:
         cursor = db.get_db().cursor()
         cursor.execute("""
@@ -75,10 +79,10 @@ def get_scores(country_name):
         return jsonify({"error": str(e)}), 500
         
 
-@model.route("/get_model_scores/<country_name>", methods=["GET"])
+@model.route("/model_scores/<country_name>", methods=["GET"])
 def get_model_scores(country_name):
     try:
-        current_app.logger.info("GET /graph_scores handler")
+        current_app.logger.info("GET /get handler")
         cursor = db.get_db().cursor()
         predicted_scores = model02.autoregressor_all(country_name)
         current_app.logger.info(f"Predicted scores for {country_name}: {predicted_scores}")

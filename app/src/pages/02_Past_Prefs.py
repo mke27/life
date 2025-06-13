@@ -199,9 +199,9 @@ else:
         country_name_1 = country_id_to_name.get(country_id_1, f"Unknown ID {country_id_1}")
         country_name_2 = country_id_to_name.get(country_id_2, f"Unknown ID {country_id_2}")
 
-        url_1 = f"http://web-api:4000/model/get_model_scores/{country_name_1}"
+        url_1 = f"http://web-api:4000/model/model_scores/{country_name_1}"
         response_1 = requests.get(url_1)
-        url_2 = f"http://web-api:4000/model/get_model_scores/{country_name_2}"
+        url_2 = f"http://web-api:4000/model/model_scores/{country_name_2}"
         response_2 = requests.get(url_2)
 
         if response_1.status_code == 200 and response_2.status_code == 200:

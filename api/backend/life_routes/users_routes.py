@@ -16,6 +16,7 @@ users = Blueprint("users", __name__)
 
 @users.route("/role/<role_name>", methods=["GET"])
 def get_usernames_by_role_name(role_name):
+    current_app.logger.info('GET /role/<role_name> route')
     try:
         cursor = db.get_db().cursor()
 
@@ -38,8 +39,9 @@ def get_usernames_by_role_name(role_name):
         current_app.logger.error(f'Database error in get_user_by_role_name: {str(e)}')
         return jsonify({"error": str(e)}), 500
     
-@users.route('/users/remove/<int:user_ID>', methods=["DELETE"])
+@users.route('/user/<int:user_ID>', methods=["DELETE"])
 def remove_user(user_ID):
+    current_app.logger.info('DELETE /user/<int:user_ID> route')
     try:
         cursor = db.get_db().cursor()
         query = 'DELETE FROM User WHERE user_ID = %s'
@@ -57,9 +59,9 @@ def remove_user(user_ID):
         return jsonify({'error': str(e)}), 500
 
   
-@users.route('/update/username', methods=['PUT'])
+@users.route('/username', methods=['PUT'])
 def update_username():
-    current_app.logger.info('PUT /update/username route')
+    current_app.logger.info('PUT /username route')
     try:
         user_info = request.json
         user_ID = user_info['user_ID']
@@ -86,10 +88,10 @@ def update_username():
         current_app.logger.error(f'Error updating user name: {str(e)}')
         return jsonify({'error': 'Internal server error'}), 500
 
-@users.route('/update/first-name', methods=['PUT'])
+@users.route('/first-name', methods=['PUT'])
 def update_first_name():
 
-    current_app.logger.info('PUT /update/username route')
+    current_app.logger.info('PUT /username route')
     try:
         user_info = request.json
         user_ID = user_info['user_ID']
