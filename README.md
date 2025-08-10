@@ -43,9 +43,8 @@ Areti contributed significantly on developing the database, REST API, an UI laye
 
 ### Max Robinson
 
-Max worked on building the cosine similarities model and implementing the model on all pages it was needed. Max also made the Policy maker's policy page and webscraped all the policy news as well as requesting from the eurostat APIs.
-
-Max built the Chloropleth maps for all users and built The activist's first page, both policymaker's pages (exlcuding the implementation of the autoregressive model) and the prospective university student's first page (excluding the compare preferences page).
+Max worked on designing the autoregressive model and building the cosine similarity model. Max implemented the cosine model on all pages where it was needed. Max also created the Policy Maker's policy page and web scraped all the policy news, as well as tested and gathered data from the Eurostat APIs.
+Max built the Chloropleth maps for all users and built the activist's first page, both policymaker's pages (excluding the implementation of the autoregressive model), and the prospective university student's first page (excluding the compare preferences page).
 
 ### Zoya Siddiqui
 
